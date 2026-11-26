@@ -1333,8 +1333,11 @@ app.post('/api/flagsmith/sync', async (req, res) => {
     let gitCouplingsCount = 0;
 
     if (graph) {
-      // Signal 1: Tag-declared dependencies from Flagsmith REST API
-      syncResult = await flagsmithClient.syncToGraph(graph, req.body || {});
+      // Signal 1: Tag-declared dependencies from Flagsmith REST API (or fallback features)
+      syncResult = await flagsmithClient.syncToGraph(graph, {
+        fallbackFeatures: fallbackFlagsmithFeatures,
+        ...(req.body || {})
+      });
 
       // Signal 2: Static AST Code Analysis
       try {

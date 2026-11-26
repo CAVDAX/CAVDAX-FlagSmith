@@ -138,8 +138,15 @@ export class FlagsmithClient {
 
     if (options.features) {
       rawFeatures = options.features;
+    } else if (this.isConfigured()) {
+      try {
+        rawFeatures = await this.fetchFeatures();
+      } catch (err) {
+        console.warn('[FlagsmithClient] Failed to fetch live features from API, using fallback:', err.message);
+        rawFeatures = options.fallbackFeatures || [];
+      }
     } else {
-      rawFeatures = await this.fetchFeatures();
+      rawFeatures = options.fallbackFeatures || [];
     }
 
     const { parsedFeatures, dependencies } = this.extractDependencies(rawFeatures);
