@@ -55,7 +55,7 @@
 
 > **Live Production Gateway:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)  
 > **Self-Hosted Flagsmith API:** [`https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`](https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/)  
-> **Official npm Package:** [`@cavdax/flagsmith-mcp`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) (`v1.0.2`)  
+> **Official npm Package:** [`@cavdax/flagsmith-mcp`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) (`v1.0.3`)  
 > **Interactive Blast Radius Radar:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live) $\to$ *Flag Radar*
 
 Autonomous coding agents (Cursor, Claude Code, Windsurf) edit code and toggle feature flags blindly—without understanding the hidden multi-hop ripple effects across downstream services and users. Toggling or deleting a flag like `dark_mode` can silently crash downstream systems (`premium_analytics`, `analytics_dashboard`) or violate mandatory upstream prerequisites (`theme_system`, `auth_v2`).
@@ -92,6 +92,7 @@ CAVDAX for Flagsmith builds a **3-Signal Topological Dependency Graph** powered 
   • list_flagsmith_features                        • Safe Toggle Switch with 409 Conflict
   • scan_code_for_flags                            • Transitive Dependency Visualizer
   • sync_flagsmith_graph                           • 3-Signal Mesh Ingestion
+  • list_stale_flags                               • Stale Flag Pruning & Cleanup
 ```
 
 ### Quick Evaluation for Judges (Zero Installation Required)
@@ -116,6 +117,9 @@ npx @cavdax/flagsmith-mcp sync
 
 # 6. Bypass safety gate with --force
 npx @cavdax/flagsmith-mcp toggle dark_mode off --force
+
+# 7. List stale feature flags with 0 dependents for dead-code pruning (>90 days)
+npx @cavdax/flagsmith-mcp stale --days 90
 ```
 
 ### Cursor & Claude Code Zero-Config Setup
@@ -155,6 +159,7 @@ Add the Flagsmith safety gate to your AI coding agents in 10 seconds:
 | `/api/flagsmith/safe-toggle` | `POST` | ~28ms | Validates dependencies; returns `409 Conflict` if unsafe |
 | `/api/flagsmith/scan-code` | `POST` | ~19ms | Analyzes code AST for SDK invocations, inferred dependencies & live status |
 | `/api/flagsmith/sync` | `POST` | ~31ms | Ingests Flagsmith features, AST signals, and Git history into FalkorDB |
+| `/api/flagsmith/stale` | `GET` | ~15ms | Detects stale flags (>90 days, 0 dependents) for dead code cleanup |
 
 ---
 

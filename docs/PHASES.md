@@ -157,7 +157,7 @@ flowchart TD
    - Pre-flight `safe_toggle_flag` tool halting breaking toggles with **HTTP 409 Conflict**.
 3. **Standalone Packaging & OIDC Distribution**:
    - Extracted `apps/flagsmith-mcp` with CLI (`bin/cli.js`) and Stdio MCP server (`src/mcpServer.js`).
-   - Configured GitHub Actions OIDC Trusted Publisher publishing `@cavdax/flagsmith-mcp@1.0.2` with Sigstore SLSA-1 provenance, exposing 5 MCP tools and standalone CLI.
+   - Configured GitHub Actions OIDC Trusted Publisher publishing `@cavdax/flagsmith-mcp@1.0.3` with Sigstore SLSA-1 provenance, exposing 6 MCP tools and standalone CLI.
 4. **Self-Hosted AWS EC2 Infrastructure & AST Code Inspector**:
    - Deployed self-hosted Flagsmith v2.295.2 on AWS EC2 (`15.135.78.65`, ap-southeast-2) with `DJANGO_ALLOWED_HOSTS: "*"`.
    - Production PWA updated with interactive `FlagBlastRadiusCard.jsx`, AST Live Code Inspector (Signal 2 Static Analyzer), and Track 03 Hero Pill.

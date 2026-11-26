@@ -117,9 +117,26 @@ async function main() {
     const data = await fetchGateway('/flagsmith/sync', { method: 'POST' });
     console.log('\n✅ Sync Complete:');
     console.log(JSON.stringify(data, null, 2));
+  } else if (command === 'stale') {
+    const daysIdx = args.indexOf('--days');
+    const days = daysIdx !== -1 && args[daysIdx + 1] ? args[daysIdx + 1] : 90;
+    console.log(`Querying stale feature flags (inactivity threshold: ${days} days)...`);
+    const data = await fetchGateway(`/flagsmith/stale?days=${encodeURIComponent(days)}`);
+    if (data.stale_flags && data.stale_flags.length > 0) {
+      console.log(`\nFound ${data.stale_flags.length} Stale Feature Flag Candidate(s) for Sunset:`);
+      console.table(data.stale_flags.map(f => ({
+        Flag: f.name,
+        State: f.enabled ? 'ENABLED' : 'DISABLED',
+        IncomingDependents: f.incoming_dependents || 0,
+        Status: f.status || 'CANDIDATE_FOR_SUNSET',
+        Recommendation: f.recommendation || ''
+      })));
+    } else {
+      console.log(`\nZero stale flags found with threshold ${days} days.`);
+    }
   } else if (command === '--help' || command === '-h' || command === 'help') {
     console.log(`
-@cavdax/flagsmith-mcp v1.0.2
+@cavdax/flagsmith-mcp v1.0.3
 Flagsmith Feature Flag Blast Radius & Safe-Toggle MCP Server for AI Coding Agents
 
 Usage:
@@ -129,6 +146,7 @@ Usage:
   npx @cavdax/flagsmith-mcp toggle <f> on|off   Safely toggle a flag with dependency validation
   npx @cavdax/flagsmith-mcp scan <filePath>     Scan code file for Flagsmith calls & AST relations
   npx @cavdax/flagsmith-mcp sync                Synchronize Flagsmith instance with GraphBLAS matrix
+  npx @cavdax/flagsmith-mcp stale [--days <n>]  Identify stale flags eligible for sunset/removal
 
 Options:
   --force                                       Bypass safety gates on toggle

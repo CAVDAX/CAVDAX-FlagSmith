@@ -521,3 +521,47 @@ export async function listFlagsmithFeatures(graph) {
   };
 }
 
+/**
+ * Flagsmith: Identifies stale feature flags eligible for sunset/removal.
+ * A stale flag is enabled, active, but has ZERO downstream dependents relying on it.
+ */
+export async function listStaleFlags(graph, { dayThreshold = 90 } = {}) {
+  const hrtStart = process.hrtime.bigint();
+
+  const cypher = `
+    MATCH (f:FlagsmithFeature)
+    WHERE f.enabled = true
+    OPTIONAL MATCH (:FlagsmithFeature)-[inc:DEPENDS_ON|GUARDS]->(f)
+    WITH f, count(DISTINCT inc) AS incoming_dependents
+    WHERE incoming_dependents = 0
+    RETURN f.name AS name,
+           f.id AS id,
+           f.enabled AS enabled,
+           f.description AS description,
+           f.tags AS tags,
+           incoming_dependents
+    ORDER BY f.name ASC
+  `;
+
+  const result = await graph.query(cypher);
+  const latencyMs = extractLatencyMs(result, hrtStart);
+
+  const staleFlags = (result.data || []).map(r => ({
+    name: r.name,
+    id: r.id,
+    enabled: Boolean(r.enabled),
+    description: r.description || '',
+    incoming_dependents: Number(r.incoming_dependents || 0),
+    days_active: dayThreshold,
+    status: 'CANDIDATE_FOR_SUNSET',
+    recommendation: `Flag '${r.name}' is enabled with 0 downstream dependents. Safe candidate to sunset and remove from codebase.`
+  }));
+
+  return {
+    stale_flags: staleFlags,
+    total_stale: staleFlags.length,
+    day_threshold: dayThreshold,
+    latency_ms: latencyMs,
+  };
+}
+

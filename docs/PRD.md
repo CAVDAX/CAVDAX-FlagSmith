@@ -147,6 +147,6 @@ When autonomous coding agents or engineers modify feature flags in Flagsmith, th
 - **FR-7.4 Bayesian Confidence Aggregator**: Synthesize multi-source signals into unified edge weights: $P = 1 - \prod(1 - c_i)$.
 - **FR-7.5 Multi-Hop GraphBLAS Blast Radius**: Execute directed reachability queries in FalkorDB (`[:DEPENDS_ON|GUARDS*1..3]`) with latency $\le 35\text{ms}$.
 - **FR-7.6 Pre-Flight Safe Toggle Interception**: Mutating tool `safe_toggle_flag` halts with HTTP 409 Conflict (`BLAST_RADIUS_VIOLATION`) when disabling a flag breaks active downstream dependents unless `--force` is provided.
-- **FR-7.7 Model Context Protocol Tools**: Expose 5 dedicated tools: `get_flag_blast_radius`, `safe_toggle_flag`, `list_flagsmith_features`, `scan_code_for_flags`, and `sync_flagsmith_graph` to AI coding agents (Cursor, Claude Code) via stdio server.
-- **FR-7.8 Zero-Config Distribution**: Standalone npm package `@cavdax/flagsmith-mcp@1.0.2` published with Sigstore provenance via GitHub Actions OIDC Trusted Publisher.
+- **FR-7.7 Model Context Protocol Tools**: Expose 6 dedicated tools: `get_flag_blast_radius`, `safe_toggle_flag`, `list_flagsmith_features`, `scan_code_for_flags`, `sync_flagsmith_graph`, and `list_stale_flags` (for dead-code pruning of flags with 0 dependents) to AI coding agents (Cursor, Claude Code) via stdio server.
+- **FR-7.8 Zero-Config Distribution**: Standalone npm package `@cavdax/flagsmith-mcp@1.0.3` published with Sigstore provenance via GitHub Actions OIDC Trusted Publisher.
 - **FR-7.9 Interactive AST Live Code Inspector**: Interactive web HUD console with AST code presets, live AST extraction, and real-time FalkorDB production state enrichment.

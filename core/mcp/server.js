@@ -7,7 +7,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { verifyActionGate, revalidateDecision, fetchGraphState, computeFlagBlastRadius, listFlagsmithFeatures } from '../graph/queries.js';
+import { verifyActionGate, revalidateDecision, fetchGraphState, computeFlagBlastRadius, listFlagsmithFeatures, listStaleFlags } from '../graph/queries.js';
 import { renderGraphToSvg, computeBlastRadius } from '../graph/renderSvg.js';
 import { globalLockManager } from './lockManager.js';
 import { AstScanner } from '../ingestion/astScanner.js';
@@ -266,6 +266,16 @@ export class CavdaxMcpServer {
           type: 'object',
           properties: {}
         }
+      },
+      {
+        name: 'list_stale_flags',
+        description: 'Flagsmith Integration: Identifies stale feature flags that are candidates for sunset and removal. Scans for enabled flags with zero downstream dependents across the FalkorDB dependency matrix.',
+        parameters: {
+          type: 'object',
+          properties: {
+            days: { type: 'number', description: 'Inactivity threshold in days (defaults to 90).' }
+          }
+        }
       }
     ];
   }
@@ -304,6 +314,8 @@ export class CavdaxMcpServer {
       return await this.executeScanCodeForFlags(args);
     } else if (toolName === 'sync_flagsmith_graph') {
       return await this.executeSyncFlagsmithGraph(args);
+    } else if (toolName === 'list_stale_flags') {
+      return await this.executeListStaleFlags(args);
     } else {
       throw new Error(`Unknown tool: '${toolName}'`);
     }
@@ -886,6 +898,26 @@ export class CavdaxMcpServer {
     return {
       status: 'SUCCESS',
       message: 'Flagsmith 3-Signal graph sync triggered successfully.'
+    };
+  }
+
+  /**
+   * Flagsmith: Identifies stale feature flags with zero downstream dependents (candidates for sunset/removal)
+   */
+  async executeListStaleFlags({ days = 90 } = {}) {
+    if (this.graph) {
+      const data = await listStaleFlags(this.graph, { dayThreshold: Number(days) || 90 });
+      return {
+        status: 'SUCCESS',
+        ...data
+      };
+    }
+    return {
+      status: 'SUCCESS',
+      stale_flags: [],
+      total_stale: 0,
+      day_threshold: Number(days) || 90,
+      message: 'Zero stale flags detected in current environment.'
     };
   }
 }

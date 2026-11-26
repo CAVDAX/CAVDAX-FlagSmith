@@ -37,6 +37,24 @@ describe('Flagsmith MCP Tools Expansion', () => {
     assert.ok(toolNames.includes('get_flag_blast_radius'), 'Must expose get_flag_blast_radius');
     assert.ok(toolNames.includes('safe_toggle_flag'), 'Must expose safe_toggle_flag');
     assert.ok(toolNames.includes('list_flagsmith_features'), 'Must expose list_flagsmith_features');
+    assert.ok(toolNames.includes('scan_code_for_flags'), 'Must expose scan_code_for_flags');
+    assert.ok(toolNames.includes('sync_flagsmith_graph'), 'Must expose sync_flagsmith_graph');
+    assert.ok(toolNames.includes('list_stale_flags'), 'Must expose list_stale_flags');
+  });
+
+  test('list_stale_flags returns candidate feature flags for sunset', async () => {
+    const res = await mcp.handleToolCall('list_stale_flags', { days: 90 });
+    assert.equal(res.status, 'SUCCESS');
+    assert.ok(Array.isArray(res.stale_flags));
+  });
+
+  test('scan_code_for_flags parses Flagsmith SDK calls from source text', async () => {
+    const res = await mcp.handleToolCall('scan_code_for_flags', {
+      code: 'if (flagsmith.hasFeature("dark_mode")) { applyTheme(); }'
+    });
+    assert.equal(res.status, 'SUCCESS');
+    assert.equal(res.flags_count, 1);
+    assert.equal(res.flags[0].name, 'dark_mode');
   });
 
   test('get_flag_blast_radius returns full topology report', async () => {

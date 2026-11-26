@@ -4,8 +4,8 @@
 > **Track**: Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
 > **Lead Architect & Maintainer**: Suneet Chugh & Team AWDAX  
 > **Current Status**: 100% Verified Production Delivery & Published Package  
-> **Version**: 1.2.0 (Synchronized with `@cavdax/flagsmith-mcp@1.0.2`)  
-> **Timestamp**: `2026-11-27T01:40:00+05:30`  
+> **Version**: 1.3.0 (Synchronized with `@cavdax/flagsmith-mcp@1.0.3`)  
+> **Timestamp**: `2026-11-27T02:12:00+05:30`  
 > **Production Gateway**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)
 
 ---
@@ -38,7 +38,7 @@
 │ 4. AI Marketing Fog Words         │ 0 Violations │ 0 Violations        │
 │ 5. Dual-Theme Interface Parity    │ Full Parity  │ Dark & Light Tested │
 │ 6. Sigstore Provenance Gate       │ Valid Log    │ Log #4132791550     │
-│ 7. Automated Test Suite           │ 100% Pass    │ 185/185 Pass (100%) │
+│ 7. Automated Test Suite           │ 100% Pass    │ 187/187 Pass (100%) │
 └───────────────────────────────────┴──────────────┴─────────────────────┘
 ```
 
@@ -48,8 +48,8 @@
 
 | Artifact | Registry | Version | Attestation / Verification | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| `@cavdax/flagsmith-mcp` | [npm Registry](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) | `1.0.2` | Sigstore SLSA-1 Provenance (`publish-flagsmith-mcp.yml`) | ✅ **Active & Verified** |
-| `flagsmith-mcp` CLI | GitHub Actions | `1.0.2` | Published via OIDC Trusted Publisher without static secrets | ✅ **Active & Verified** |
+| `@cavdax/flagsmith-mcp` | [npm Registry](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) | `1.0.3` | Sigstore SLSA-1 Provenance (`publish-flagsmith-mcp.yml`) | ✅ **Active & Verified** |
+| `flagsmith-mcp` CLI | GitHub Actions | `1.0.3` | Published via OIDC Trusted Publisher without static secrets | ✅ **Active & Verified** |
 | `CAVDAX-FlagSmith` Core | GitHub | `main` | Clean working tree, all tests passing in simulated CI | ✅ **Pushed & Clean** |
 
 ---

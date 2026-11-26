@@ -79,6 +79,19 @@ export const TOOLS = [
       type: 'object',
       properties: {}
     }
+  },
+  {
+    name: 'list_stale_flags',
+    description: 'Flagsmith Integration: Identifies stale feature flags that are candidates for sunset and removal. Scans for enabled flags with zero downstream dependents across the FalkorDB dependency matrix.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        days: {
+          type: 'number',
+          description: 'Inactivity threshold in days (defaults to 90).'
+        }
+      }
+    }
   }
 ];
 
@@ -160,6 +173,17 @@ export async function handleToolCall(name, args = {}) {
       ],
       isError: !data.success
     };
+  } else if (name === 'list_stale_flags') {
+    const days = args.days || 90;
+    const data = await fetchGateway(`/flagsmith/stale?days=${encodeURIComponent(days)}`);
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(data, null, 2)
+        }
+      ]
+    };
   } else {
     throw new Error(`Unknown tool: '${name}'`);
   }
@@ -191,7 +215,7 @@ export function startStdioServer() {
           capabilities: { tools: {} },
           serverInfo: {
             name: '@cavdax/flagsmith-mcp',
-            version: '1.0.2'
+            version: '1.0.3'
           }
         });
       } else if (method === 'notifications/initialized') {

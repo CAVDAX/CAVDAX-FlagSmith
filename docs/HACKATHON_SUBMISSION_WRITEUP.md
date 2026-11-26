@@ -14,7 +14,7 @@
 - **Interactive Flag Radar**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live) $\to$ *Flag Radar* tab
 - **Self-Hosted Flagsmith API**: [`https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`](https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/)
 - **GitHub Repository**: [`https://github.com/CAVDAX/CAVDAX-FlagSmith`](https://github.com/CAVDAX/CAVDAX-FlagSmith)
-- **Official npm Package**: [`@cavdax/flagsmith-mcp@1.0.2`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) *(Published with Sigstore SLSA Provenance via GitHub OIDC)*
+- **Official npm Package**: [`@cavdax/flagsmith-mcp@1.0.3`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) *(Published with Sigstore SLSA Provenance via GitHub OIDC)*
 - **Demo Video Walkthrough**: *[Insert YouTube Link Here]*
 
 ---
@@ -72,8 +72,11 @@ CAVDAX for Flagsmith constructs a real-time directed dependency graph in **Falko
   Model Context Protocol (MCP)                     Interactive Web HUD
   npx @cavdax/flagsmith-mcp                        https://cavdax-flagsmith.sahnirmaan.live
   • get_flag_blast_radius                          • Real-time Blast Radius Radar
-  • safe_toggle_flag                               • Safe Toggle Switch with 409 Conflict
-  • list_flagsmith_features                        • Transitive Dependency Visualizer
+  • safe_toggle_flag                               • AST Live Code Inspector (Signal 2)
+  • list_flagsmith_features                        • Safe Toggle Switch with 409 Conflict
+  • scan_code_for_flags                            • Transitive Dependency Visualizer
+  • sync_flagsmith_graph                           • 3-Signal Mesh Ingestion
+  • list_stale_flags                               • Stale Flag Pruning & Cleanup
 ```
 
 1. **Signal 1: Flagsmith REST API Ingestion (`core/ingestion/flagsmithClient.js`)**:
@@ -111,6 +114,9 @@ npx @cavdax/flagsmith-mcp sync
 
 # 6. Bypass safety gate with --force
 npx @cavdax/flagsmith-mcp toggle dark_mode off --force
+
+# 7. List stale feature flags with 0 dependents for dead code cleanup (>90 days)
+npx @cavdax/flagsmith-mcp stale --days 90
 ```
 
 ### Cursor & Claude Code Integration (`.cursor/mcp.json`):
@@ -156,8 +162,8 @@ npx @cavdax/flagsmith-mcp toggle dark_mode off --force
 ## 🏆 Accomplishments We're Proud Of
 
 - **< 35ms Graph Traversal**: Complex multi-hop blast radius calculations run in sub-35ms, fast enough to run synchronously inside AI agent tool-calls.
-- **100% Automated Test Pass Rate**: 13/13 passing tests across AST scanners, Git miners, Bayesian aggregators, and MCP gates.
-- **True Packaging**: Published directly on npm as `@cavdax/flagsmith-mcp@1.0.1` with Sigstore provenance. Zero installation required.
+- **100% Automated Test Pass Rate**: 187/187 passing tests across AST scanners, Git miners, Bayesian aggregators, and MCP gates.
+- **True Packaging**: Published directly on npm as `@cavdax/flagsmith-mcp@1.0.3` with Sigstore provenance. Zero installation required.
 - **Full Self-Hosted Deployment**: Live and running on AWS EC2 with real Flagsmith containers, FalkorDB, and interactive HUD.
 
 ---

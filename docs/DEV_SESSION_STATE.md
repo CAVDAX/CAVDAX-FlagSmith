@@ -1,15 +1,15 @@
 # CAVDAX for Flagsmith: Active Development Session State (`DEV_SESSION_STATE.md`)
 
 > **Repository**: `CAVDAX/CAVDAX-FlagSmith`  
-> **Session Timestamp**: `2026-11-27T01:42:00+05:30`  
+> **Session Timestamp**: `2026-11-27T02:14:00+05:30`  
 > **Active Branch**: `main` (Integration branch: `main`)  
-> **Status**: Toggle Wars Track 03 Production Deployment Verified (`https://cavdax-flagsmith.sahnirmaan.live`), `@cavdax/flagsmith-mcp@1.0.2` (5 MCP Tools, AST Code Inspector, Sigstore Provenance, 185/185 Automated Tests Passing)
+> **Status**: Toggle Wars Track 03 Production Deployment Verified (`https://cavdax-flagsmith.sahnirmaan.live`), `@cavdax/flagsmith-mcp@1.0.3` (6 MCP Tools, AST Code Inspector, Sigstore Provenance, 187/187 Automated Tests Passing)
 
 ---
 
 ## 🏆 Completed Milestones & Architectural Landings
 
-### 00b. Toggle Wars Track 03: Flagsmith Blast Radius Engine & npm OIDC Provenance (November 26–27, 2026)
+### 00b. Toggle Wars Track 03: Flagsmith Blast Radius Engine, 6 MCP Tools & npm OIDC Provenance (November 26–27, 2026)
 - **Track 03 Engine Architecture (Three-Signal Dependency Discovery)**:
   - **Signal 1: Flagsmith REST API Ingestion** (`core/ingestion/flagsmithClient.js`):
     - Synchronizes feature flags, tags, prerequisite dependencies, and multivariate segment variants directly from self-hosted Flagsmith API (`/api/v1/flags/`).
@@ -28,10 +28,11 @@
 - **Self-Hosted Flagsmith AWS EC2 Deployment (`15.135.78.65`)**:
   - Replaced external dependencies with a complete self-hosted Flagsmith Docker container mesh (`cavdax-flagsmith-api:v2.295.2`, `cavdax-flagsmith-db:postgres:15-alpine`).
   - Added `DJANGO_ALLOWED_HOSTS: "*"` resolving Django HTTP 400 Bad Request error. Verified live API at `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`.
-- **Standalone npm Package & GitHub Actions OIDC Trusted Publisher (@cavdax/flagsmith-mcp@1.0.2)**:
+- **Standalone npm Package & GitHub Actions OIDC Trusted Publisher (@cavdax/flagsmith-mcp@1.0.3)**:
   - Created standalone package `apps/flagsmith-mcp` with dedicated CLI (`bin/cli.js`), MCP Stdio Server (`src/mcpServer.js`), and exported APIs.
-  - Expanded exposed MCP tools to 5: `get_flag_blast_radius`, `safe_toggle_flag`, `list_flagsmith_features`, `scan_code_for_flags`, `sync_flagsmith_graph`.
-  - Expanded CLI with `scan <filePath>` (terminal AST analysis) and `sync` (triggers 3-signal graph refresh).
+  - Expanded exposed MCP tools to 6: `get_flag_blast_radius`, `safe_toggle_flag`, `list_flagsmith_features`, `scan_code_for_flags`, `sync_flagsmith_graph`, and `list_stale_flags`.
+  - Added Tool 6 (`list_stale_flags`) in `core/graph/queries.js`, `apps/server/index.js` (`GET /api/flagsmith/stale`), `core/mcp/server.js`, and `apps/flagsmith-mcp/src/mcpServer.js` to identify flags enabled > 90 days with zero downstream dependents for safe dead-code pruning.
+  - Expanded CLI with `stale [--days <n>]`, `scan <filePath>` (terminal AST analysis), and `sync` (triggers 3-signal graph refresh).
   - Configured npm **Trusted Publisher (OIDC)** connection bound to GitHub repository `CAVDAX/CAVDAX-FlagSmith` and workflow `publish-flagsmith-mcp.yml`.
   - Authored `.github/workflows/publish-flagsmith-mcp.yml` with pre-publish test gates and automated Sigstore provenance attestation (`npm publish --access public --provenance`).
   - Verified instant zero-config judge execution: `npx @cavdax/flagsmith-mcp blast dark_mode`.
@@ -39,7 +40,7 @@
   - Implemented interactive `FlagBlastRadiusCard.jsx` console with dual-tab architecture: `[Topology Radar]` and `[AST Inspector]`.
   - Added interactive AST code analyzer supporting live code pasting, presets (`Nested Guards`, `Boolean Conjunction`, `React Hook useFlags`), and instant AST extraction with live FalkorDB production state enrichment.
   - Ingested new official Team AWDAX emblem, converted to optimized WebP (`apps/client/public/team/awdax-logo.webp`, 13.6 KB, 1080x1080), and updated all team attribution components.
-  - Integrated Toggle Wars Track 03 Hero Pill and Flag Radar CTA directly on the main landing page. All 185 test suites passing (100% green).
+  - Integrated Toggle Wars Track 03 Hero Pill and Flag Radar CTA directly on the main landing page. All 187 test suites passing (100% green).
 
 ### 00a. Official MCP Registry, Glama Support, v1.3.3 & ISM Hardening (November 12, 2026)
 - **Official MCP Registry & Glama Integration**:

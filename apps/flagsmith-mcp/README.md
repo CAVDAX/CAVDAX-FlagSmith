@@ -49,6 +49,7 @@ Add to your `claude_desktop_config.json`:
 | `list_flagsmith_features` | Read-only | Returns all registered feature flags, current enabled state, and graph degree metrics. |
 | `scan_code_for_flags` | Read-only | Static AST inspection: analyzes code snippets or files for Flagsmith SDK calls, extracting inferred dependencies (GUARDS, CO_OCCURS_AND, CO_OCCURS_HOOK) and live status. |
 | `sync_flagsmith_graph` | Mutating | Triggers bidirectional 3-signal synchronization between self-hosted Flagsmith REST API and the FalkorDB GraphBLAS matrix. |
+| `list_stale_flags` | Read-only | Identifies stale feature flags with 0 downstream dependents as candidates for sunset and codebase cleanup. |
 
 ---
 
@@ -63,6 +64,9 @@ npx @cavdax/flagsmith-mcp blast dark_mode
 
 # Scan code snippet or file for Flagsmith SDK calls and AST dependencies
 npx @cavdax/flagsmith-mcp scan src/App.jsx
+
+# Identify stale flags eligible for sunset/removal (Flag Debt Management)
+npx @cavdax/flagsmith-mcp stale --days 90
 
 # Synchronize Flagsmith instance with FalkorDB GraphBLAS matrix
 npx @cavdax/flagsmith-mcp sync

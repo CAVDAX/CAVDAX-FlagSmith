@@ -31,7 +31,8 @@ import {
   revalidateDecision,
   fetchAuditLog,
   computeFlagBlastRadius,
-  listFlagsmithFeatures
+  listFlagsmithFeatures,
+  listStaleFlags
 } from '../../core/graph/queries.js';
 import { FlagsmithClient } from '../../core/ingestion/flagsmithClient.js';
 import { AstScanner } from '../../core/ingestion/astScanner.js';
@@ -1456,6 +1457,44 @@ app.get('/api/flagsmith/features', async (req, res) => {
     }
   } catch (err) {
     console.error('[Flagsmith Features Error]:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 2b. List Stale Feature Flags (Candidates for Sunset/Deprecation)
+app.get('/api/flagsmith/stale', async (req, res) => {
+  try {
+    const days = parseInt(req.query.days || '90', 10);
+    if (!isFalkorConnected) await initDb();
+
+    if (graph) {
+      const result = await listStaleFlags(graph, { dayThreshold: days });
+      return res.json({ success: true, ...result });
+    } else {
+      // Simulation mode stale flags: flags enabled with 0 incoming dependents
+      const staleSim = fallbackFlagsmithFeatures
+        .filter(f => f.enabled && (!f.tags || !f.tags.some(t => t.startsWith('depends:') || t.startsWith('requires:'))))
+        .map(f => ({
+          name: f.name,
+          enabled: true,
+          description: f.description || '',
+          incoming_dependents: 0,
+          days_active: days,
+          status: 'CANDIDATE_FOR_SUNSET',
+          recommendation: `Flag '${f.name}' is enabled with 0 downstream dependents. Safe candidate to sunset and remove from codebase.`
+        }));
+
+      return res.json({
+        success: true,
+        stale_flags: staleSim,
+        total_stale: staleSim.length,
+        day_threshold: days,
+        latency_ms: 0.4,
+        simulation: true
+      });
+    }
+  } catch (err) {
+    console.error('[Flagsmith Stale Flags Error]:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
