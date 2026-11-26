@@ -1,0 +1,42 @@
+{
+  "name": "@cavdax/flagsmith-mcp",
+  "version": "1.0.0",
+  "description": "Flagsmith Feature Flag Blast Radius & Safe-Toggle MCP Server for AI Coding Agents",
+  "main": "src/index.js",
+  "type": "module",
+  "bin": {
+    "flagsmith-mcp": "bin/cli.js",
+    "flagsmith-blast-radius": "bin/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CAVDAX/CAVDAX-FlagSmith.git",
+    "directory": "apps/flagsmith-mcp"
+  },
+  "homepage": "https://cavdax-flagsmith.sahnirmaan.live",
+  "bugs": {
+    "url": "https://github.com/CAVDAX/CAVDAX-FlagSmith/issues"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "flagsmith",
+    "feature-flags",
+    "mcp",
+    "model-context-protocol",
+    "falkordb",
+    "graphblas",
+    "blast-radius",
+    "ai-coding-agent",
+    "cursor",
+    "claude-code",
+    "safe-toggle",
+    "toggle-wars"
+  ],
+  "author": "Team AWDAX <suneetchugh.dev@gmail.com>",
+  "license": "Apache-2.0"
+}
