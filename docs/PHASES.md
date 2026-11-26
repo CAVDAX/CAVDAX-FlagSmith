@@ -142,3 +142,22 @@ flowchart TD
    - **Act 4: Causal Revalidation Loop**: Architecture rectified with Valkey; MCP gate grants green verified execution token.
 3. **Automated Verification Checkpoint**:
    - Automated end-to-end Cypress/Playwright or manual walkthrough script passes 4-Act demo in under 90 seconds without human intervention.
+
+---
+
+## 7. Phase 6: Toggle Wars Track 03 (Flagsmith Blast Radius Engine & Standalone MCP)
+
+### Scope & Deliverables
+1. **Three-Signal Ingestion Pipeline**:
+   - Signal 1: Flagsmith REST Client (`core/ingestion/flagsmithClient.js`) syncing flags, prerequisites, and segments.
+   - Signal 2: Static AST Code Analysis Scanner (`core/ingestion/astScanner.js`) extracting `isFeatureEnabled` calls, useFlags hooks, and nested guard enclosures.
+   - Signal 3: Git Temporal Coupling Miner (`core/ingestion/gitMiner.js`) computing Jaccard index across commit histories.
+2. **GraphBLAS Optimization & Safety Gate**:
+   - Directed acyclic Cypher reachability (`[:DEPENDS_ON|GUARDS*1..3]`) eliminating cyclic GraphBLAS timeouts and achieving **34.15 ms** latency.
+   - Pre-flight `safe_toggle_flag` tool halting breaking toggles with **HTTP 409 Conflict**.
+3. **Standalone Packaging & OIDC Distribution**:
+   - Extracted `apps/flagsmith-mcp` with CLI (`bin/cli.js`) and Stdio MCP server (`src/mcpServer.js`).
+   - Configured GitHub Actions OIDC Trusted Publisher publishing `@cavdax/flagsmith-mcp@1.0.1` with Sigstore SLSA-1 provenance.
+4. **Self-Hosted AWS EC2 Infrastructure**:
+   - Deployed self-hosted Flagsmith v2.295.2 on AWS EC2 (`15.135.78.65`, ap-southeast-2) with `DJANGO_ALLOWED_HOSTS: "*"`.
+   - Production PWA updated with interactive `FlagBlastRadiusCard.jsx` and Track 03 Hero Pill.

@@ -428,3 +428,44 @@ The **Causal Interception Enclave** (`#enclave-hub-section`) is CAVDAX's core ar
 ### 8.4 Fullscreen Docking & Lenis Virtualizer Handshake
 - **Deterministic Centering**: Viewport locking threshold is calculated as $|\text{sectionCenter} - \text{viewportCenter}| < \min(80, \text{viewportHeight} \times 0.08)$, guaranteeing identical docking precision on $1080\text{p}$ F11 fullscreen and responsive laptop displays.
 - **Internal Docking Exemption**: Internal scroll calls pass `options.isInternalDock = true`, preventing Lenis's global programmatic scroll flag (`window.__isProgrammaticScroll`) from triggering false-positive unlocks.
+
+---
+
+## 9. Flagsmith Feature Flag Dependency Mesh & Self-Hosted Topology
+
+### 9.1 Three-Signal Ingestion Pipeline
+CAVDAX for Flagsmith expands the causal kernel to govern dynamic feature flags through a 3-signal inference mesh:
+
+```
+ ┌──────────────────────┐  ┌──────────────────────┐  ┌──────────────────────┐
+ │       SIGNAL 1       │  │       SIGNAL 2       │  │       SIGNAL 3       │
+ │   Flagsmith REST     │  │ Static AST Scanner   │  │ Git Temporal Miner   │
+ │   Tags & Prereqs     │  │ isFeatureEnabled()   │  │ Jaccard Co-Change    │
+ └──────────┬───────────┘  └──────────┬───────────┘  └──────────┬───────────┘
+            │ c1 = 0.95               │ c2 = 0.75..0.85         │ c3 = J(A,B)
+            └────────────────► ┌──────┴──────┐ ◄────────────────┘
+                               │  Bayesian   │
+                               │  Aggregator │ P = 1 - Π(1 - c_i)
+                               └──────┬──────┘
+                                      │
+                                      ▼
+                        ┌───────────────────────────┐
+                        │   FalkorDB GraphBLAS      │
+                        │ [:DEPENDS_ON|GUARDS*1..3] │
+                        └─────────────┬─────────────┘
+                                      │
+                         ┌────────────┴────────────┐
+                         ▼                         ▼
+                  MCP Safety Gate           React PWA HUD
+                  HTTP 409 Conflict         /api/flagsmith/*
+```
+
+### 9.2 GraphBLAS Reachability Matrix Formulation
+To avoid cyclic infinite loops from bidirectional co-occurrence relations, the Cypher traversal is formulated as a directed reachability problem:
+$$\mathbf{R} = \bigoplus_{k=1}^3 \mathbf{A}^k$$
+Where $\mathbf{A}$ represents the directed adjacency matrix over `[:DEPENDS_ON|GUARDS]` relationships. Matrix multiplication sweeps complete in $\le 35\text{ms}$.
+
+### 9.3 Self-Hosted Flagsmith AWS EC2 Infrastructure
+- **Container Mesh**: Runs Flagsmith v2.295.2 (`cavdax-flagsmith-api`) with PostgreSQL 15 (`cavdax-flagsmith-db`), FalkorDB, Express, and Caddy on AWS EC2 (`15.135.78.65`, ap-southeast-2).
+- **Host Governance**: `DJANGO_ALLOWED_HOSTS: "*"` enables Cloudflare reverse proxy routing to `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`.
+- **Packaging**: `@cavdax/flagsmith-mcp@1.0.1` published with Sigstore provenance via GitHub Actions OIDC Trusted Publisher.

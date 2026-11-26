@@ -1,9 +1,11 @@
-# Product Requirements Document (PRD) — CAVDAX
+# Product Requirements Document (PRD) — CAVDAX for Flagsmith
 
 **Project**: CAVDAX (**C**ontextual **A**ction & **V**erified **D**ecision **A**utonomous e**X**ecution)  
-**Track**: WeMakeDevs × FalkorDB *Graph Hacks: Context for AI Agents* (Track 01 & Track 02)  
-**Target Submissions**: Model Context Protocol (MCP) Causal Execution Gate & FalkorDB GraphBLAS Matrix Invalidation  
-**Version**: 1.0.0-PRODUCTION  
+**Hackathon Tracks**: 
+- **Toggle Wars (WeMakeDevs × Flagsmith)**: Track 03 — Build on Open Source Flagsmith *(Active Primary)*
+- **Graph Hacks (WeMakeDevs × FalkorDB)**: Track 01 & Track 02 *(Foundation Architecture)*  
+**Target Submissions**: Flagsmith Blast Radius MCP Gate, FalkorDB GraphBLAS Matrix Invalidation, Standalone `@cavdax/flagsmith-mcp`  
+**Version**: 1.1.0-PRODUCTION (Synchronized with `@cavdax/flagsmith-mcp@1.0.1`)  
 
 ---
 
@@ -130,3 +132,20 @@ To prevent overengineering and scope creep, CAVDAX establishes clear non-goals:
 | **Gate Verification Latency** | **$< 2.5\text{ms}$** | High-resolution performance timer on `/api/mcp/call`. |
 | **Graph Invalidation Time** | **$< 3.0\text{ms}$** | FalkorDB benchmark query execution log. |
 | **Act IV Revalidation Recovery** | **100.0%** | Agent successfully synthesizes DEC-103 and passes gate on retry. |
+
+---
+
+## 7. Toggle Wars Track 03: Flagsmith Blast Radius & Safe-Toggle Extension
+
+### 7.1 Scope & Problem Statement
+When autonomous coding agents or engineers modify feature flags in Flagsmith, they lack visibility into multi-hop downstream dependencies. Toggling off an essential flag (e.g. `dark_mode`) or enabling a beta flag with missing prerequisites (e.g. `beta_streaming` without `auth_v2`) causes silent runtime failures.
+
+### 7.2 Functional Requirements (Track 03)
+- **FR-7.1 Flagsmith REST Ingestion (Signal 1)**: Sync flag metadata, tags, prerequisites, and segment overrides via `/api/v1/flags/` (Confidence: 0.95).
+- **FR-7.2 Static AST Code Analysis (Signal 2)**: Traverse source ASTs to detect `isFeatureEnabled`, `useFlags`, `getValue`, and enclosing nested boolean guards (Confidence: 0.75–0.85).
+- **FR-7.3 Git Temporal Coupling Mining (Signal 3)**: Compute Jaccard co-change metric $J(A, B) = \frac{|A \cap B|}{|A \cup B|}$ across git commits to discover hidden flag co-dependencies.
+- **FR-7.4 Bayesian Confidence Aggregator**: Synthesize multi-source signals into unified edge weights: $P = 1 - \prod(1 - c_i)$.
+- **FR-7.5 Multi-Hop GraphBLAS Blast Radius**: Execute directed reachability queries in FalkorDB (`[:DEPENDS_ON|GUARDS*1..3]`) with latency $\le 35\text{ms}$.
+- **FR-7.6 Pre-Flight Safe Toggle Interception**: Mutating tool `safe_toggle_flag` halts with HTTP 409 Conflict (`BLAST_RADIUS_VIOLATION`) when disabling a flag breaks active downstream dependents unless `--force` is provided.
+- **FR-7.7 Model Context Protocol Tools**: Expose `get_flag_blast_radius`, `safe_toggle_flag`, and `list_flagsmith_features` to AI coding agents (Cursor, Claude Code) via stdio server.
+- **FR-7.8 Zero-Config Distribution**: Standalone npm package `@cavdax/flagsmith-mcp@1.0.1` published with Sigstore provenance via GitHub Actions OIDC Trusted Publisher.
