@@ -7,7 +7,7 @@
 export const TEAM_DETAILS = {
   name: 'AWDAX',
   tagline: 'Flag Blast Radius Intelligence & Graph-Grounded Feature Flag Safety for Flagsmith',
-  logo: '/team/contrarians-logo.png',
+  logo: '/team/awdax-logo.webp',
   engine: 'Powered by FalkorDB GraphBLAS, Flagsmith & Model Context Protocol (MCP)',
   focus: 'GraphBLAS Multi-Hop Blast Radius Traversal & Flagsmith Autonomous Agent Governance',
   license: 'Dual-Licensed: Apache 2.0 (Client/MCP) & BSL 1.1 (Cloud Platform)',

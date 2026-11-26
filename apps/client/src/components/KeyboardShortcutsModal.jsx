@@ -11,7 +11,7 @@ const SHORTCUT_GROUPS = [
       { key: "2", label: "Verification Console", icon: SlidersHorizontal, desc: "Interactive GraphBLAS verification console" },
       { key: "3", label: "Connect MCP", icon: Cable, desc: "Agent integration & MCP stdio protocol" },
       { key: "4", label: "Demo Video", icon: Play, desc: "Watch video presentation & live proof" },
-      { key: "5", label: "Team Page", icon: Users, desc: "Team Contrarians presentation" },
+      { key: "5", label: "Team Page", icon: Users, desc: "Team AWDAX presentation" },
       { key: "W", label: "Wordmark Intro", icon: Compass, desc: "Jump to pure typographic brand entry" },
     ]
   },

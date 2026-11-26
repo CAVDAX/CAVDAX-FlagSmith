@@ -17,9 +17,9 @@ import { TEAM_MEMBERS, TEAM_DETAILS, SYSTEM_CREDITS } from '../data/teamData';
 import { playClick } from '../utils/soundFx';
 
 /**
- * TeamPage — Team Contrarians Presentation
+ * TeamPage — Team AWDAX Presentation
  * Built with full fidelity to CAVDAX Team Page:
- * - CurvyArrow with mathematically seamless infinite dash-march pointing to CONTRARIANS
+ * - CurvyArrow with mathematically seamless infinite dash-march pointing to AWDAX
  * - Golden-amber atmospheric radial aura halo behind Team Name & Header
  * - Golden outline ring with luminous amber glow on member profile avatars
  * - Corner fan geometric accents and neo-glass card elevation

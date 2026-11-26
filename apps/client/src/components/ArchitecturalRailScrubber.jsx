@@ -26,7 +26,7 @@ const TAB_SECTIONS = {
     { id: 'project-specs', label: '04 · Architectural Specs' },
   ],
   team: [
-    { id: 'team-intro', label: '01 · Team Contrarians' },
+    { id: 'team-intro', label: '01 · Team AWDAX' },
     { id: 'team-roster', label: '02 · Builders & Engineers' },
     { id: 'team-credits', label: '03 · System Credits' },
   ],

@@ -73,7 +73,7 @@ const KEY_MOMENTS = [
   { label: '1-Click GitHub PR Sync', time: '8:35', seconds: 515 },
   { label: 'Agent Action Audit Log', time: '8:58', seconds: 538 },
   { label: 'System Preferences & Alerts', time: '9:30', seconds: 570 },
-  { label: 'Team Contrarians Credits', time: '10:02', seconds: 602 }
+  { label: 'Team AWDAX Credits', time: '10:02', seconds: 602 }
 ];
 
 export default function ProjectVideoPage({ onLaunchConsole, onOpenMcpPage }) {
