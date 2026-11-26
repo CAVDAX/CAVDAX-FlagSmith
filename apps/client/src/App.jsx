@@ -28,6 +28,7 @@ const SupportPage = React.lazy(() => import('./components/SupportPage.jsx'));
 const SponsorsPage = React.lazy(() => import('./components/SponsorsPage.jsx'));
 const ConnectedRepoWorkspace = React.lazy(() => import('./components/ConnectedRepoWorkspace.jsx'));
 const TierBenefitsPage = React.lazy(() => import('./components/TierBenefitsPage.jsx'));
+const FlagBlastRadiusCard = React.lazy(() => import('./components/FlagBlastRadiusCard.jsx'));
 import PreferencesModal from './components/PreferencesModal.jsx';
 import KeyboardShortcutsModal from './components/KeyboardShortcutsModal.jsx';
 import McpConnectModal from './components/McpConnectModal.jsx';
@@ -46,6 +47,7 @@ const ROUTE_PREFETCH_LOADERS = {
   dev: () => import('./components/DevConsolePage.jsx'),
   devteam: () => import('./components/DevTeamPanel.jsx'),
   repo: () => import('./components/ConnectedRepoWorkspace.jsx'),
+  flags: () => import('./components/FlagBlastRadiusCard.jsx'),
   benefits: () => import('./components/TierBenefitsPage.jsx')
 };
 
@@ -99,6 +101,7 @@ function resolveTabFromUrl() {
   const rawPath = window.location.pathname.toLowerCase().replace(/\/+$/, '') || '/';
   if (rawPath === '/' || rawPath === '/overview') return 'landing';
   if (rawPath === '/console') return 'console';
+  if (rawPath === '/flags' || rawPath === '/flagsmith' || rawPath === '/blast-radius') return 'flags';
   if (rawPath === '/mcp') return 'mcp';
   if (rawPath === '/project' || rawPath === '/demo' || rawPath === '/walkthrough') return 'project';
   if (rawPath === '/team') return 'team';
@@ -115,6 +118,7 @@ function resolveTabFromUrl() {
   if (rawPath === '/') {
     const h = window.location.hash.toLowerCase();
     if (h === '#console') return 'console';
+    if (h === '#flags' || h === '#flagsmith') return 'flags';
     if (h === '#mcp') return 'mcp';
     if (h === '#project' || h === '#demo' || h === '#walkthrough') return 'project';
     if (h === '#team') return 'team';
@@ -133,6 +137,7 @@ function resolveTabFromUrl() {
 const TAB_TO_PATH = {
   landing: '/overview',
   console: '/console',
+  flags: '/flags',
   mcp: '/mcp',
   project: '/walkthrough',
   team: '/team',
@@ -1587,6 +1592,16 @@ export default function App() {
             isDarkTheme={isDarkTheme}
             onToggleTheme={() => setIsDarkTheme((d) => !d)}
           />
+        </SubsystemErrorBoundary>
+      ) : activeTab === 'flags' ? (
+        /* Dedicated Flagsmith Multi-Signal Blast Radius Radar */
+        <SubsystemErrorBoundary name="Flagsmith Blast Radius Radar">
+          <div className="pt-24 pb-16 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
+            <FlagBlastRadiusCard
+              isDarkTheme={isDarkTheme}
+              onSelectFlag={() => {}}
+            />
+          </div>
         </SubsystemErrorBoundary>
       ) : activeTab === 'mcp' ? (
         /* Dedicated Full-Page MCP Architecture & Agent Connection Guide */

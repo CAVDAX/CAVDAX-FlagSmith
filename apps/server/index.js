@@ -34,6 +34,9 @@ import {
   listFlagsmithFeatures
 } from '../../core/graph/queries.js';
 import { FlagsmithClient } from '../../core/ingestion/flagsmithClient.js';
+import { AstScanner } from '../../core/ingestion/astScanner.js';
+import { GitMiner } from '../../core/ingestion/gitMiner.js';
+import { BlastRadiusCalculator } from '../../core/graph/blastRadiusCalculator.js';
 import { ingestAdrFile } from '../../core/ingestion/parser.js';
 import { scanRepoAdrs, createAdrPullRequest, syncSupersededAdrPullRequest, listRepoBranches, GithubAdrError , proposeAdrPullRequest, createCiGatePullRequest} from './githubAdr.js';
 import { CavdaxMcpServer } from '../../core/mcp/server.js';
@@ -1260,6 +1263,8 @@ app.get('/api/events', (req, res) => {
 // ============================================================================
 
 const flagsmithClient = new FlagsmithClient();
+const astScanner = new AstScanner();
+const gitMiner = new GitMiner();
 
 const fallbackFlagsmithFeatures = [
   {
@@ -1314,18 +1319,94 @@ const fallbackFlagsmithFeatures = [
   }
 ];
 
-// 1. Sync feature flags and tag dependencies from Flagsmith REST API into FalkorDB
+// 1. Sync feature flags and all 3 dependency signals (Tags, Static AST, Git Temporal Coupling) into FalkorDB
 app.post('/api/flagsmith/sync', async (req, res) => {
   try {
     if (!isFalkorConnected) await initDb();
 
+    const __currentFilename = fileURLToPath(import.meta.url);
+    const __currentDirname = path.dirname(__currentFilename);
+    const repoRoot = path.resolve(__currentDirname, '../../');
+
+    let syncResult = { featuresIngested: 0, dependenciesIngested: 0, latencyMs: 0 };
+    let astDependenciesCount = 0;
+    let gitCouplingsCount = 0;
+
     if (graph) {
-      const syncResult = await flagsmithClient.syncToGraph(graph, req.body || {});
-      broadcastEvent('FLAGSMITH_SYNCED', syncResult);
+      // Signal 1: Tag-declared dependencies from Flagsmith REST API
+      syncResult = await flagsmithClient.syncToGraph(graph, req.body || {});
+
+      // Signal 2: Static AST Code Analysis
+      try {
+        const astResult = await astScanner.scanDirectory(repoRoot);
+        if (astResult.dependencies.length > 0) {
+          for (const dep of astResult.dependencies) {
+            const relType = dep.relationship || 'DEPENDS_ON';
+            const cypher = `
+              MERGE (s:FlagsmithFeature {name: $sourceFlag})
+              MERGE (t:FlagsmithFeature {name: $targetFlag})
+              MERGE (s)-[r:${relType} {confidence: $confidence, signal: $signal, file: $file}]->(t)
+              RETURN s.name, t.name
+            `;
+            await graph.query(cypher, {
+              params: {
+                sourceFlag: dep.sourceFlag,
+                targetFlag: dep.targetFlag,
+                confidence: dep.confidence,
+                signal: dep.signal,
+                file: dep.file || '',
+              },
+            });
+          }
+          astDependenciesCount = astResult.dependencies.length;
+        }
+      } catch (astErr) {
+        console.warn('[Flagsmith Sync] AST static analysis skipped:', astErr.message);
+      }
+
+      // Signal 3: Git Temporal Coupling Analysis
+      try {
+        const featureListResult = await listFlagsmithFeatures(graph);
+        const knownFlags = (featureListResult.features || []).map(f => f.name);
+        if (knownFlags.length > 0) {
+          const gitResult = await gitMiner.mineGitRepository(repoRoot, knownFlags);
+          if (gitResult.couplings.length > 0) {
+            for (const c of gitResult.couplings) {
+              const cypher = `
+                MERGE (s:FlagsmithFeature {name: $sourceFlag})
+                MERGE (t:FlagsmithFeature {name: $targetFlag})
+                MERGE (s)-[r:CO_CHANGED {confidence: $confidence, signal: $signal, jaccard: $jaccard}]->(t)
+                RETURN s.name, t.name
+              `;
+              await graph.query(cypher, {
+                params: {
+                  sourceFlag: c.sourceFlag,
+                  targetFlag: c.targetFlag,
+                  confidence: c.confidence,
+                  signal: c.signal,
+                  jaccard: c.jaccardIndex,
+                },
+              });
+            }
+            gitCouplingsCount = gitResult.couplings.length;
+          }
+        }
+      } catch (gitErr) {
+        console.warn('[Flagsmith Sync] Git temporal mining skipped:', gitErr.message);
+      }
+
+      const totalDeps = syncResult.dependenciesIngested + astDependenciesCount + gitCouplingsCount;
+      broadcastEvent('FLAGSMITH_SYNCED', { ...syncResult, totalDependencies: totalDeps });
+
       return res.json({
         success: true,
-        message: 'Flagsmith feature flags successfully synchronized to FalkorDB.',
-        ...syncResult
+        message: 'Flagsmith 3-Signal dependency mesh successfully synchronized to FalkorDB.',
+        featuresIngested: syncResult.featuresIngested,
+        tagDependenciesIngested: syncResult.dependenciesIngested,
+        astDependenciesIngested: astDependenciesCount,
+        gitCouplingsIngested: gitCouplingsCount,
+        totalDependenciesIngested: totalDeps,
+        latencyMs: syncResult.latencyMs,
       });
     } else {
       // In-memory simulation fallback
@@ -1334,8 +1415,11 @@ app.post('/api/flagsmith/sync', async (req, res) => {
         success: true,
         message: 'Synchronized in simulation mode (FalkorDB offline).',
         featuresIngested: fallbackFlagsmithFeatures.length,
-        dependenciesIngested: 3,
-        latencyMs: 0.8
+        tagDependenciesIngested: 3,
+        astDependenciesIngested: 2,
+        gitCouplingsIngested: 1,
+        totalDependenciesIngested: 6,
+        latencyMs: 0.8,
       });
     }
   } catch (err) {
@@ -1439,18 +1523,31 @@ app.post('/api/flagsmith/safe-toggle', async (req, res) => {
 
     if (!isFalkorConnected) await initDb();
 
-    // Check blast radius if disabling
+    // Check blast radius and prerequisites
     let blastRadius = null;
     if (graph) {
       blastRadius = await computeFlagBlastRadius(graph, flagName);
     }
 
+    // Safety Gate 1: If disabling, ensure no active downstream feature depends on this flag
     if (enabled === false && blastRadius?.downstream_impact_count > 0 && !force) {
       return res.status(409).json({
         success: false,
         blocked: true,
         code: 'BLAST_RADIUS_VIOLATION',
         message: `Cannot safely disable '${flagName}' — ${blastRadius.downstream_impact_count} downstream feature(s) depend on it.`,
+        blastRadius
+      });
+    }
+
+    // Safety Gate 2: If enabling, ensure all upstream prerequisites are already satisfied
+    if (enabled === true && blastRadius?.missing_prerequisites?.length > 0 && !force) {
+      const missingNames = blastRadius.missing_prerequisites.map(p => p.name).join(', ');
+      return res.status(409).json({
+        success: false,
+        blocked: true,
+        code: 'PREREQUISITE_VIOLATION',
+        message: `Cannot safely enable '${flagName}' — upstream prerequisite(s) [${missingNames}] are currently disabled.`,
         blastRadius
       });
     }

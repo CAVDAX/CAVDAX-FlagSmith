@@ -380,18 +380,19 @@ export async function fetchAuditLog(graph, limit = 100, { repo = null } = {}) {
 /**
  * Computes the full multi-hop blast radius of a Flagsmith feature flag before it is toggled.
  * Traverses both upstream prerequisites and downstream dependents via GraphBLAS sparse matrix operations.
+ * Supports Signal 1 (TAG), Signal 2 (AST Static Code), and Signal 3 (Git Temporal Coupling).
  *
  * @param {object} graph - FalkorDB graph instance
  * @param {string} flagName - Name of the feature flag (e.g. 'dark_mode')
- * @returns {Promise<object>} Blast radius topology, impacted flags, path depth, and latency
+ * @returns {Promise<object>} Blast radius topology, impacted flags, path depth, signals, and latency
  */
 export async function computeFlagBlastRadius(graph, flagName) {
   const hrtStart = process.hrtime.bigint();
 
   const cypher = `
     MATCH (target:FlagsmithFeature {name: $flagName})
-    OPTIONAL MATCH upstreamPath = (target)-[:DEPENDS_ON*1..6]->(up:FlagsmithFeature)
-    OPTIONAL MATCH downstreamPath = (down:FlagsmithFeature)-[:DEPENDS_ON*1..6]->(target)
+    OPTIONAL MATCH upstreamPath = (target)-[:DEPENDS_ON|GUARDS|CO_OCCURS_AND|CO_CHANGED*1..6]->(up:FlagsmithFeature)
+    OPTIONAL MATCH downstreamPath = (down:FlagsmithFeature)-[:DEPENDS_ON|GUARDS|CO_OCCURS_AND|CO_CHANGED*1..6]->(target)
     OPTIONAL MATCH blocked = (target)-[:BLOCKS]->(b:FlagsmithFeature)
     RETURN target.name AS target_flag,
            target.enabled AS target_enabled,
@@ -426,6 +427,7 @@ export async function computeFlagBlastRadius(graph, flagName) {
       blocked_features: [],
       risk_tier: 'UNKNOWN',
       safe_to_disable: true,
+      safe_to_enable: true,
       latency_ms: latencyMs,
     };
   }
@@ -435,8 +437,12 @@ export async function computeFlagBlastRadius(graph, flagName) {
   const downstream = (row.downstream_dependents || []).filter(item => item && item.name);
   const blocked = (row.blocked_features || []).filter(item => item && item.name);
 
+  // Active downstream breaking features
+  const activeDownstream = downstream.filter(d => Boolean(d.enabled));
+  const missingUpstream = upstream.filter(u => !Boolean(u.enabled));
+
   // Calculate probabilistic impact & risk tier
-  const impactCount = downstream.length;
+  const impactCount = activeDownstream.length;
   let riskTier = 'LOW';
   if (impactCount >= 5) riskTier = 'CRITICAL';
   else if (impactCount >= 2) riskTier = 'HIGH';
@@ -448,11 +454,24 @@ export async function computeFlagBlastRadius(graph, flagName) {
     enabled: Boolean(row.target_enabled),
     description: row.target_description || '',
     downstream_impact_count: impactCount,
+    total_downstream_count: downstream.length,
     downstream_dependents: downstream,
     upstream_prerequisites: upstream,
+    missing_prerequisites: missingUpstream,
     blocked_features: blocked,
     risk_tier: riskTier,
     safe_to_disable: impactCount === 0,
+    safe_to_enable: missingUpstream.length === 0,
+    governance: {
+      disable_allowed: impactCount === 0,
+      enable_allowed: missingUpstream.length === 0,
+      disable_reason: impactCount === 0
+        ? 'Safe to disable without breaking active downstream features.'
+        : `Unsafe: ${impactCount} active feature(s) depend on this flag: ${activeDownstream.map(d => d.name).join(', ')}.`,
+      enable_reason: missingUpstream.length === 0
+        ? 'All upstream prerequisites satisfied.'
+        : `Unsafe: missing required prerequisites: ${missingUpstream.map(u => u.name).join(', ')}.`
+    },
     latency_ms: latencyMs,
   };
 }

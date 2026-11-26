@@ -7,7 +7,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { verifyActionGate, revalidateDecision, fetchGraphState } from '../graph/queries.js';
+import { verifyActionGate, revalidateDecision, fetchGraphState, computeFlagBlastRadius, listFlagsmithFeatures } from '../graph/queries.js';
 import { renderGraphToSvg, computeBlastRadius } from '../graph/renderSvg.js';
 import { globalLockManager } from './lockManager.js';
 
@@ -213,6 +213,38 @@ export class CavdaxMcpServer {
           },
           required: ['node_id']
         }
+      },
+      {
+        name: 'get_flag_blast_radius',
+        description: 'Flagsmith Integration: Computes the multi-hop blast radius of a feature flag across Signal 1 (Tags), Signal 2 (Static AST calls), and Signal 3 (Git temporal coupling).',
+        parameters: {
+          type: 'object',
+          properties: {
+            flag_name: { type: 'string', description: 'The feature flag name (e.g. "dark_mode", "premium_analytics").' }
+          },
+          required: ['flag_name']
+        }
+      },
+      {
+        name: 'safe_toggle_flag',
+        description: 'Flagsmith Integration: Safely toggles a feature flag in Flagsmith and FalkorDB, validating that no active downstream features are broken and all upstream prerequisites are satisfied.',
+        parameters: {
+          type: 'object',
+          properties: {
+            flag_name: { type: 'string', description: 'The feature flag name to toggle.' },
+            enabled: { type: 'boolean', description: 'The target boolean state (true to enable, false to disable).' },
+            force: { type: 'boolean', description: 'Set to true to bypass safety gates and force-toggle even if breaking changes exist.' }
+          },
+          required: ['flag_name', 'enabled']
+        }
+      },
+      {
+        name: 'list_flagsmith_features',
+        description: 'Flagsmith Integration: Lists all registered feature flags, their current enabled status, tag-declared dependencies, and topological degree counts.',
+        parameters: {
+          type: 'object',
+          properties: {}
+        }
       }
     ];
   }
@@ -241,6 +273,12 @@ export class CavdaxMcpServer {
       return await this.executeGetDecisionDetails(args);
     } else if (toolName === 'explain_blast_radius' || toolName === 'explain_architectural_impact') {
       return await this.executeExplainBlastRadius(args);
+    } else if (toolName === 'get_flag_blast_radius') {
+      return await this.executeGetFlagBlastRadius(args);
+    } else if (toolName === 'safe_toggle_flag') {
+      return await this.executeSafeToggleFlag(args);
+    } else if (toolName === 'list_flagsmith_features') {
+      return await this.executeListFlagsmithFeatures(args);
     } else {
       throw new Error(`Unknown tool: '${toolName}'`);
     }
@@ -699,6 +737,78 @@ export class CavdaxMcpServer {
       remediation_directive: downstreamDecisions.length > 0
         ? `Modifying '${cleanId}' will invalidate ${downstreamDecisions.length} dependent decision(s) across ${summary.files.length} file(s). Call 'revalidate_decision' to ground new decisions before modifying source files.`
         : `Node '${cleanId}' has zero downstream dependent decisions. Safe to modify or deprecate without causal invalidation.`
+    };
+  }
+
+  /**
+   * Flagsmith: Computes topological blast radius across FalkorDB GraphBLAS matrix
+   */
+  async executeGetFlagBlastRadius({ flag_name }) {
+    if (!flag_name) {
+      return { isError: true, message: 'flag_name is required' };
+    }
+    const report = await computeFlagBlastRadius(this.graph, flag_name);
+    return {
+      status: 'SUCCESS',
+      ...report
+    };
+  }
+
+  /**
+   * Flagsmith: Validates and applies safe feature toggle
+   */
+  async executeSafeToggleFlag({ flag_name, enabled, force = false }) {
+    if (!flag_name) {
+      return { isError: true, message: 'flag_name is required' };
+    }
+
+    const blast = await computeFlagBlastRadius(this.graph, flag_name);
+
+    if (enabled === false && blast.downstream_impact_count > 0 && !force) {
+      return {
+        isError: true,
+        gate_verdict: 'BLOCKED_BLAST_RADIUS_VIOLATION',
+        flag_name,
+        breaking_dependents: blast.downstream_dependents.filter(d => Boolean(d.enabled)),
+        message: `⛔ SAFETY GATE: Cannot disable '${flag_name}'. ${blast.downstream_impact_count} active downstream feature(s) depend on it.`,
+        instructions_for_agent: 'Either disable downstream dependent flags first, or pass force: true to override.'
+      };
+    }
+
+    if (enabled === true && blast.missing_prerequisites?.length > 0 && !force) {
+      return {
+        isError: true,
+        gate_verdict: 'BLOCKED_PREREQUISITE_VIOLATION',
+        flag_name,
+        missing_prerequisites: blast.missing_prerequisites,
+        message: `⛔ SAFETY GATE: Cannot enable '${flag_name}'. Required upstream prerequisites are disabled: ${blast.missing_prerequisites.map(p => p.name).join(', ')}.`,
+        instructions_for_agent: 'Enable all prerequisite flags first before enabling this feature.'
+      };
+    }
+
+    await this.graph.query(`
+      MATCH (f:FlagsmithFeature {name: $flag_name})
+      SET f.enabled = $enabled, f.updatedAt = timestamp()
+      RETURN f.name AS name
+    `, { params: { flag_name, enabled: Boolean(enabled) } });
+
+    return {
+      status: 'SUCCESS',
+      flag_name,
+      enabled: Boolean(enabled),
+      forced: Boolean(force),
+      blast_radius: blast
+    };
+  }
+
+  /**
+   * Flagsmith: Lists all synchronized features and degree metrics
+   */
+  async executeListFlagsmithFeatures() {
+    const list = await listFlagsmithFeatures(this.graph);
+    return {
+      status: 'SUCCESS',
+      ...list
     };
   }
 }

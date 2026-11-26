@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import {
   Sun, Moon,
   Layers, SlidersHorizontal, Cable, Play, Users, Settings, ClipboardList, User,
-  Menu, X, Heart, Terminal, Compass
+  Menu, X, Heart, Terminal, Compass, ToggleRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CavdaxBrandLoader from './CavdaxBrandLoader';
@@ -28,6 +28,7 @@ import ShimmerImage from './ui/ShimmerImage';
 const NAV_TABS = [
   { id: "landing", label: "Overview", icon: Layers },
   { id: "console", label: "Console", icon: SlidersHorizontal },
+  { id: "flags", label: "Flag Radar", icon: ToggleRight },
   { id: "mcp", label: "MCP", icon: Cable },
   { id: "audit", label: "Audit", icon: ClipboardList },
   { id: "project", label: "Walkthrough", icon: Play },
