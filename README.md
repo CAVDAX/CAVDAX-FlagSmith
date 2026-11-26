@@ -30,7 +30,8 @@
 </p>
 <p>
 <a href="https://youtu.be/Nhdd7spj1RA"><img src="https://img.shields.io/badge/YouTube-10--Minute%20Demo%20Walkthrough-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Demo Walkthrough" /></a>
-<a href="https://cavdax.sahnirmaan.live/"><img src="https://img.shields.io/badge/Live%20Production%20Demo-cavdax.sahnirmaan.live-10B981?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" /></a>
+<a href="https://cavdax-flagsmith.sahnirmaan.live/"><img src="https://img.shields.io/badge/Live%20Flagsmith%20Demo-cavdax--flagsmith.sahnirmaan.live-10B981?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" /></a>
+<a href="https://www.npmjs.com/package/@cavdax/flagsmith-mcp"><img src="https://img.shields.io/npm/v/@cavdax/flagsmith-mcp?style=for-the-badge&logo=npm&logoColor=white&color=CB3837&label=flagsmith-mcp" alt="npm flagsmith-mcp" /></a>
 </p>
 </div>
 
@@ -38,17 +39,113 @@
 
 [![CI](https://img.shields.io/github/actions/workflow/status/CAVDAX/CAVDAX/ci.yml?style=for-the-badge&logo=github&label=CI)](https://github.com/CAVDAX/CAVDAX/actions)
 [![GitHub Release](https://img.shields.io/github/v/release/CAVDAX/CAVDAX?style=for-the-badge&logo=github&color=blue)](https://github.com/CAVDAX/CAVDAX/releases/tag/v1.3.3)
-[![X (Twitter)](https://img.shields.io/badge/X-@cavdax__dev-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/cavdax_dev)
-[![npm version](https://img.shields.io/npm/v/@cavdax/mcp-server?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@cavdax/mcp-server)
-[![npm provenance](https://img.shields.io/badge/provenance-sigstore-informational?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/@cavdax/mcp-server)
+[![npm version](https://img.shields.io/npm/v/@cavdax/flagsmith-mcp?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@cavdax/flagsmith-mcp)
+[![npm provenance](https://img.shields.io/badge/provenance-sigstore-informational?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/@cavdax/flagsmith-mcp)
 [![FalkorDB](https://img.shields.io/badge/FalkorDB-GraphBLAS-FF2D55?style=for-the-badge&logo=redis&logoColor=white)](https://falkordb.com/)
 [![MCP](https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20%28MCP%29-06B6D4?style=for-the-badge)](https://modelcontextprotocol.io/)
-[![CAVDAX MCP server – quality and maintenance score on Glama](https://glama.ai/mcp/servers/CAVDAX/CAVDAX/badges/score.svg)](https://glama.ai/mcp/servers/CAVDAX/CAVDAX)
 [![Docker](https://img.shields.io/badge/Docker-Compose%20Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](./docker-compose.yml)
 [![License: Apache 2.0 / BSL 1.1](https://img.shields.io/badge/License-Apache_2.0_%2F_BSL_1.1-blue.svg?style=for-the-badge)](./LICENSE)
-[![Latency](https://img.shields.io/badge/Gate%20Latency-%3C%202.5ms-8B5CF6?style=for-the-badge)](#empirical-benchmarks)
+[![Latency](https://img.shields.io/badge/Gate%20Latency-%3C%2035ms-8B5CF6?style=for-the-badge)](#empirical-benchmarks)
 
 </div>
+
+---
+
+## 🚩 Toggle Wars Track 03: Flagsmith Blast Radius & Safe-Toggle Engine
+
+> **Live Production Gateway:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)  
+> **Self-Hosted Flagsmith API:** [`https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`](https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/)  
+> **Official npm Package:** [`@cavdax/flagsmith-mcp`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) (`v1.0.0`)  
+> **Interactive Blast Radius Radar:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live) $\to$ *Flag Radar*
+
+Autonomous coding agents (Cursor, Claude Code, Windsurf) edit code and toggle feature flags blindly—without understanding the hidden multi-hop ripple effects across downstream services and users. Toggling or deleting a flag like `dark_mode` can silently crash downstream systems (`premium_analytics`, `analytics_dashboard`) or violate mandatory upstream prerequisites (`theme_system`, `auth_v2`).
+
+CAVDAX for Flagsmith builds a **3-Signal Topological Dependency Graph** powered by FalkorDB GraphBLAS matrix multiplication, exposing deterministic pre-flight safety gates directly into AI coding agents via the Model Context Protocol (MCP).
+
+```
+ ┌────────────────────────────────────────────────────────────────────────┐
+ │                      THREE-SIGNAL INFERENCE ENGINE                     │
+ ├───────────────────┬───────────────────────────┬────────────────────────┤
+ │     SIGNAL 1      │         SIGNAL 2          │        SIGNAL 3        │
+ │ Flagsmith REST    │  Static AST Code Scanner  │ Git Temporal Coupling  │
+ │ (Tags/Prereqs/    │  (Babel/Tree-Sitter AST   │ (Jaccard Co-Change     │
+ │  Multivariate)    │   Guards & Conjunctions)  │  Across Git Commits)   │
+ └─────────┬─────────┴─────────────┬─────────────┴───────────┬────────────┘
+           │                       │                         │
+           ▼                       ▼                         ▼
+   Confidence: 0.95        Confidence: 0.75–0.85     Confidence: J(A,B)
+           │                       │                         │
+           └───────────────────────┼─────────────────────────┘
+                                   ▼
+                   Multi-Signal Bayesian Aggregator
+                      P = 1 - Π(1 - c_i)
+                                   ▼
+                   FalkorDB GraphBLAS Engine (Cypher)
+                     [:DEPENDS_ON|GUARDS*1..3]
+                                   ▼
+          ┌────────────────────────┴────────────────────────┐
+          ▼                                                 ▼
+  Model Context Protocol (MCP)                     Interactive Web HUD
+  npx @cavdax/flagsmith-mcp                        https://cavdax-flagsmith.sahnirmaan.live
+  • get_flag_blast_radius                          • Real-time Blast Radius Radar
+  • safe_toggle_flag                               • Safe Toggle Switch with 409 Conflict
+  • list_flagsmith_features                        • Transitive Dependency Visualizer
+```
+
+### ⚡ Quick Evaluation for Judges (Zero Installation Required)
+
+Judges can evaluate the live engine immediately from their terminal with zero prior setup:
+
+```bash
+# 1. Inspect the topological blast radius of 'dark_mode'
+npx @cavdax/flagsmith-mcp blast dark_mode
+
+# 2. List all registered Flagsmith feature flags & dependency metrics
+npx @cavdax/flagsmith-mcp features
+
+# 3. Test the safety gate: Attempt to disable 'dark_mode' (Blocked by 409 Conflict)
+npx @cavdax/flagsmith-mcp toggle dark_mode off
+
+# 4. Bypass safety gate with --force
+npx @cavdax/flagsmith-mcp toggle dark_mode off --force
+```
+
+### 🔌 Cursor & Claude Code Zero-Config Setup
+
+Add the Flagsmith safety gate to your AI coding agents in 10 seconds:
+
+**Cursor IDE (`.cursor/mcp.json`):**
+```json
+{
+  "mcpServers": {
+    "flagsmith-blast-radius": {
+      "command": "npx",
+      "args": ["-y", "@cavdax/flagsmith-mcp"]
+    }
+  }
+}
+```
+
+**Claude Desktop (`claude_desktop_config.json`):**
+```json
+{
+  "mcpServers": {
+    "flagsmith-blast-radius": {
+      "command": "npx",
+      "args": ["-y", "@cavdax/flagsmith-mcp"]
+    }
+  }
+}
+```
+
+### 📡 Live REST API Endpoints
+
+| Endpoint | Method | Latency | Description |
+|---|---|---|---|
+| `/api/flagsmith/features` | `GET` | ~12ms | Returns all features, enabled states, and degree metrics |
+| `/api/flagsmith/blast-radius/:flag` | `GET` | ~34ms | Traverses FalkorDB multi-hop blast radius & governance verdicts |
+| `/api/flagsmith/safe-toggle` | `POST` | ~28ms | Validates dependencies; returns `409 Conflict` if unsafe |
+| `/api/flagsmith/sync` | `POST` | ~31ms | Ingests Flagsmith features, AST signals, and Git history into FalkorDB |
 
 ---
 
