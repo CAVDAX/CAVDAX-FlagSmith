@@ -60,7 +60,7 @@ export default function TeamPage({ onLaunchConsole }) {
         className="absolute inset-0 pointer-events-none flex items-center justify-center select-none -z-0 overflow-hidden"
       >
         <span className="text-[16vw] font-black tracking-tighter text-slate-950/[0.04] dark:text-white/[0.03] leading-none font-mono">
-          CONTRARIANS
+          {TEAM_DETAILS.name}
         </span>
       </div>
 
@@ -76,8 +76,8 @@ export default function TeamPage({ onLaunchConsole }) {
             className="absolute -top-12 left-1/2 -translate-x-1/2 w-[380px] sm:w-[580px] h-[240px] sm:h-[320px] bg-[radial-gradient(ellipse_at_center,_rgba(217,163,83,0.22),_rgba(217,119,6,0.08),_transparent_65%)] dark:bg-[radial-gradient(ellipse_at_center,_rgba(217,163,83,0.28),_rgba(217,119,6,0.12),_transparent_70%)] rounded-full blur-2xl sm:blur-3xl pointer-events-none -z-0"
           />
 
-          {/* Curvy Arrow pointing to Team Contrarians with seamless infinite dash */}
-          <CurvyArrow direction="top-right" className="-right-10 top-2 sm:top-4 hidden sm:inline-flex" label="CONTRARIANS" />
+          {/* Curvy Arrow pointing to Team Name with seamless infinite dash */}
+          <CurvyArrow direction="top-right" className="-right-10 top-2 sm:top-4 hidden sm:inline-flex" label={TEAM_DETAILS.name} />
 
           {/* Team Logo Emblem - Luminous Spherical Orb Circle (Interactive 3D Lightbox Viewer) */}
           <button
@@ -208,9 +208,16 @@ export default function TeamPage({ onLaunchConsole }) {
                   <h3 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white tracking-tight min-w-0">
                     {member.name}
                   </h3>
-                  <span className="font-mono text-[9px] px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 font-bold uppercase whitespace-nowrap">
-                    {member.role}
-                  </span>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {member.wemakedevs && (
+                      <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 font-bold whitespace-nowrap">
+                        {member.wemakedevs}
+                      </span>
+                    )}
+                    <span className="font-mono text-[9px] px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-300 font-bold uppercase whitespace-nowrap">
+                      {member.role}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-1">

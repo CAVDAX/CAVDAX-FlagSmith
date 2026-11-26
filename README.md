@@ -1036,12 +1036,17 @@ CAVDAX provides a dedicated **Supporters & Backers Showcase Portal** (`/sponsors
 
 ---
 
-## Team & Attribution
+## Team & Attribution — Team AWDAX
 
-Architected with passion by the **CAVDAX Core Team**:
+Architected and developed with passion by **Team AWDAX** for **Toggle Wars: The Flagsmith Experimentation Hackathon** (Track 03):
 
-* **Suneet Chugh** ([@suneetchugh-dev](https://github.com/suneetchugh-dev)) — Lead Architect & Systems Engineer: FalkorDB GraphBLAS Causal Core, Enclosed MCP Gate, Visual Operational Console (9 Views), Cloudflare Edge Mesh & Empirical Benchmarks.
-* **Geetika Chugh** ([@GeetikaChughIBM](https://github.com/GeetikaChughIBM)) — Co-Creator & Systems Engineer: Official 10-Minute Demo Video Walkthrough, `@cavdax/mcp-server` NPM Distribution (Sigstore Provenance), GitHub Repo AST Scanner & Ingestion Engine, and Razorpay Sponsor Architecture.
+| Member | Role & Focus | Handles & Socials |
+|---|---|---|
+| **Suneet Chugh** | **Team Leader** &bull; Lead Architect & Systems Engineer<br>*FalkorDB GraphBLAS, Blast Radius Engine, Flagsmith Integration, Cloudflare & AWS* | WeMakeDevs: [`@suneetchugh_dev`](https://wemakedevs.org)<br>GitHub: [`@suneetchugh-dev`](https://github.com/suneetchugh-dev)<br>LinkedIn: [`suneetchugh-dev`](https://www.linkedin.com/in/suneetchugh-dev/) |
+| **Geetika Chugh** | **Co-Creator** &bull; Systems Engineer & Presenter<br>*MCP Distribution (SLSA-3 Sigstore), Demo Walkthrough, Ingestion Engine & CI/CD* | WeMakeDevs: [`@geetika_chugh`](https://wemakedevs.org)<br>GitHub: [`@GeetikaChughIBM`](https://github.com/GeetikaChughIBM)<br>LinkedIn: [`geetika-chugh`](https://www.linkedin.com/in/geetika-chugh-085251252/) |
+| **Jatin Jha** | **Systems & Full-Stack Engineer**<br>*Tree-Sitter AST Static Analysis, Flagsmith REST Telemetry & React Web HUD* | WeMakeDevs: [`@imded`](https://wemakedevs.org)<br>GitHub: [`@jatin0jha`](https://github.com/jatin0jha)<br>LinkedIn: [`jhajatin`](https://www.linkedin.com/in/jhajatin/) |
+| **Harshit Chauhan** | **Backend & Infrastructure Engineer**<br>*Git Temporal Coupling Miner, Jaccard Co-Change, Docker Mesh & FalkorDB Cypher* | WeMakeDevs: [`@harrsh4u`](https://wemakedevs.org)<br>GitHub: [`@harsh4k`](https://github.com/harsh4k)<br>LinkedIn: [`harshitchauhan-dev`](https://www.linkedin.com/in/harshitchauhan-dev/) |
+
 * **Official Community & Maintainer Inquiries**: Follow [@cavdax_dev](https://x.com/cavdax_dev) on X • Official Contact: [`cavdax.dev@gmail.com`](mailto:cavdax.dev@gmail.com)
 
 ---

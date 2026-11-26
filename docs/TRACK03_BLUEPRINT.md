@@ -1,13 +1,15 @@
 # CAVDAX for Flagsmith: Track 03 Adaptation Blueprint
 **Flag Blast Radius Intelligence Engine — Graph-Grounded Feature Flag Safety for Self-Hosted Flagsmith**  
 **Document Classification:** Strategic Hackathon Blueprint, Architectural Specification & Sprint Plan  
-**Document Status:** Pre-Hackathon Planning (Adaptation Strategy)  
+**Document Status:** Hackathon Execution Blueprint  
 **Maintained by:** Suneet-MASTER-Documentation-Product-Manager-Skill  
-**Author / Lead Architect:** Suneet Chugh & Team CAVDAX  
-**Version:** 1.0.0  
-**Last Updated:** 2026-11-25  
+**Author / Lead Architect:** Suneet Chugh & Team AWDAX  
+**Team Name:** AWDAX (WeMakeDevs Registered Team — 4 of 4 Seats Filled)  
+**Version:** 1.1.0  
+**Last Updated:** 2026-11-26  
 **Target Event:** Toggle Wars — The Flagsmith Experimentation Hackathon  
-**Target Track:** Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)
+**Target Track:** Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
+**Production URL:** `https://cavdax-flagsmith.sahnirmaan.live`
 
 ---
 
@@ -497,50 +499,35 @@ The competition for a PS5 + GTA 6 bundle is structurally weaker than for $2,000 
 
 ---
 
-## 7. The Team Split Strategy
+## 7. The Team Strategy & Roster: Team AWDAX
 
-### 7.1 Two Independent Teams, Two Tracks
+### 7.1 Official Team AWDAX Roster (WeMakeDevs Toggle Wars)
+
+All 4 members are fully registered on the WeMakeDevs hackathon platform under **Team AWDAX**:
+
+| Member | Hackathon Role | WeMakeDevs Handle | GitHub Profile | LinkedIn Profile |
+|---|---|---|---|---|
+| **Suneet Chugh** | **Team Leader** &bull; Lead Systems Architect | `@suneetchugh_dev` | [`@suneetchugh-dev`](https://github.com/suneetchugh-dev) | [`suneetchugh-dev`](https://www.linkedin.com/in/suneetchugh-dev/) |
+| **Geetika Chugh** | **Co-Creator** &bull; Systems Engineer & Presenter | `@geetika_chugh` | [`@GeetikaChughIBM`](https://github.com/GeetikaChughIBM) | [`geetika-chugh`](https://www.linkedin.com/in/geetika-chugh-085251252/) |
+| **Jatin Jha** | **Systems & Full-Stack Engineer** | `@imded` | [`@jatin0jha`](https://github.com/jatin0jha) | [`jhajatin`](https://www.linkedin.com/in/jhajatin/) |
+| **Harshit Chauhan** | **Backend & Infrastructure Engineer** | `@harrsh4u` | [`@harsh4k`](https://github.com/harsh4k) | [`harshitchauhan-dev`](https://www.linkedin.com/in/harshitchauhan-dev/) |
+
+### 7.2 Team Execution Architecture
 
 ```
-TEAM SPLIT STRUCTURE
+TEAM AWDAX UNIFIED EXECUTION MESH
 ─────────────────────────────────────────────────────────────────────────────────────
+TEAM NAME:       AWDAX (4 of 4 Members Registered)
+PRIMARY TARGET:  Track 03 — Build on Open Source Flagsmith (PS5 + GTA 6 Bundle)
+REPO:            https://github.com/CAVDAX/CAVDAX-FlagSmith
+PRODUCTION:      https://cavdax-flagsmith.sahnirmaan.live (AWS EC2 t3.small + Cloudflare)
 
-TEAM A: CAVDAX (Track 03 — CAVDAX for Flagsmith)
-  Focus:   Flag Blast Radius Intelligence Engine
-  Codebase: C:\Users\krish\OneDrive\Desktop\(All_&_Everything)\
-             (All-Hackathons)\GraphHacks-Hackathon\Codebase
-  Timeline: Nov 26–29 (see Section 5.1 sprint plan)
-  Primary deliverable: docker compose up + MCP server + web HUD
-  Secondary deliverable: submission writeup + demo video
-
-TEAM B: ERVIX (Tracks 01 + 02)
-  Focus:   Autonomous UI Quality Gate + Flagsmith Experimentation
-  Codebase: C:\Users\krish\OneDrive\Desktop\(All_&_Everything)\
-             Current-Projects\All-My-Projects\(AI-Designer-Observer-ERVIX)
-  Timeline: Nov 26–29 (ERVIX master spec v1.8.0 applies)
-  Primary deliverable: Track 02 MCP server + testbed A/B experiment
-  Secondary deliverable: Track 01 experimentation case study
-
-ZERO SHARED CODE: These are independent submissions to independent tracks.
-ZERO CONTEXT-SWITCHING: Each team stays in their codebase for the full 4 days.
-```
-
-### 7.2 Realistic Prize Haul
-
-```
-Scenario A (Both teams ship what they plan):
-  Track 02 (ERVIX): $1,000 cash [high confidence — 90% fit, strong submission]
-  Track 03 (CAVDAX): PS5 + GTA 6 [high confidence — 85-90% win probability]
-  Track 01 (ERVIX): $2,000 cash [medium confidence — 65% fit, circular experiment risk]
-  
-  Expected value: $1,000 certain + PS5+GTA6 likely + $2,000 possible
-
-Scenario B (Only CAVDAX team ships Track 03):
-  Track 03 (CAVDAX): PS5 + GTA 6 [high confidence]
-  
-Scenario C (Only ERVIX team ships Tracks 01+02):
-  Track 02 (ERVIX): $1,000 cash [high confidence]
-  Track 01 (ERVIX): $2,000 cash [medium confidence]
+RESPONSIBILITIES DIVISION:
+• Suneet:   FalkorDB GraphBLAS multi-hop Cypher queries, blast radius math, safe-toggle API
+• Geetika:  MCP tool contract packaging (@cavdax/mcp-server), demo video presentation & docs
+• Jatin:    Tree-Sitter AST code scanner (Signal 2), Flagsmith REST telemetry & React Web HUD
+• Harshit:  Git temporal coupling co-change miner (Signal 3), Docker Compose mesh & EC2 swap
+─────────────────────────────────────────────────────────────────────────────────────
 ```
 
 ---
