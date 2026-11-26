@@ -391,8 +391,8 @@ export async function computeFlagBlastRadius(graph, flagName) {
 
   const cypher = `
     MATCH (target:FlagsmithFeature {name: $flagName})
-    OPTIONAL MATCH upstreamPath = (target)-[:DEPENDS_ON|GUARDS|CO_OCCURS_AND|CO_CHANGED*1..6]->(up:FlagsmithFeature)
-    OPTIONAL MATCH downstreamPath = (down:FlagsmithFeature)-[:DEPENDS_ON|GUARDS|CO_OCCURS_AND|CO_CHANGED*1..6]->(target)
+    OPTIONAL MATCH upstreamPath = (target)-[:DEPENDS_ON|GUARDS*1..3]->(up:FlagsmithFeature)
+    OPTIONAL MATCH downstreamPath = (down:FlagsmithFeature)-[:DEPENDS_ON|GUARDS*1..3]->(target)
     OPTIONAL MATCH blocked = (target)-[:BLOCKS]->(b:FlagsmithFeature)
     RETURN target.name AS target_flag,
            target.enabled AS target_enabled,
