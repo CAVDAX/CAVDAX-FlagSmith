@@ -29,6 +29,11 @@ services:
       - NODE_ENV=production
       - GITHUB_CALLBACK_URL=${GITHUB_CALLBACK_URL:-http://localhost:3001/api/auth/github/callback}
       - CLIENT_URL=${CLIENT_URL:-http://localhost:5173}
+      - FLAGSMITH_API_URL=${FLAGSMITH_API_URL:-http://flagsmith-api:8000/api/v1}
+      - FLAGSMITH_ENVIRONMENT_KEY=${FLAGSMITH_ENVIRONMENT_KEY:-}
+      - FLAGSMITH_MANAGEMENT_API_KEY=${FLAGSMITH_MANAGEMENT_API_KEY:-}
+      - FLAGSMITH_PROJECT_ID=${FLAGSMITH_PROJECT_ID:-}
+      - FLAGSMITH_SYNC_INTERVAL_MS=${FLAGSMITH_SYNC_INTERVAL_MS:-30000}
     ports:
       - "3001:3000"
     volumes:
@@ -54,8 +59,46 @@ services:
       - server
     restart: unless-stopped
 
+  # 4. Flagsmith PostgreSQL Database (Self-Hosted State Store)
+  flagsmith-db:
+    image: postgres:15-alpine
+    container_name: cavdax-flagsmith-db
+    environment:
+      POSTGRES_USER: flagsmith
+      POSTGRES_PASSWORD: flagsmith_password
+      POSTGRES_DB: flagsmith
+    volumes:
+      - flagsmith-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flagsmith"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # 5. Flagsmith API Engine (Self-Hosted Open Source Feature Flag Server)
+  flagsmith-api:
+    image: flagsmith/flagsmith:latest
+    container_name: cavdax-flagsmith-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://flagsmith:flagsmith_password@flagsmith-db:5432/flagsmith
+      FLAGSMITH_DOMAIN: localhost:8000
+      PORT: 8000
+      ENABLE_ADMIN_ACCESS_USER: "True"
+      ADMIN_EMAIL: admin@cavdax.local
+      ADMIN_PASSWORD: adminpassword123
+      PREVENT_SIGNUP: "False"
+    depends_on:
+      flagsmith-db:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   falkordb-data:
     driver: local
   server-data:
+    driver: local
+  flagsmith-db-data:
     driver: local

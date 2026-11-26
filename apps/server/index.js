@@ -29,8 +29,11 @@ import {
   fetchGraphState,
   verifyActionGate,
   revalidateDecision,
-  fetchAuditLog
+  fetchAuditLog,
+  computeFlagBlastRadius,
+  listFlagsmithFeatures
 } from '../../core/graph/queries.js';
+import { FlagsmithClient } from '../../core/ingestion/flagsmithClient.js';
 import { ingestAdrFile } from '../../core/ingestion/parser.js';
 import { scanRepoAdrs, createAdrPullRequest, syncSupersededAdrPullRequest, listRepoBranches, GithubAdrError , proposeAdrPullRequest, createCiGatePullRequest} from './githubAdr.js';
 import { CavdaxMcpServer } from '../../core/mcp/server.js';
@@ -1249,6 +1252,230 @@ app.get('/api/events', (req, res) => {
     clearInterval(heartbeat);
     sseClients.delete(clientRecord);
   });
+});
+
+// ============================================================================
+// FLAGSMITH FEATURE FLAG BLAST RADIUS & INTELLIGENCE API (Track 03)
+// ============================================================================
+
+const flagsmithClient = new FlagsmithClient();
+
+const fallbackFlagsmithFeatures = [
+  {
+    name: 'dark_mode',
+    id: 'feat_01',
+    enabled: true,
+    value: null,
+    description: 'Enables dark mode theme across entire web application',
+    tags: ['depends:theme_system', 'core'],
+    outgoing_dependencies: 1,
+    incoming_dependents: 2
+  },
+  {
+    name: 'premium_analytics',
+    id: 'feat_02',
+    enabled: true,
+    value: null,
+    description: 'High-frequency telemetry and export for Pro users',
+    tags: ['depends:dark_mode', 'depends:auth_v2'],
+    outgoing_dependencies: 2,
+    incoming_dependents: 1
+  },
+  {
+    name: 'analytics_dashboard',
+    id: 'feat_03',
+    enabled: true,
+    value: null,
+    description: 'Real-time charts and Bayesian conversion graphs',
+    tags: ['depends:premium_analytics'],
+    outgoing_dependencies: 1,
+    incoming_dependents: 0
+  },
+  {
+    name: 'theme_system',
+    id: 'feat_04',
+    enabled: true,
+    value: null,
+    description: 'Core CSS variables and design token engine',
+    tags: ['core', 'foundation'],
+    outgoing_dependencies: 0,
+    incoming_dependents: 1
+  },
+  {
+    name: 'auth_v2',
+    id: 'feat_05',
+    enabled: true,
+    value: null,
+    description: 'OAuth2 and WebAuthn hardware key authentication',
+    tags: ['security', 'core'],
+    outgoing_dependencies: 0,
+    incoming_dependents: 1
+  }
+];
+
+// 1. Sync feature flags and tag dependencies from Flagsmith REST API into FalkorDB
+app.post('/api/flagsmith/sync', async (req, res) => {
+  try {
+    if (!isFalkorConnected) await initDb();
+
+    if (graph) {
+      const syncResult = await flagsmithClient.syncToGraph(graph, req.body || {});
+      broadcastEvent('FLAGSMITH_SYNCED', syncResult);
+      return res.json({
+        success: true,
+        message: 'Flagsmith feature flags successfully synchronized to FalkorDB.',
+        ...syncResult
+      });
+    } else {
+      // In-memory simulation fallback
+      broadcastEvent('FLAGSMITH_SYNCED', { featuresIngested: fallbackFlagsmithFeatures.length, dependenciesIngested: 3, latencyMs: 0.8 });
+      return res.json({
+        success: true,
+        message: 'Synchronized in simulation mode (FalkorDB offline).',
+        featuresIngested: fallbackFlagsmithFeatures.length,
+        dependenciesIngested: 3,
+        latencyMs: 0.8
+      });
+    }
+  } catch (err) {
+    console.error('[Flagsmith Sync Error]:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 2. List all synchronized Flagsmith feature flags with topological degree metrics
+app.get('/api/flagsmith/features', async (req, res) => {
+  try {
+    if (!isFalkorConnected) await initDb();
+
+    if (graph) {
+      const result = await listFlagsmithFeatures(graph);
+      // If graph is empty, seed fallback feature flags automatically so UI has immediate data
+      if (result.total === 0) {
+        await flagsmithClient.syncToGraph(graph, { features: fallbackFlagsmithFeatures });
+        const seededResult = await listFlagsmithFeatures(graph);
+        return res.json({ success: true, ...seededResult });
+      }
+      return res.json({ success: true, ...result });
+    } else {
+      return res.json({
+        success: true,
+        features: fallbackFlagsmithFeatures,
+        total: fallbackFlagsmithFeatures.length,
+        latency_ms: 0.5,
+        simulation: true
+      });
+    }
+  } catch (err) {
+    console.error('[Flagsmith Features Error]:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 3. Compute Blast Radius for a specific feature flag
+app.get('/api/flagsmith/blast-radius/:flagName', async (req, res) => {
+  try {
+    const { flagName } = req.params;
+    if (!isFalkorConnected) await initDb();
+
+    if (graph) {
+      const result = await computeFlagBlastRadius(graph, flagName);
+      return res.json({ success: true, ...result });
+    } else {
+      // Simulation mode blast radius lookup
+      const target = fallbackFlagsmithFeatures.find(f => f.name === flagName);
+      if (!target) {
+        return res.json({
+          success: true,
+          found: false,
+          flag_name: flagName,
+          downstream_impact_count: 0,
+          downstream_dependents: [],
+          upstream_prerequisites: [],
+          risk_tier: 'UNKNOWN',
+          safe_to_disable: true,
+          latency_ms: 0.4
+        });
+      }
+
+      const dependents = [];
+      if (flagName === 'dark_mode') {
+        dependents.push({ name: 'premium_analytics', enabled: true, depth: 1 });
+        dependents.push({ name: 'analytics_dashboard', enabled: true, depth: 2 });
+      } else if (flagName === 'premium_analytics') {
+        dependents.push({ name: 'analytics_dashboard', enabled: true, depth: 1 });
+      }
+
+      return res.json({
+        success: true,
+        found: true,
+        flag_name: flagName,
+        enabled: target.enabled,
+        description: target.description,
+        downstream_impact_count: dependents.length,
+        downstream_dependents: dependents,
+        upstream_prerequisites: target.tags.filter(t => t.startsWith('depends:')).map(t => ({ name: t.replace('depends:', ''), enabled: true, depth: 1 })),
+        blocked_features: [],
+        risk_tier: dependents.length >= 2 ? 'HIGH' : (dependents.length === 1 ? 'MODERATE' : 'LOW'),
+        safe_to_disable: dependents.length === 0,
+        latency_ms: 0.6,
+        simulation: true
+      });
+    }
+  } catch (err) {
+    console.error('[Flagsmith Blast Radius Error]:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 4. Safe Toggle Feature Flag (validates blast radius before toggling)
+app.post('/api/flagsmith/safe-toggle', async (req, res) => {
+  try {
+    const { flagName, enabled, force } = req.body;
+    if (!flagName) {
+      return res.status(400).json({ success: false, error: 'flagName is required' });
+    }
+
+    if (!isFalkorConnected) await initDb();
+
+    // Check blast radius if disabling
+    let blastRadius = null;
+    if (graph) {
+      blastRadius = await computeFlagBlastRadius(graph, flagName);
+    }
+
+    if (enabled === false && blastRadius?.downstream_impact_count > 0 && !force) {
+      return res.status(409).json({
+        success: false,
+        blocked: true,
+        code: 'BLAST_RADIUS_VIOLATION',
+        message: `Cannot safely disable '${flagName}' — ${blastRadius.downstream_impact_count} downstream feature(s) depend on it.`,
+        blastRadius
+      });
+    }
+
+    // Update in graph
+    if (graph) {
+      await graph.query(`
+        MATCH (f:FlagsmithFeature {name: $flagName})
+        SET f.enabled = $enabled, f.updatedAt = timestamp()
+        RETURN f.name AS name
+      `, { params: { flagName, enabled: Boolean(enabled) } });
+    }
+
+    broadcastEvent('FLAG_TOGGLED', { flagName, enabled: Boolean(enabled), forced: Boolean(force) });
+
+    return res.json({
+      success: true,
+      flagName,
+      enabled: Boolean(enabled),
+      forced: Boolean(force),
+      blastRadius
+    });
+  } catch (err) {
+    console.error('[Flagsmith Safe Toggle Error]:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 // 3. Seed Demo Graph

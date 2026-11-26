@@ -372,3 +372,133 @@ export async function fetchAuditLog(graph, limit = 100, { repo = null } = {}) {
 
   return { entries, total, latency_ms: latencyMs };
 }
+
+// ============================================================================
+// FLAGSMITH BLAST RADIUS & FEATURE INTELLIGENCE QUERIES (Track 03)
+// ============================================================================
+
+/**
+ * Computes the full multi-hop blast radius of a Flagsmith feature flag before it is toggled.
+ * Traverses both upstream prerequisites and downstream dependents via GraphBLAS sparse matrix operations.
+ *
+ * @param {object} graph - FalkorDB graph instance
+ * @param {string} flagName - Name of the feature flag (e.g. 'dark_mode')
+ * @returns {Promise<object>} Blast radius topology, impacted flags, path depth, and latency
+ */
+export async function computeFlagBlastRadius(graph, flagName) {
+  const hrtStart = process.hrtime.bigint();
+
+  const cypher = `
+    MATCH (target:FlagsmithFeature {name: $flagName})
+    OPTIONAL MATCH upstreamPath = (target)-[:DEPENDS_ON*1..6]->(up:FlagsmithFeature)
+    OPTIONAL MATCH downstreamPath = (down:FlagsmithFeature)-[:DEPENDS_ON*1..6]->(target)
+    OPTIONAL MATCH blocked = (target)-[:BLOCKS]->(b:FlagsmithFeature)
+    RETURN target.name AS target_flag,
+           target.enabled AS target_enabled,
+           target.description AS target_description,
+           collect(DISTINCT {
+             name: up.name,
+             enabled: up.enabled,
+             depth: length(upstreamPath)
+           }) AS upstream_prerequisites,
+           collect(DISTINCT {
+             name: down.name,
+             enabled: down.enabled,
+             depth: length(downstreamPath)
+           }) AS downstream_dependents,
+           collect(DISTINCT {
+             name: b.name,
+             enabled: b.enabled
+           }) AS blocked_features
+  `;
+
+  const result = await graph.query(cypher, { params: { flagName } });
+  const latencyMs = extractLatencyMs(result, hrtStart);
+  const row = result.data?.[0];
+
+  if (!row || !row.target_flag) {
+    return {
+      found: false,
+      flag_name: flagName,
+      downstream_impact_count: 0,
+      downstream_dependents: [],
+      upstream_prerequisites: [],
+      blocked_features: [],
+      risk_tier: 'UNKNOWN',
+      safe_to_disable: true,
+      latency_ms: latencyMs,
+    };
+  }
+
+  // Filter out null entries
+  const upstream = (row.upstream_prerequisites || []).filter(item => item && item.name);
+  const downstream = (row.downstream_dependents || []).filter(item => item && item.name);
+  const blocked = (row.blocked_features || []).filter(item => item && item.name);
+
+  // Calculate probabilistic impact & risk tier
+  const impactCount = downstream.length;
+  let riskTier = 'LOW';
+  if (impactCount >= 5) riskTier = 'CRITICAL';
+  else if (impactCount >= 2) riskTier = 'HIGH';
+  else if (impactCount === 1) riskTier = 'MODERATE';
+
+  return {
+    found: true,
+    flag_name: row.target_flag,
+    enabled: Boolean(row.target_enabled),
+    description: row.target_description || '',
+    downstream_impact_count: impactCount,
+    downstream_dependents: downstream,
+    upstream_prerequisites: upstream,
+    blocked_features: blocked,
+    risk_tier: riskTier,
+    safe_to_disable: impactCount === 0,
+    latency_ms: latencyMs,
+  };
+}
+
+/**
+ * Lists all synchronized Flagsmith features with degree counts (in-degree & out-degree dependencies).
+ *
+ * @param {object} graph - FalkorDB graph instance
+ * @returns {Promise<{ features: Array<object>, total: number, latency_ms: number }>}
+ */
+export async function listFlagsmithFeatures(graph) {
+  const hrtStart = process.hrtime.bigint();
+
+  const cypher = `
+    MATCH (f:FlagsmithFeature)
+    OPTIONAL MATCH (f)-[out:DEPENDS_ON]->(:FlagsmithFeature)
+    OPTIONAL MATCH (:FlagsmithFeature)-[inc:DEPENDS_ON]->(f)
+    RETURN f.name AS name,
+           f.id AS id,
+           f.enabled AS enabled,
+           f.value AS value,
+           f.description AS description,
+           f.tags AS tags,
+           count(DISTINCT out) AS outgoing_dependencies,
+           count(DISTINCT inc) AS incoming_dependents
+    ORDER BY incoming_dependents DESC, f.name ASC
+  `;
+
+  const result = await graph.query(cypher);
+  const latencyMs = extractLatencyMs(result, hrtStart);
+
+  const features = (result.data || []).map(r => ({
+    name: r.name,
+    id: r.id,
+    enabled: Boolean(r.enabled),
+    value: r.value,
+    description: r.description,
+    tags: r.tags ? (typeof r.tags === 'string' ? JSON.parse(r.tags) : r.tags) : [],
+    outgoing_dependencies: Number(r.outgoing_dependencies || 0),
+    incoming_dependents: Number(r.incoming_dependents || 0),
+  }));
+
+  return {
+    features,
+    total: features.length,
+    latency_ms: latencyMs,
+  };
+}
+
