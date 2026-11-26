@@ -25,6 +25,11 @@ services:
       - FALKORDB_HOST=falkordb
       - FALKORDB_PORT=6379
       - NODE_ENV=production
+      - FLAGSMITH_API_URL=http://flagsmith-api:8000/api/v1
+      - FLAGSMITH_ENVIRONMENT_KEY=${FLAGSMITH_ENVIRONMENT_KEY:-}
+      - FLAGSMITH_MANAGEMENT_API_KEY=${FLAGSMITH_MANAGEMENT_API_KEY:-}
+      - FLAGSMITH_PROJECT_ID=${FLAGSMITH_PROJECT_ID:-}
+      - FLAGSMITH_SYNC_INTERVAL_MS=${FLAGSMITH_SYNC_INTERVAL_MS:-30000}
     volumes:
       - server-data:/app/apps/server/data
     depends_on:
@@ -60,6 +65,40 @@ services:
       - server
       - client
 
+  # 5. Flagsmith PostgreSQL Database (Self-Hosted State Store)
+  flagsmith-db:
+    image: postgres:15-alpine
+    container_name: cavdax-flagsmith-db
+    environment:
+      POSTGRES_USER: flagsmith
+      POSTGRES_PASSWORD: ${FLAGSMITH_DB_PASSWORD:-flagsmith_prod_secure_pass_99}
+      POSTGRES_DB: flagsmith
+    volumes:
+      - flagsmith-db-prod-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flagsmith"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # 6. Flagsmith API Engine (Self-Hosted Feature Flag Server)
+  flagsmith-api:
+    image: flagsmith/flagsmith:latest
+    container_name: cavdax-flagsmith-api
+    environment:
+      DATABASE_URL: postgresql://flagsmith:${FLAGSMITH_DB_PASSWORD:-flagsmith_prod_secure_pass_99}@flagsmith-db:5432/flagsmith
+      FLAGSMITH_DOMAIN: ${FLAGSMITH_DOMAIN:-cavdax-flagsmith.sahnirmaan.live}
+      PORT: 8000
+      ENABLE_ADMIN_ACCESS_USER: "True"
+      ADMIN_EMAIL: ${FLAGSMITH_ADMIN_EMAIL:-admin@sahnirmaan.live}
+      ADMIN_PASSWORD: ${FLAGSMITH_ADMIN_PASSWORD:-cavdax_flagsmith_admin_pass}
+      PREVENT_SIGNUP: "False"
+    depends_on:
+      flagsmith-db:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   falkordb-prod-data:
     driver: local
@@ -68,4 +107,6 @@ volumes:
   caddy-config:
     driver: local
   server-data:
+    driver: local
+  flagsmith-db-prod-data:
     driver: local

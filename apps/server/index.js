@@ -98,6 +98,7 @@ app.use((req, res, next) => {
 // Explicit CORS Origin Allowlist (Blocks arbitrary cross-site credential theft)
 const allowedOrigins = [
   'https://cavdax.sahnirmaan.live',
+  'https://cavdax-flagsmith.sahnirmaan.live',
   ...(process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean)
 ];
 
