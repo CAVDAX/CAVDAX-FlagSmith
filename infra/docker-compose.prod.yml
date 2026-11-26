@@ -89,6 +89,7 @@ services:
     environment:
       DATABASE_URL: postgresql://flagsmith:${FLAGSMITH_DB_PASSWORD:-flagsmith_prod_secure_pass_99}@flagsmith-db:5432/flagsmith
       FLAGSMITH_DOMAIN: ${FLAGSMITH_DOMAIN:-cavdax-flagsmith.sahnirmaan.live}
+      DJANGO_ALLOWED_HOSTS: "*"
       PORT: 8000
       ENABLE_ADMIN_ACCESS_USER: "True"
       ADMIN_EMAIL: ${FLAGSMITH_ADMIN_EMAIL:-admin@sahnirmaan.live}

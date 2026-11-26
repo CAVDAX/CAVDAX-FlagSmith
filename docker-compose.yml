@@ -85,6 +85,7 @@ services:
     environment:
       DATABASE_URL: postgresql://flagsmith:flagsmith_password@flagsmith-db:5432/flagsmith
       FLAGSMITH_DOMAIN: localhost:8000
+      DJANGO_ALLOWED_HOSTS: "*"
       PORT: 8000
       ENABLE_ADMIN_ACCESS_USER: "True"
       ADMIN_EMAIL: admin@cavdax.local
