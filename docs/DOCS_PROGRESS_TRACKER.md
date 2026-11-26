@@ -4,8 +4,8 @@
 > **Track**: Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
 > **Lead Architect & Maintainer**: Suneet Chugh & Team AWDAX  
 > **Current Status**: 100% Verified Production Delivery & Published Package  
-> **Version**: 1.1.0 (Synchronized with `@cavdax/flagsmith-mcp@1.0.1`)  
-> **Timestamp**: `2026-11-27T01:10:00+05:30`  
+> **Version**: 1.2.0 (Synchronized with `@cavdax/flagsmith-mcp@1.0.2`)  
+> **Timestamp**: `2026-11-27T01:40:00+05:30`  
 > **Production Gateway**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)
 
 ---
@@ -19,7 +19,7 @@
 | **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | ISM elimination, secret-guard pre-commit, zero-emoji UI |
 | **Sprint Phases & Milestones** | [`docs/PHASES.md`](./PHASES.md) | Tutorial / Guide | ✅ Up to date | 2026-11-27 | Phase 1–4 completed, Track 03 Flagsmith deployed |
 | **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 2-line max subtexts, Team AWDAX |
-| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00b (Flagsmith Track 03, npm OIDC, 13/13 passing tests) |
+| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00b (Flagsmith Track 03, npm OIDC, 185/185 passing tests) |
 | **Track 03 Hackathon Blueprint** | [`docs/TRACK03_BLUEPRINT.md`](./TRACK03_BLUEPRINT.md) | Strategic Spec | ✅ Up to date | 2026-11-27 | Judging rubric alignment, 3-signal discovery, gap analysis |
 
 ---
@@ -38,7 +38,7 @@
 │ 4. AI Marketing Fog Words         │ 0 Violations │ 0 Violations        │
 │ 5. Dual-Theme Interface Parity    │ Full Parity  │ Dark & Light Tested │
 │ 6. Sigstore Provenance Gate       │ Valid Log    │ Log #4132791550     │
-│ 7. Automated Test Suite           │ 100% Pass    │ 13/13 Pass (100%)   │
+│ 7. Automated Test Suite           │ 100% Pass    │ 185/185 Pass (100%) │
 └───────────────────────────────────┴──────────────┴─────────────────────┘
 ```
 
@@ -48,8 +48,8 @@
 
 | Artifact | Registry | Version | Attestation / Verification | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| `@cavdax/flagsmith-mcp` | [npm Registry](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) | `1.0.1` | Sigstore SLSA-1 Provenance (`logIndex: 4132791550`) | ✅ **Active & Verified** |
-| `flagsmith-mcp` CLI | GitHub Actions | `1.0.1` | Published via OIDC Trusted Publisher without static secrets | ✅ **Active & Verified** |
+| `@cavdax/flagsmith-mcp` | [npm Registry](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) | `1.0.2` | Sigstore SLSA-1 Provenance (`publish-flagsmith-mcp.yml`) | ✅ **Active & Verified** |
+| `flagsmith-mcp` CLI | GitHub Actions | `1.0.2` | Published via OIDC Trusted Publisher without static secrets | ✅ **Active & Verified** |
 | `CAVDAX-FlagSmith` Core | GitHub | `main` | Clean working tree, all tests passing in simulated CI | ✅ **Pushed & Clean** |
 
 ---

@@ -53,6 +53,32 @@ export const TOOLS = [
       type: 'object',
       properties: {}
     }
+  },
+  {
+    name: 'scan_code_for_flags',
+    description: 'Flagsmith Integration: Analyzes code snippets or files for Flagsmith SDK invocations (Signal 2 Static AST analysis), inferring structural dependencies (GUARDS, CO_OCCURS_AND, CO_OCCURS_HOOK), checking live production states, and reporting prerequisite risks.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        code: {
+          type: 'string',
+          description: 'The source code string to scan for Flagsmith SDK calls.'
+        },
+        file_path: {
+          type: 'string',
+          description: 'Optional file path or name (e.g. "App.jsx", "checkout.ts"). Defaults to "snippet.js".'
+        }
+      },
+      required: ['code']
+    }
+  },
+  {
+    name: 'sync_flagsmith_graph',
+    description: 'Flagsmith Integration: Triggers bidirectional synchronization between the self-hosted Flagsmith instance and the FalkorDB GraphBLAS dependency matrix across all 3 signals (Tags, AST, and Git).',
+    inputSchema: {
+      type: 'object',
+      properties: {}
+    }
   }
 ];
 
@@ -104,6 +130,36 @@ export async function handleToolCall(name, args = {}) {
         }
       ]
     };
+  } else if (name === 'scan_code_for_flags') {
+    const data = await fetchGateway('/flagsmith/scan-code', {
+      method: 'POST',
+      body: JSON.stringify({
+        code: args.code,
+        filePath: args.file_path || 'snippet.js'
+      })
+    });
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(data, null, 2)
+        }
+      ],
+      isError: !data.success
+    };
+  } else if (name === 'sync_flagsmith_graph') {
+    const data = await fetchGateway('/flagsmith/sync', {
+      method: 'POST'
+    });
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(data, null, 2)
+        }
+      ],
+      isError: !data.success
+    };
   } else {
     throw new Error(`Unknown tool: '${name}'`);
   }
@@ -135,7 +191,7 @@ export function startStdioServer() {
           capabilities: { tools: {} },
           serverInfo: {
             name: '@cavdax/flagsmith-mcp',
-            version: '1.0.0'
+            version: '1.0.2'
           }
         });
       } else if (method === 'notifications/initialized') {

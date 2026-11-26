@@ -29,9 +29,17 @@ const SDK_CALL_PATTERNS = [
   /\b(?:isFeatureEnabled|hasFeature)\s*\(\s*['"`]([a-zA-Z0-9_-]+)['"`]\s*\)/g,
   // Python: flags.is_feature_enabled("flag") / flags.get_feature_value("flag")
   /(?:flagsmith|flags)\s*\.\s*(?:is_feature_enabled|get_feature_value)\s*\(\s*['"`]([a-zA-Z0-9_-]+)['"`]\s*\)/g,
-  // Object property check: flags['flag_name'] or flags?.flag_name
-  /\bflags(?:mith)?(?:\?\.|\.)([a-zA-Z0-9_]+)\b/g,
+  // Object property check: flags['flag_name'] or flags?.flag_name (exclude function calls)
+  /\bflags(?:mith)?(?:\?\.|\.)([a-zA-Z0-9_]+)(?!\s*\()\b/g,
 ];
+
+// Reserved SDK method and property names to prevent false positive flag detection
+const RESERVED_SDK_NAMES = new Set([
+  'hasFeature', 'isFeatureEnabled', 'getValue', 'getFeatureValue',
+  'init', 'identify', 'logout', 'setTrait', 'getTrait', 'hasTrait',
+  'getFlags', 'getAllFlags', 'useFlags', 'is_feature_enabled', 'get_feature_value',
+  'set_trait', 'get_trait', 'flags', 'client', 'flagsmith', 'identity', 'traits'
+]);
 
 // File extensions eligible for static AST analysis
 const SUPPORTED_EXTENSIONS = new Set([
@@ -89,7 +97,7 @@ export class AstScanner {
             }
           } else {
             const flagName = match[1];
-            if (flagName && flagName.length > 1) {
+            if (flagName && flagName.length > 1 && !RESERVED_SDK_NAMES.has(flagName)) {
               const key = `${lineNum}:${flagName}`;
               if (!seenOnLine.has(key)) {
                 seenOnLine.add(key);
@@ -145,6 +153,7 @@ export class AstScanner {
       if (flagsOnLine.length >= 2) {
         const hasAnd = lineText.includes('&&') || lineText.includes(' and ');
         const hasOr = lineText.includes('||') || lineText.includes(' or ');
+        const hasUseFlags = lineText.includes('useFlags');
 
         for (let i = 0; i < flagsOnLine.length; i++) {
           for (let j = i + 1; j < flagsOnLine.length; j++) {
@@ -156,6 +165,9 @@ export class AstScanner {
             } else if (hasOr) {
               addDep(f1, f2, 'CO_OCCURS_OR', 0.65, 'Evaluated in same boolean OR fallback expression', lineNum);
               addDep(f2, f1, 'CO_OCCURS_OR', 0.65, 'Evaluated in same boolean OR fallback expression', lineNum);
+            } else if (hasUseFlags) {
+              addDep(f1, f2, 'CO_OCCURS_HOOK', 0.70, 'Requested together in useFlags hook declaration', lineNum);
+              addDep(f2, f1, 'CO_OCCURS_HOOK', 0.70, 'Requested together in useFlags hook declaration', lineNum);
             }
           }
         }

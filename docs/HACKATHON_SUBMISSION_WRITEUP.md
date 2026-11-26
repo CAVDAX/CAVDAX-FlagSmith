@@ -14,7 +14,7 @@
 - **Interactive Flag Radar**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live) $\to$ *Flag Radar* tab
 - **Self-Hosted Flagsmith API**: [`https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`](https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/)
 - **GitHub Repository**: [`https://github.com/CAVDAX/CAVDAX-FlagSmith`](https://github.com/CAVDAX/CAVDAX-FlagSmith)
-- **Official npm Package**: [`@cavdax/flagsmith-mcp@1.0.1`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) *(Published with Sigstore SLSA Provenance via GitHub OIDC)*
+- **Official npm Package**: [`@cavdax/flagsmith-mcp@1.0.2`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) *(Published with Sigstore SLSA Provenance via GitHub OIDC)*
 - **Demo Video Walkthrough**: *[Insert YouTube Link Here]*
 
 ---
@@ -103,7 +103,13 @@ npx @cavdax/flagsmith-mcp features
 # 3. Test the safety gate: Attempt to disable 'dark_mode' (Blocked by 409 Conflict)
 npx @cavdax/flagsmith-mcp toggle dark_mode off
 
-# 4. Bypass safety gate with --force
+# 4. Scan local source code for Flagsmith SDK calls & structural AST dependencies
+npx @cavdax/flagsmith-mcp scan apps/client/src/App.jsx
+
+# 5. Synchronize Flagsmith instance with FalkorDB GraphBLAS matrix
+npx @cavdax/flagsmith-mcp sync
+
+# 6. Bypass safety gate with --force
 npx @cavdax/flagsmith-mcp toggle dark_mode off --force
 ```
 

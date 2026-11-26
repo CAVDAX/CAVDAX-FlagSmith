@@ -55,7 +55,7 @@
 
 > **Live Production Gateway:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)  
 > **Self-Hosted Flagsmith API:** [`https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`](https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/)  
-> **Official npm Package:** [`@cavdax/flagsmith-mcp`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) (`v1.0.1`)  
+> **Official npm Package:** [`@cavdax/flagsmith-mcp`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) (`v1.0.2`)  
 > **Interactive Blast Radius Radar:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live) $\to$ *Flag Radar*
 
 Autonomous coding agents (Cursor, Claude Code, Windsurf) edit code and toggle feature flags blindly—without understanding the hidden multi-hop ripple effects across downstream services and users. Toggling or deleting a flag like `dark_mode` can silently crash downstream systems (`premium_analytics`, `analytics_dashboard`) or violate mandatory upstream prerequisites (`theme_system`, `auth_v2`).
@@ -88,8 +88,10 @@ CAVDAX for Flagsmith builds a **3-Signal Topological Dependency Graph** powered 
   Model Context Protocol (MCP)                     Interactive Web HUD
   npx @cavdax/flagsmith-mcp                        https://cavdax-flagsmith.sahnirmaan.live
   • get_flag_blast_radius                          • Real-time Blast Radius Radar
-  • safe_toggle_flag                               • Safe Toggle Switch with 409 Conflict
-  • list_flagsmith_features                        • Transitive Dependency Visualizer
+  • safe_toggle_flag                               • AST Live Code Inspector (Signal 2)
+  • list_flagsmith_features                        • Safe Toggle Switch with 409 Conflict
+  • scan_code_for_flags                            • Transitive Dependency Visualizer
+  • sync_flagsmith_graph                           • 3-Signal Mesh Ingestion
 ```
 
 ### Quick Evaluation for Judges (Zero Installation Required)
@@ -106,7 +108,13 @@ npx @cavdax/flagsmith-mcp features
 # 3. Test the safety gate: Attempt to disable 'dark_mode' (Blocked by 409 Conflict)
 npx @cavdax/flagsmith-mcp toggle dark_mode off
 
-# 4. Bypass safety gate with --force
+# 4. Scan a local code file for Flagsmith SDK calls & structural AST dependencies
+npx @cavdax/flagsmith-mcp scan apps/client/src/App.jsx
+
+# 5. Synchronize Flagsmith instance with FalkorDB GraphBLAS matrix
+npx @cavdax/flagsmith-mcp sync
+
+# 6. Bypass safety gate with --force
 npx @cavdax/flagsmith-mcp toggle dark_mode off --force
 ```
 
@@ -145,6 +153,7 @@ Add the Flagsmith safety gate to your AI coding agents in 10 seconds:
 | `/api/flagsmith/features` | `GET` | ~12ms | Returns all features, enabled states, and degree metrics |
 | `/api/flagsmith/blast-radius/:flag` | `GET` | ~34ms | Traverses FalkorDB multi-hop blast radius & governance verdicts |
 | `/api/flagsmith/safe-toggle` | `POST` | ~28ms | Validates dependencies; returns `409 Conflict` if unsafe |
+| `/api/flagsmith/scan-code` | `POST` | ~19ms | Analyzes code AST for SDK invocations, inferred dependencies & live status |
 | `/api/flagsmith/sync` | `POST` | ~31ms | Ingests Flagsmith features, AST signals, and Git history into FalkorDB |
 
 ---

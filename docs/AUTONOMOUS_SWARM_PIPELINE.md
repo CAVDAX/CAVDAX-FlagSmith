@@ -25,9 +25,9 @@
 | **State 0** | **Ingestion & Baseline Audit** | Hackathon Track 03 Brief | 3-Signal requirement locked, gap analysis in `TRACK03_BLUEPRINT.md` | ✅ **DONE** |
 | **State 1** | **Scaffolding & Contract Freezing** | AST Scanner + Git Miner specs | Exported contracts (`astScanner.js`, `gitMiner.js`, `blastRadiusCalculator.js`) | ✅ **DONE** |
 | **State 2** | **Assembly & Mesh Integration** | FalkorDB + Flagsmith self-hosted | 74 edges synced, 6 Docker containers deployed on AWS EC2 (`15.135.78.65`) | ✅ **DONE** |
-| **State 3** | **Verification & Empirical Gates** | 13 test suites + npx CLI | `apps/server/test/*.test.mjs` (13/13 passing), `npx` exit 0 in 34ms | ✅ **DONE** |
+| **State 3** | **Verification & Empirical Gates** | 185 test suites + npx CLI | `apps/server/test/*.test.mjs` (185/185 passing), `npx` exit 0 in 34ms | ✅ **DONE** |
 | **State 4** | **Self-Healing & Remediation** | GraphBLAS timeout + deploy.yml bug | Directed reachability fix (`[:DEPENDS_ON\|GUARDS*1..3]`), workflow fix | ✅ **CLEARED** |
-| **State 5** | **Attestation & Release** | OIDC Trusted Publisher + Docs Sync | Published `@cavdax/flagsmith-mcp@1.0.1` (Sigstore log #4132791550), docs synced | ✅ **VERIFIED** |
+| **State 5** | **Attestation & Release** | OIDC Trusted Publisher + Docs Sync | Published `@cavdax/flagsmith-mcp@1.0.2` (5 tools, AST Inspector, Sigstore provenance), docs synced | ✅ **VERIFIED** |
 
 ---
 

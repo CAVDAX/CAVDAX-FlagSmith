@@ -1579,6 +1579,56 @@ app.post('/api/flagsmith/safe-toggle', async (req, res) => {
   }
 });
 
+// 5. Scan Code AST for Flagsmith SDK calls & infer dependencies (Signal 2 Static Inspector)
+app.post('/api/flagsmith/scan-code', async (req, res) => {
+  try {
+    const { code, filePath = 'snippet.js' } = req.body;
+    if (!code || typeof code !== 'string') {
+      return res.status(400).json({ success: false, error: 'code string is required' });
+    }
+
+    const scanner = new AstScanner();
+    const result = scanner.analyzeDependencies(code, filePath);
+
+    if (!isFalkorConnected) await initDb();
+
+    // Enrich detected flags with live production states from FalkorDB
+    const enrichedFlags = [];
+    for (const flagName of result.flags) {
+      let flagMeta = { name: flagName, exists: false, enabled: null, risk_tier: 'UNKNOWN' };
+      if (graph) {
+        try {
+          const record = await computeFlagBlastRadius(graph, flagName);
+          if (record && record.found) {
+            flagMeta = {
+              name: flagName,
+              exists: true,
+              enabled: record.enabled,
+              risk_tier: record.risk_tier,
+              downstream_dependents_count: record.downstream_impact_count || 0,
+              missing_prerequisites_count: record.missing_prerequisites?.length || 0
+            };
+          }
+        } catch {
+          // Keep flagMeta defaults
+        }
+      }
+      enrichedFlags.push(flagMeta);
+    }
+
+    return res.json({
+      success: true,
+      flags_count: result.flags.length,
+      flags: enrichedFlags,
+      dependencies_count: result.dependencies.length,
+      dependencies: result.dependencies
+    });
+  } catch (err) {
+    console.error('[Flagsmith Scan Code Error]:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // 3. Seed Demo Graph
 // seedDemoGraph() runs MATCH (n) DETACH DELETE n, so like /api/reset it is maintainer-only.
 app.post('/api/seed', requireDevAuth, async (req, res) => {

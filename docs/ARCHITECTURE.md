@@ -468,4 +468,4 @@ Where $\mathbf{A}$ represents the directed adjacency matrix over `[:DEPENDS_ON|G
 ### 9.3 Self-Hosted Flagsmith AWS EC2 Infrastructure
 - **Container Mesh**: Runs Flagsmith v2.295.2 (`cavdax-flagsmith-api`) with PostgreSQL 15 (`cavdax-flagsmith-db`), FalkorDB, Express, and Caddy on AWS EC2 (`15.135.78.65`, ap-southeast-2).
 - **Host Governance**: `DJANGO_ALLOWED_HOSTS: "*"` enables Cloudflare reverse proxy routing to `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`.
-- **Packaging**: `@cavdax/flagsmith-mcp@1.0.1` published with Sigstore provenance via GitHub Actions OIDC Trusted Publisher.
+- **Packaging**: `@cavdax/flagsmith-mcp@1.0.2` published with Sigstore provenance via GitHub Actions OIDC Trusted Publisher, exposing 5 dedicated tools and standalone CLI.

@@ -8,8 +8,12 @@
  *   npx @cavdax/flagsmith-mcp blast <flagName>    -> Computes blast radius of flag
  *   npx @cavdax/flagsmith-mcp features            -> Lists all feature flags & dependency metrics
  *   npx @cavdax/flagsmith-mcp toggle <flag> on|off [--force] -> Safely toggles flag
+ *   npx @cavdax/flagsmith-mcp scan <file>         -> Scans code for Flagsmith calls & AST dependencies
+ *   npx @cavdax/flagsmith-mcp sync                -> Synchronizes Flagsmith & FalkorDB GraphBLAS matrix
  */
 
+import fs from 'fs';
+import path from 'path';
 import { startStdioServer, fetchGateway } from '../src/mcpServer.js';
 
 const args = process.argv.slice(2);
@@ -65,9 +69,57 @@ async function main() {
     } else {
       console.log(`\n✅ Toggle Succeeded:`, JSON.stringify(data, null, 2));
     }
+  } else if (command === 'scan') {
+    const targetFile = args[1];
+    if (!targetFile) {
+      console.error('Usage: flagsmith-mcp scan <filePath>');
+      process.exit(1);
+    }
+    const resolvedPath = path.resolve(process.cwd(), targetFile);
+    if (!fs.existsSync(resolvedPath)) {
+      console.error(`Error: File not found: ${resolvedPath}`);
+      process.exit(1);
+    }
+    const code = fs.readFileSync(resolvedPath, 'utf8');
+    console.log(`Scanning '${targetFile}' for Flagsmith SDK calls & AST dependencies...`);
+    const data = await fetchGateway('/flagsmith/scan-code', {
+      method: 'POST',
+      body: JSON.stringify({ code, filePath: targetFile })
+    });
+
+    if (data.flags && data.flags.length > 0) {
+      console.log(`\nDetected ${data.flags.length} Feature Flag Reference(s):`);
+      console.table(data.flags.map(f => ({
+        Flag: f.name,
+        KnownInGraph: f.exists ? 'YES' : 'NO',
+        LiveState: f.enabled === true ? 'ENABLED' : (f.enabled === false ? 'DISABLED' : 'UNKNOWN'),
+        RiskTier: f.risk_tier || 'UNKNOWN',
+        DownstreamDependents: f.downstream_dependents_count || 0,
+        MissingPrereqs: f.missing_prerequisites_count || 0
+      })));
+    } else {
+      console.log('\nZero Flagsmith feature flag references detected in file.');
+    }
+
+    if (data.dependencies && data.dependencies.length > 0) {
+      console.log(`\nInferred ${data.dependencies.length} Structural AST Dependency Relation(s):`);
+      console.table(data.dependencies.map(d => ({
+        Source: d.sourceFlag,
+        Target: d.targetFlag,
+        Relation: d.relationship,
+        Confidence: d.confidence,
+        Line: d.line,
+        Reason: d.reason
+      })));
+    }
+  } else if (command === 'sync') {
+    console.log('Triggering 3-Signal Sync (Flagsmith API + AST Ingestion + Git Coupling)...');
+    const data = await fetchGateway('/flagsmith/sync', { method: 'POST' });
+    console.log('\n✅ Sync Complete:');
+    console.log(JSON.stringify(data, null, 2));
   } else if (command === '--help' || command === '-h' || command === 'help') {
     console.log(`
-@cavdax/flagsmith-mcp v1.0.0
+@cavdax/flagsmith-mcp v1.0.2
 Flagsmith Feature Flag Blast Radius & Safe-Toggle MCP Server for AI Coding Agents
 
 Usage:
@@ -75,6 +127,8 @@ Usage:
   npx @cavdax/flagsmith-mcp blast <flagName>    Inspect topological blast radius of a flag
   npx @cavdax/flagsmith-mcp features            List all registered feature flags & dependencies
   npx @cavdax/flagsmith-mcp toggle <f> on|off   Safely toggle a flag with dependency validation
+  npx @cavdax/flagsmith-mcp scan <filePath>     Scan code file for Flagsmith calls & AST relations
+  npx @cavdax/flagsmith-mcp sync                Synchronize Flagsmith instance with GraphBLAS matrix
 
 Options:
   --force                                       Bypass safety gates on toggle

@@ -1,9 +1,9 @@
 # CAVDAX for Flagsmith: Active Development Session State (`DEV_SESSION_STATE.md`)
 
 > **Repository**: `CAVDAX/CAVDAX-FlagSmith`  
-> **Session Timestamp**: `2026-11-27T01:05:00+05:30`  
+> **Session Timestamp**: `2026-11-27T01:42:00+05:30`  
 > **Active Branch**: `main` (Integration branch: `main`)  
-> **Status**: Toggle Wars Track 03 Production Deployment Verified (`https://cavdax-flagsmith.sahnirmaan.live`), `@cavdax/flagsmith-mcp@1.0.1` Published via GitHub Actions OIDC Trusted Publisher with Sigstore Provenance, 13/13 Automated Tests Passing
+> **Status**: Toggle Wars Track 03 Production Deployment Verified (`https://cavdax-flagsmith.sahnirmaan.live`), `@cavdax/flagsmith-mcp@1.0.2` (5 MCP Tools, AST Code Inspector, Sigstore Provenance, 185/185 Automated Tests Passing)
 
 ---
 
@@ -15,8 +15,8 @@
     - Synchronizes feature flags, tags, prerequisite dependencies, and multivariate segment variants directly from self-hosted Flagsmith API (`/api/v1/flags/`).
     - Implemented robust fallback to simulated dependency profiles ensuring graceful degradation when credentials are unset.
   - **Signal 2: Static AST Code Analysis Scanner** (`core/ingestion/astScanner.js`):
-    - Parses repository source code using Babel/Tree-Sitter AST traversal, detecting `isFeatureEnabled`, `useFlags`, `getValue`, and boolean conjunctions (`CO_OCCURS_AND`, confidence 0.75).
-    - Detects enclosing nested guard relationships (`GUARDS`, confidence 0.85). Verified with 4/4 passing tests in `apps/server/test/astScanner.test.mjs`.
+    - Parses repository source code using AST traversal, detecting `isFeatureEnabled`, `useFlags`, `getValue`, and boolean conjunctions (`CO_OCCURS_AND`, confidence 0.75).
+    - Detects enclosing nested guard relationships (`GUARDS`, confidence 0.85) and React hook co-location (`CO_OCCURS_HOOK`, confidence 0.70). Filtered reserved SDK method names to prevent false positive flags. Verified with 4/4 passing tests in `apps/server/test/astScanner.test.mjs`.
   - **Signal 3: Git Temporal Coupling Miner** (`core/ingestion/gitMiner.js`):
     - Mines git commit history to compute Jaccard co-change metric $J(A, B) = \frac{|A \cap B|}{|A \cup B|}$, identifying latent feature flag couplings without explicit code references. Verified with 2/2 passing tests in `apps/server/test/gitMiner.test.mjs`.
   - **Multi-Signal Bayesian Aggregator** (`core/graph/blastRadiusCalculator.js`):
@@ -28,16 +28,18 @@
 - **Self-Hosted Flagsmith AWS EC2 Deployment (`15.135.78.65`)**:
   - Replaced external dependencies with a complete self-hosted Flagsmith Docker container mesh (`cavdax-flagsmith-api:v2.295.2`, `cavdax-flagsmith-db:postgres:15-alpine`).
   - Added `DJANGO_ALLOWED_HOSTS: "*"` resolving Django HTTP 400 Bad Request error. Verified live API at `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`.
-- **Standalone npm Package & GitHub Actions OIDC Trusted Publisher**:
+- **Standalone npm Package & GitHub Actions OIDC Trusted Publisher (@cavdax/flagsmith-mcp@1.0.2)**:
   - Created standalone package `apps/flagsmith-mcp` with dedicated CLI (`bin/cli.js`), MCP Stdio Server (`src/mcpServer.js`), and exported APIs.
+  - Expanded exposed MCP tools to 5: `get_flag_blast_radius`, `safe_toggle_flag`, `list_flagsmith_features`, `scan_code_for_flags`, `sync_flagsmith_graph`.
+  - Expanded CLI with `scan <filePath>` (terminal AST analysis) and `sync` (triggers 3-signal graph refresh).
   - Configured npm **Trusted Publisher (OIDC)** connection bound to GitHub repository `CAVDAX/CAVDAX-FlagSmith` and workflow `publish-flagsmith-mcp.yml`.
   - Authored `.github/workflows/publish-flagsmith-mcp.yml` with pre-publish test gates and automated Sigstore provenance attestation (`npm publish --access public --provenance`).
-  - Successfully published `@cavdax/flagsmith-mcp@1.0.0` and `@cavdax/flagsmith-mcp@1.0.1`. Provenance verified on public transparency log (log index `4132791550`).
   - Verified instant zero-config judge execution: `npx @cavdax/flagsmith-mcp blast dark_mode`.
-- **Frontend Flag Radar HUD & Team AWDAX Branding**:
-  - Implemented interactive `FlagBlastRadiusCard.jsx` console with live GraphBLAS topology visualization, 3-signal breakdown chips, and bi-directional safe toggle switches.
+- **Frontend Flag Radar HUD & AST Live Code Inspector**:
+  - Implemented interactive `FlagBlastRadiusCard.jsx` console with dual-tab architecture: `[Topology Radar]` and `[AST Inspector]`.
+  - Added interactive AST code analyzer supporting live code pasting, presets (`Nested Guards`, `Boolean Conjunction`, `React Hook useFlags`), and instant AST extraction with live FalkorDB production state enrichment.
   - Ingested new official Team AWDAX emblem, converted to optimized WebP (`apps/client/public/team/awdax-logo.webp`, 13.6 KB, 1080x1080), and updated all team attribution components.
-  - Integrated Toggle Wars Track 03 Hero Pill and Flag Radar CTA directly on the main landing page.
+  - Integrated Toggle Wars Track 03 Hero Pill and Flag Radar CTA directly on the main landing page. All 185 test suites passing (100% green).
 
 ### 00a. Official MCP Registry, Glama Support, v1.3.3 & ISM Hardening (November 12, 2026)
 - **Official MCP Registry & Glama Integration**:
