@@ -31,7 +31,6 @@ jobs:
           node --test apps/server/test/*.test.mjs
 
       - name: Deploy via SSH
-        if: "${{ secrets.VM_HOST != '' }}"
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VM_HOST }}
