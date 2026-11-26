@@ -17,7 +17,7 @@
 | **S4** | **Bayesian Risk & Blast Radius Aggregator** | **PASSED** | `core/graph/blastRadiusCalculator.js` merging Signals 1, 2, 3 into unified $P(A \to B) = 1 - \prod(1 - c_i)$ | 3/3 Unit tests passing in 10ms (`blastRadiusCalculator.test.mjs`) |
 | **S5** | **Interactive Web HUD Blast Card & Route** | **PASSED** | `apps/client/src/components/FlagBlastRadiusCard.jsx`, `/flags` tab & route, monochromatic obsidian theme | Zero-emoji discipline, 2-line max copy, live toggle & mesh sync |
 | **S6** | **MCP Tooling for Flagsmith** | **PASSED** | MCP tools: `get_flag_blast_radius`, `safe_toggle_flag`, `list_flagsmith_features` in `core/mcp/server.js` | 4/4 Unit tests passing in 7ms (`mcpFlagsmithTools.test.mjs`) |
-| **S7** | **Continuous Deployment & AWS Rollout** | **IN_PROGRESS** | Push to `main` -> GitHub Actions deploy -> EC2 multi-container mesh live | Full 14-test verification passing |
+| **S7** | **Continuous Deployment & AWS Rollout** | **PASSED** | Multi-container mesh live on AWS EC2 (`15.135.78.65`), 74 dependency edges indexed in FalkorDB, `/api/flagsmith/safe-toggle` enforcing bidirectional safety | Live smoke tests 200 OK (`https://cavdax-flagsmith.sahnirmaan.live/flags`) |
 
 ---
 
