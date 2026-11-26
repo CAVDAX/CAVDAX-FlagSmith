@@ -170,17 +170,17 @@ export class FlagsmithClient {
 
     // Upsert Dependencies as graph relationships
     for (const dep of dependencies) {
-      let relCypher = `[:DEPENDS_ON {confidence: $confidence, signal: $signal, rawTag: $rawTag}]`;
+      let relType = 'DEPENDS_ON';
       if (dep.relationship === 'ENABLES') {
-        relCypher = `[:ENABLES {confidence: $confidence, signal: $signal, rawTag: $rawTag}]`;
+        relType = 'ENABLES';
       } else if (dep.relationship === 'BLOCKS') {
-        relCypher = `[:BLOCKS {confidence: $confidence, signal: $signal, rawTag: $rawTag}]`;
+        relType = 'BLOCKS';
       }
 
       const depQuery = `
         MERGE (s:FlagsmithFeature {name: $sourceFlag})
         MERGE (t:FlagsmithFeature {name: $targetFlag})
-        MERGE (s)-[r${relCypher}]->(t)
+        MERGE (s)-[r:${relType} {confidence: $confidence, signal: $signal, rawTag: $rawTag}]->(t)
         RETURN s.name, t.name
       `;
 
