@@ -13,7 +13,6 @@ jobs:
   deploy:
     name: Production Deployment
     runs-on: ubuntu-latest
-    if: ${{ secrets.VM_HOST != '' }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -32,6 +31,7 @@ jobs:
           node --test apps/server/test/*.test.mjs
 
       - name: Deploy via SSH
+        if: "${{ secrets.VM_HOST != '' }}"
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VM_HOST }}
