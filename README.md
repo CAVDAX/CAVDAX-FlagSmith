@@ -1,3 +1,19 @@
+<!-- TOGGLE WARS HACKATHON SUBMISSION -->
+> **Toggle Wars Hackathon — Track 03: Build on Open Source Flagsmith**  
+> **Track:** Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
+> **Event:** Toggle Wars: The Flagsmith Experimentation Hackathon (WeMakeDevs × Flagsmith)  
+> **Hackathon Window:** November 26–29, 2026
+>
+> This repository is CAVDAX adapted for Toggle Wars Track 03. CAVDAX is an open-source
+> graph intelligence engine maintained by this team (see [CAVDAX/CAVDAX](https://github.com/CAVDAX/CAVDAX)).
+> All Flagsmith-specific integration — flag ingestion, the three-signal blast radius engine,
+> and the Flagsmith-wired HUD — was built during the Toggle Wars hackathon window (November 26–29, 2026).
+>
+> The core graph engine (FalkorDB + GraphBLAS) is pre-existing open-source infrastructure
+> we maintain. The Flagsmith product layer built on top of it is new work created for this hackathon.
+
+---
+
 <div align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="assets/cavdax-logo-dark.svg" />
