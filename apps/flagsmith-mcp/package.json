@@ -1,6 +1,6 @@
 {
   "name": "@cavdax/flagsmith-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Flagsmith Feature Flag Blast Radius & Safe-Toggle MCP Server for AI Coding Agents",
   "main": "src/index.js",
   "type": "module",

@@ -1,0 +1,54 @@
+name: Publish Flagsmith MCP to npm
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Verify & Publish @cavdax/flagsmith-mcp to npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for npm OIDC Trusted Publishing and Sigstore provenance
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Server Test Dependencies
+        run: |
+          npm install -g npm@latest
+          cd apps/server && npm install
+
+      - name: Syntax-check Flagsmith MCP Sources
+        run: |
+          node --check apps/flagsmith-mcp/bin/cli.js
+          node --check apps/flagsmith-mcp/src/mcpServer.js
+          node --check apps/flagsmith-mcp/src/index.js
+
+      - name: Run Core Flagsmith & Blast Radius Test Suite
+        working-directory: apps/server
+        run: |
+          node --test test/astScanner.test.mjs test/gitMiner.test.mjs test/blastRadiusCalculator.test.mjs test/mcpFlagsmithTools.test.mjs
+
+      - name: Verify Package Version
+        run: |
+          PKG_VERSION=$(node -p "require('./apps/flagsmith-mcp/package.json').version")
+          echo "Publishing @cavdax/flagsmith-mcp version: $PKG_VERSION"
+
+      - name: Publish to npm with Sigstore Provenance via OIDC
+        working-directory: apps/flagsmith-mcp
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          if curl -sf "https://registry.npmjs.org/@cavdax%2fflagsmith-mcp/$PKG_VERSION" >/dev/null; then
+            echo "@cavdax/flagsmith-mcp@$PKG_VERSION is already published on npm — skipping."
+          else
+            npm publish --access public --provenance
+          fi
