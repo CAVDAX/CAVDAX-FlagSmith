@@ -1,13 +1,43 @@
-# CAVDAX: Active Development Session State (`DEV_SESSION_STATE.md`)
+# CAVDAX for Flagsmith: Active Development Session State (`DEV_SESSION_STATE.md`)
 
-> **Repository**: `GraphHacks-Hackathon/Codebase`  
-> **Session Timestamp**: `2026-11-12T17:08:00+05:30`  
+> **Repository**: `CAVDAX/CAVDAX-FlagSmith`  
+> **Session Timestamp**: `2026-11-27T01:05:00+05:30`  
 > **Active Branch**: `main` (Integration branch: `main`)  
-> **Status**: `@cavdax/mcp-server@1.3.3` Published to npm + Official MCP Registry (`io.github.CAVDAX/cavdax`), `glama.json` Added, ISM Concurrency Hardened
+> **Status**: Toggle Wars Track 03 Production Deployment Verified (`https://cavdax-flagsmith.sahnirmaan.live`), `@cavdax/flagsmith-mcp@1.0.1` Published via GitHub Actions OIDC Trusted Publisher with Sigstore Provenance, 13/13 Automated Tests Passing
 
 ---
 
 ## 🏆 Completed Milestones & Architectural Landings
+
+### 00b. Toggle Wars Track 03: Flagsmith Blast Radius Engine & npm OIDC Provenance (November 26–27, 2026)
+- **Track 03 Engine Architecture (Three-Signal Dependency Discovery)**:
+  - **Signal 1: Flagsmith REST API Ingestion** (`core/ingestion/flagsmithClient.js`):
+    - Synchronizes feature flags, tags, prerequisite dependencies, and multivariate segment variants directly from self-hosted Flagsmith API (`/api/v1/flags/`).
+    - Implemented robust fallback to simulated dependency profiles ensuring graceful degradation when credentials are unset.
+  - **Signal 2: Static AST Code Analysis Scanner** (`core/ingestion/astScanner.js`):
+    - Parses repository source code using Babel/Tree-Sitter AST traversal, detecting `isFeatureEnabled`, `useFlags`, `getValue`, and boolean conjunctions (`CO_OCCURS_AND`, confidence 0.75).
+    - Detects enclosing nested guard relationships (`GUARDS`, confidence 0.85). Verified with 4/4 passing tests in `apps/server/test/astScanner.test.mjs`.
+  - **Signal 3: Git Temporal Coupling Miner** (`core/ingestion/gitMiner.js`):
+    - Mines git commit history to compute Jaccard co-change metric $J(A, B) = \frac{|A \cap B|}{|A \cup B|}$, identifying latent feature flag couplings without explicit code references. Verified with 2/2 passing tests in `apps/server/test/gitMiner.test.mjs`.
+  - **Multi-Signal Bayesian Aggregator** (`core/graph/blastRadiusCalculator.js`):
+    - Fuses multi-source evidence into unified probability $P = 1 - \prod(1 - c_i)$.
+    - Computes multi-hop downstream blast radius and blocks toggling ON when prerequisites are missing or OFF when active dependents break. Verified with 3/3 passing tests in `apps/server/test/blastRadiusCalculator.test.mjs`.
+- **FalkorDB GraphBLAS Optimization (Resolution of Infinite Path Permutation Timeout)**:
+  - *Diagnosis*: Unconstrained Cypher traversal `[:DEPENDS_ON|GUARDS|CO_OCCURS_AND*1..6]` caused GraphBLAS matrix permutation explosion due to bidirectional cyclic edges, resulting in `Query timed out` errors.
+  - *Remedy*: Scoped Cypher reachability to strictly directed acyclic hierarchy `[:DEPENDS_ON|GUARDS*1..3]`. Traversal latency dropped from timeout to **34.15 ms**.
+- **Self-Hosted Flagsmith AWS EC2 Deployment (`15.135.78.65`)**:
+  - Replaced external dependencies with a complete self-hosted Flagsmith Docker container mesh (`cavdax-flagsmith-api:v2.295.2`, `cavdax-flagsmith-db:postgres:15-alpine`).
+  - Added `DJANGO_ALLOWED_HOSTS: "*"` resolving Django HTTP 400 Bad Request error. Verified live API at `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`.
+- **Standalone npm Package & GitHub Actions OIDC Trusted Publisher**:
+  - Created standalone package `apps/flagsmith-mcp` with dedicated CLI (`bin/cli.js`), MCP Stdio Server (`src/mcpServer.js`), and exported APIs.
+  - Configured npm **Trusted Publisher (OIDC)** connection bound to GitHub repository `CAVDAX/CAVDAX-FlagSmith` and workflow `publish-flagsmith-mcp.yml`.
+  - Authored `.github/workflows/publish-flagsmith-mcp.yml` with pre-publish test gates and automated Sigstore provenance attestation (`npm publish --access public --provenance`).
+  - Successfully published `@cavdax/flagsmith-mcp@1.0.0` and `@cavdax/flagsmith-mcp@1.0.1`. Provenance verified on public transparency log (log index `4132791550`).
+  - Verified instant zero-config judge execution: `npx @cavdax/flagsmith-mcp blast dark_mode`.
+- **Frontend Flag Radar HUD & Team AWDAX Branding**:
+  - Implemented interactive `FlagBlastRadiusCard.jsx` console with live GraphBLAS topology visualization, 3-signal breakdown chips, and bi-directional safe toggle switches.
+  - Ingested new official Team AWDAX emblem, converted to optimized WebP (`apps/client/public/team/awdax-logo.webp`, 13.6 KB, 1080x1080), and updated all team attribution components.
+  - Integrated Toggle Wars Track 03 Hero Pill and Flag Radar CTA directly on the main landing page.
 
 ### 00a. Official MCP Registry, Glama Support, v1.3.3 & ISM Hardening (November 12, 2026)
 - **Official MCP Registry & Glama Integration**:

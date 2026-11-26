@@ -34,7 +34,9 @@ import {
 
   Cable,
 
-  HelpCircle
+  HelpCircle,
+
+  ToggleRight
 
 } from 'lucide-react';
 
@@ -912,8 +914,23 @@ export default function LandingPage({
 
 
 
-        {/* Primary Hero Heading: Monumental Display Hierarchy (Wordmark elevated to Section 0) */}
+        {/* Toggle Wars Track 03 Submission Callout Banner */}
+        <div className="mb-6 sm:mb-8 flex items-center justify-center">
+          <button
+            onClick={() => {
+              playClick();
+              if (onSelectTab) onSelectTab('flags');
+            }}
+            className="group inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300 dark:border-white/10 bg-slate-100/80 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] hover:border-slate-400 dark:hover:border-white/20 transition-all text-xs font-mono text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-slate-900 dark:text-slate-100">Toggle Wars Track 03:</span>
+            <span>Flagsmith Blast Radius Radar &amp; MCP Gate</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white" />
+          </button>
+        </div>
 
+        {/* Primary Hero Heading: Monumental Display Hierarchy (Wordmark elevated to Section 0) */}
         <h1 className="max-w-6xl tracking-tight leading-[1.05] mb-8 sm:mb-12 flex flex-col items-center">
 
           <span className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[4.75rem] text-balance font-black tracking-tight leading-[1.1] sm:leading-[1.04] bg-clip-text text-transparent bg-gradient-to-b from-slate-950 via-slate-900 to-slate-700 dark:from-white dark:via-slate-100 dark:to-slate-400 block pb-2 sm:pb-3 px-2 max-w-full">
@@ -947,46 +964,37 @@ export default function LandingPage({
         </h1>
 
 
-        {/* Symmetrical Dual Action CTA Buttons (Section 15 Standard, Optical Right Icons) */}
-
+        {/* Symmetrical Action CTA Buttons (Section 15 Standard, Optical Right Icons) */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 sm:mb-14">
-
           <button
-
             onClick={() => {
-
               playClick();
-
-              if (onLaunchConsole) onLaunchConsole();
-
+              if (onSelectTab) onSelectTab('flags');
             }}
-
             className="btn-primary group tactile-btn inline-flex items-center justify-center gap-2 leading-none"
-
           >
-
-            <span>Launch Verification Console</span>
-
-            <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
-
+            <span>Flag Radar (Track 03)</span>
+            <ToggleRight className="w-4 h-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
           </button>
-
-
 
           <button
-
-            onClick={handleMcpClick}
-
+            onClick={() => {
+              playClick();
+              if (onLaunchConsole) onLaunchConsole();
+            }}
             className="btn-secondary group tactile-btn inline-flex items-center justify-center gap-2 leading-none"
-
           >
-
-            <span>Connect Real MCP Agent</span>
-
-            <McpCableConnectionSvg className="text-slate-700 dark:text-slate-300" />
-
+            <span>ADR Causal Console</span>
+            <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
           </button>
 
+          <button
+            onClick={handleMcpClick}
+            className="btn-secondary group tactile-btn inline-flex items-center justify-center gap-2 leading-none"
+          >
+            <span>Connect MCP Agent</span>
+            <McpCableConnectionSvg className="text-slate-700 dark:text-slate-300" />
+          </button>
         </div>
 
 

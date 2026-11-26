@@ -27,53 +27,51 @@ const ACTS = [
   {
     id: 1,
     act: 'Act I',
-    title: 'Vector RAG Failure & Drift',
+    title: 'Feature Flag Blindness & Cascading Outages',
     time: '0:00',
     seconds: 0,
-    desc: 'Why cosine similarity fails and FalkorDB resolves precedence.'
+    desc: 'Why AI coding agents toggle flags blindly and trigger cascading downstream outages.'
   },
   {
     id: 2,
     act: 'Act II',
-    title: 'Published MCP Gate Daemon',
-    time: '1:42',
-    seconds: 102,
-    desc: 'Universal stdio & SSE setup for Claude Code, Cursor, and Windsurf.'
+    title: 'Three-Signal GraphBLAS Dependency Discovery',
+    time: '0:45',
+    seconds: 45,
+    desc: 'Fusing Flagsmith REST tags, AST code guards, and Git temporal coupling in FalkorDB.'
   },
   {
     id: 3,
     act: 'Act III',
-    title: 'Live Interception & Repair',
-    time: '3:15',
-    seconds: 195,
-    desc: 'Stale Redis write blocked; self-correction to DynamoDB DAX.'
+    title: 'Live Pre-Flight Interception & 409 Conflict',
+    time: '1:30',
+    seconds: 90,
+    desc: 'Unsafe toggle of dark_mode blocked in 34ms; safe bypass verified with --force.'
   },
   {
     id: 4,
     act: 'Act IV',
-    title: 'Connected GitHub Graph Sync',
-    time: '6:08',
-    seconds: 368,
-    desc: 'Live repository scan, 1-click ADR PR, and verified audit log.'
+    title: 'Published MCP Daemon & Live Self-Hosted Mesh',
+    time: '2:15',
+    seconds: 135,
+    desc: 'npx @cavdax/flagsmith-mcp in Cursor, Sigstore provenance, and live AWS EC2.'
   }
 ];
 
-const TOTAL_DURATION_SECONDS = 621;
+const TOTAL_DURATION_SECONDS = 180;
 
 const KEY_MOMENTS = [
-  { label: 'Cosine Blindness', time: '0:33', seconds: 33 },
-  { label: 'Verification Console', time: '1:22', seconds: 82 },
-  { label: 'MCP Config Guides', time: '1:42', seconds: 102 },
-  { label: 'npm run doctor', time: '2:45', seconds: 165 },
-  { label: 'Act I Baseline Ingestion', time: '3:15', seconds: 195 },
-  { label: 'Act II ADR-004 Mutation', time: '4:00', seconds: 240 },
-  { label: 'Act III Stale Redis Blocked', time: '4:30', seconds: 270 },
-  { label: 'Act IV DynamoDB DAX Self-Correction', time: '5:15', seconds: 315 },
-  { label: 'Connected GitHub Graph', time: '6:08', seconds: 368 },
-  { label: '1-Click GitHub PR Sync', time: '8:35', seconds: 515 },
-  { label: 'Agent Action Audit Log', time: '8:58', seconds: 538 },
-  { label: 'System Preferences & Alerts', time: '9:30', seconds: 570 },
-  { label: 'Team AWDAX Credits', time: '10:02', seconds: 602 }
+  { label: 'Feature Flag Blindness', time: '0:15', seconds: 15 },
+  { label: 'Flagsmith REST Ingestion', time: '0:45', seconds: 45 },
+  { label: 'Static AST Code Scanner', time: '1:00', seconds: 60 },
+  { label: 'Git Temporal Coupling (Jaccard)', time: '1:15', seconds: 75 },
+  { label: 'FalkorDB Cypher Traversal (34ms)', time: '1:30', seconds: 90 },
+  { label: 'Safe Toggle 409 Conflict Halt', time: '1:45', seconds: 105 },
+  { label: 'npx @cavdax/flagsmith-mcp CLI', time: '2:00', seconds: 120 },
+  { label: 'Cursor .cursor/mcp.json Setup', time: '2:15', seconds: 135 },
+  { label: 'Live Flag Radar Web HUD', time: '2:30', seconds: 150 },
+  { label: 'Self-Hosted Flagsmith on AWS EC2', time: '2:45', seconds: 165 },
+  { label: 'Team AWDAX Credits', time: '2:55', seconds: 175 }
 ];
 
 export default function ProjectVideoPage({ onLaunchConsole, onOpenMcpPage }) {
