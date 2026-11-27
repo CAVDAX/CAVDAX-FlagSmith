@@ -1202,39 +1202,46 @@ CAVDAX/
 ├── apps/
 │   ├── client/                  # React 18 + Vite + Tailwind Porcelain Dark Web HUD
 │   │   ├── public/sw.js         # Service Worker (Web Push & background divergence alerts)
-│   │   ├── src/components/      # CommandPalette, DevPatLoginModal, AuditPage, DevConsolePage, NodeInspector diff, etc.
+│   │   ├── src/components/      # FlagBlastRadiusCard, AstInspector, CommandPalette, AuditPage, etc.
 │   │   ├── src/services/        # webPush.js (VAPID PushManager subscription manager)
 │   │   └── Dockerfile           # Client containerization
 │   ├── server/                  # Node.js + Express Backend Gateway
-│   │   ├── index.js             # REST API, SSE broadcaster, MCP SSE transport, GitHub webhook ingestion
+│   │   ├── index.js             # REST API, SSE broadcaster, Flagsmith bi-directional sync, MCP gateway
+│   │   ├── flagsmithSync.js     # Flagsmith REST API bi-directional graph synchronization
 │   │   ├── email.js             # Resend API transactional divergence alert dispatcher & debouncer
 │   │   ├── webPush.js           # VAPID key manager & Web Push background notification broker
 │   │   ├── systemState.js       # Atomic persistent state & user notification preferences
 │   │   ├── test/                # Unit & security test suite (114 automated tests: 112 server + 2 MCP locks)
 │   │   └── Dockerfile           # Server containerization
-│   └── mcp-server/              # Standalone NPM package (@cavdax/mcp-server — published)
+│   ├── flagsmith-mcp/           # Published Flagsmith MCP package (@cavdax/flagsmith-mcp v1.0.3)
+│   │   ├── bin/cli.js           # Universal standalone CLI: npx @cavdax/flagsmith-mcp blast|toggle|scan
+│   │   └── src/mcpServer.js     # Stdio/SSE Model Context Protocol server exposing 6 Flagsmith tools
+│   └── mcp-server/              # Standalone NPM package (@cavdax/mcp-server — legacy baseline)
 │       ├── bin/cavdax.js        # Universal CLI: npx cavdax mcp|ingest|check|doctor
 │       └── src/                 # stdioServer, ingestCommand, checkCommand, doctorCommand
-├── assets/                      # Monochromatic Mermaid-style architecture flowcharts (.svg)
+├── assets/                      # Monochromatic Mermaid-style architecture flowcharts (.svg) & UI mockups
 ├── benchmark/                   # Evaluation harness & empirical scale tests
 │   ├── evaluate.js              # 10-Scenario Vector RAG vs CAVDAX benchmark
 │   ├── scale_generator.js       # 50,000-node GraphBLAS stress test
 │   ├── results.json             # Benchmark metrics data
 │   └── EVALUATION_REPORT.md     # Detailed evaluation markdown report
 ├── core/                        # Core Engine Modules
-│   ├── graph/                   # FalkorDB client manager & optimized Cypher queries
-│   ├── ingestion/               # parser.js (ADR YAML) + sources.js (commit/package/codeowners/issue)
-│   └── mcp/                     # Enclosed MCP server & apply_code_change tool
+│   ├── graph/                   # FalkorDB client manager & GraphBLAS blast radius traversal
+│   ├── ingestion/               # flagsmithClient.js (REST), astScanner.js (AST), gitMiner.js (Temporal)
+│   └── mcp/                     # Enclosed MCP server & pre-flight safe_toggle_flag gate
 ├── demo-repo/                   # Target repository subject to agent mutations
-│   ├── docs/adrs/               # ADR-001 (stale), ADR-002 (superseding), ADR-003 (multi-supersedes), TEMPLATE.md
-│   ├── .github/CODEOWNERS       # Governance source generalization
-│   └── src/services/            # payment.js target service
-├── docs/                        # Complete technical specifications & guides
-│   └── FUTURE_ROADMAP.md        # Tiered distribution plan & long-term source ingestion roadmap
+├── docs/                        # Complete technical specifications & canonical context files
+│   ├── PRD.md                   # Product Requirements Document (Track 03 Flagsmith Blast Radius)
+│   ├── ARCHITECTURE.md          # System Architecture & GraphBLAS Multi-Signal Topology
+│   ├── PHASES.md                # 7-Phase Milestone Roadmap & Verification Criteria
+│   └── DEPLOYMENT_AND_INFRA_RUNBOOK.md # Production EC2, Caddy, & Docker Rolling Conflict Invariant
+├── infra/                       # Production Deployment Infrastructure
+│   ├── docker-compose.prod.yml  # 6-container production stack (FalkorDB, Flagsmith API, DB, Server, Client, Caddy)
+│   └── Caddyfile                # Automatic HTTPS reverse proxy with static route precedence
 ├── .env.example                 # Environment variable reference (copy to .env — never commit .env)
 ├── action.yml                   # Reusable composite GitHub Action (CAVDAX causal invalidation gate)
-├── .github/workflows/           # CI pipeline + cavdax-gate.yml (PR blocking workflow)
-├── docker-compose.yml           # Multi-container orchestration (FalkorDB, server, client)
+├── .github/workflows/           # CI/CD pipelines (deploy.yml, publish-flagsmith-mcp.yml, cavdax-gate.yml)
+├── docker-compose.yml           # Local multi-container development orchestration
 ├── LICENSE                      # Apache 2.0 (Client/MCP) / BSL 1.1 (Platform)
 └── package.json                 # Monorepo root scripts
 ```
