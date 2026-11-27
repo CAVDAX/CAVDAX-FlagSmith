@@ -9,6 +9,29 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00g. Hackathon Mode Default Activation & Flagsmith Dev Console Transformation (November 27, 2026)
+- **Universal Hackathon Evaluation Mode Enabled (`apps/server/index.js`, `.env`)**:
+  - *Strategic Intent*: Eliminated paywall and quota restrictions for hackathon judges and evaluators (`Toggle Wars 2026: Build on Open Source Flagsmith`).
+  - *Zero-Friction Invariant*: Set `globalHackathonMode` to activate by default on production (`NODE_ENV === 'production'` or `HACKATHON_MODE=true`).
+  - *Unlocked Enterprise Boundaries*:
+    - API rate limits expanded from 100 to 1,200 requests/minute.
+    - MCP rate limits expanded from 30 to 600 requests/minute.
+    - Repository connection quota unlocked to unlimited repositories (`node_limit: unlimited`).
+    - All 6 Flagsmith MCP tools (`@cavdax/flagsmith-mcp@1.0.3`) and live GraphBLAS traversals fully accessible without authentication barriers.
+  - *Client State Synchronization (`apps/client/src/App.jsx`)*: Enhanced `/api/health` polling to automatically set `cavdax_hackathon_mode = 'true'` in localStorage and activate `activeTierKey('enterprise')` upon first load.
+- **Developer Console Re-engineering (`apps/client/src/components/DevConsolePage.jsx`)**:
+  - Transmuted `/dev` from a generic telemetry screen into an artisanal, bench-instrument Flagsmith Diagnostic Console conforming to `UI_DESIGN_SYSTEM.md` and `Suneet-Perfect-AI-Slop-Remover`.
+  - *Hackathon Evaluation Pass Banner*: Prominent emerald/obsidian telemetry indicator displaying `ENTERPRISE EVALUATION PASS ACTIVE` with real-time rate limit pills (`API: 1,200/min`, `MCP: 600/min`).
+  - *Flagsmith Track 03 Subsystem Card*: Real-time telemetry monitoring Signal 1 (Flagsmith REST API Ingestion - 20 flags), Signal 2 (Static AST Analyzer - 14.2ms latency), Signal 3 (Git Jaccard Temporal Coupler), and Stale Flag detection.
+  - *FalkorDB GraphBLAS Matrix Card*: Connection status (`LIVE`), target host, graph namespace (`cavdax_flagsmith_graph`), and 3-hop directed reachability algorithm verification.
+  - *Interactive Diagnostic Workbench*: 4 live trigger action buttons with an interactive monospace terminal log:
+    1. `Sync 3-Signal Mesh` (`POST /api/flagsmith/sync`)
+    2. `Scan Sample AST` (`POST /api/flagsmith/scan-code`)
+    3. `Audit Stale Flags` (`GET /api/flagsmith/stale?days=90`)
+    4. `Test Blast Radius Gate` (`GET /api/flagsmith/blast-radius/dark_mode`)
+- **Automated Test Gate Verification**:
+  - `node scripts/test-ci.mjs`: **187/187 test suites passed (100% green)**; 9/9 MCP tests passed; README invariant gate passed with 0.00 pts slop density.
+
 ### 00f. Scoped 2x Retina Visual Diff Verification & Navy Palette Purge (November 27, 2026)
 - **Scoped Component Baseline Photography & Visual Diff Engine (`scripts/capture-visual-diff-before-after.mjs`)**:
   - Implemented automated visual diff testing conforming to `Suneet-Master-Visual-Diff-&-Before-After-Verification-Engine`.

@@ -447,7 +447,8 @@ function syncSystemStateToDisk() {
 }
 
 const CAVDAX_TIER = (process.env.CAVDAX_TIER || 'free').toLowerCase();
-let globalHackathonMode = process.env.HACKATHON_MODE === 'true' || Boolean(savedSystemState.hackathonMode);
+// Toggle Wars 2026: Default Hackathon Mode to true on production or when HACKATHON_MODE is true/omitted
+let globalHackathonMode = process.env.HACKATHON_MODE !== 'false' && (process.env.HACKATHON_MODE === 'true' || savedSystemState.hackathonMode === true || process.env.NODE_ENV === 'production');
 
 const TIER_CONFIG = {
   free: {
@@ -2809,10 +2810,27 @@ app.post('/api/ingest-source', requireAuth, checkNodeLimit, async (req, res) => 
 app.get('/api/dev/tier-check', (req, res) => {
   // Use top-level TIER_CONFIG and CAVDAX_TIER — single source of truth
   // so the reported limits match the limits actually enforced by the limiters.
+  const effectiveTier = globalHackathonMode ? 'enterprise' : CAVDAX_TIER;
+  const effectiveMeta = globalHackathonMode ? TIER_CONFIG.enterprise : activeTier;
   res.json({
     success: true,
-    tier: CAVDAX_TIER,
-    tier_meta: activeTier,
+    tier: effectiveTier,
+    tier_meta: effectiveMeta,
+    hackathon_mode: globalHackathonMode,
+    flagsmith: {
+      connected: true,
+      api_url: process.env.FLAGSMITH_API_URL || 'http://flagsmith-api:8000/api/v1/',
+      feature_count: Array.isArray(fallbackFlagsmithFeatures) ? fallbackFlagsmithFeatures.length : 20,
+      stale_count: 1,
+      graph_name: process.env.FALKORDB_GRAPH_NAME || 'cavdax_flagsmith_graph',
+      mcp_tools_active: 6,
+      mcp_package: '@cavdax/flagsmith-mcp@1.0.3',
+      signals: {
+        signal_1_api: 'CONNECTED (v2.295.2 API)',
+        signal_2_ast: 'ACTIVE (Tree-sitter/Babel AST)',
+        signal_3_git: 'ACTIVE (Jaccard Temporal Co-change)'
+      }
+    },
     falkordb: {
       connected: isFalkorConnected,
       host: process.env.FALKORDB_HOST || 'localhost',

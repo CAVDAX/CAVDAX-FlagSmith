@@ -1031,8 +1031,9 @@ export default function App() {
           setFalkorLive(healthData.falkordb_connected);
           if (healthData.tier) {
             const hasDevOverride = typeof window !== 'undefined' && localStorage.getItem('cavdax_dev_tier_override') === 'true';
-            const isHackathon = typeof window !== 'undefined' && localStorage.getItem('cavdax_hackathon_mode') === 'true';
+            const isHackathon = healthData.hackathon_mode || (typeof window !== 'undefined' && localStorage.getItem('cavdax_hackathon_mode') === 'true');
             if (isHackathon) {
+              if (typeof window !== 'undefined') localStorage.setItem('cavdax_hackathon_mode', 'true');
               setActiveTierKey('enterprise');
             } else if (hasDevOverride) {
               const savedTier = localStorage.getItem('cavdax_tier');
