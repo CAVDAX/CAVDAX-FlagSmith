@@ -230,6 +230,34 @@ export function AnalyticsDashboard() {
 
   const selectedFeature = features.find(f => f.name === selectedFlagName);
 
+  // Deduplicate and prioritize upstream prerequisites and downstream dependents
+  const uniqueDownstream = React.useMemo(() => {
+    if (!blastRadius?.downstream_dependents) return [];
+    const map = new Map();
+    for (const dep of blastRadius.downstream_dependents) {
+      if (!map.has(dep.name) || (dep.depth && map.get(dep.name).depth > dep.depth)) {
+        map.set(dep.name, dep);
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
+  }, [blastRadius?.downstream_dependents]);
+
+  const uniqueUpstream = React.useMemo(() => {
+    if (!blastRadius?.upstream_prerequisites) return [];
+    const map = new Map();
+    for (const pre of blastRadius.upstream_prerequisites) {
+      if (!map.has(pre.name)) {
+        map.set(pre.name, { ...pre });
+      } else {
+        const existing = map.get(pre.name);
+        // If any path is disabled, constraint is unsatisfied/missing
+        if (!pre.enabled) existing.enabled = false;
+        if (pre.depth && existing.depth && pre.depth < existing.depth) existing.depth = pre.depth;
+      }
+    }
+    return Array.from(map.values()).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
+  }, [blastRadius?.upstream_prerequisites]);
+
   // Compute Risk Tier styling
   const riskColor = blastRadius?.risk_tier === 'CRITICAL'
     ? 'text-rose-500 bg-rose-500/10 border-rose-500/20'
@@ -306,7 +334,7 @@ export function AnalyticsDashboard() {
             <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">
               Select Feature Flag
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center">
               {features.map((feat) => {
                 const isSelected = feat.name === selectedFlagName;
                 return (
@@ -316,16 +344,16 @@ export function AnalyticsDashboard() {
                       playClick();
                       setSelectedFlagName(feat.name);
                     }}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer ${
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold shadow-md'
-                        : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold shadow-sm'
+                        : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 border border-transparent dark:border-white/5'
                     }`}
                   >
-                    <span className={`w-2 h-2 rounded-full ${feat.enabled ? 'bg-emerald-500' : 'bg-slate-400'}`} />
-                    <span>{feat.name}</span>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${feat.enabled ? 'bg-emerald-500' : 'bg-slate-400'}`} />
+                    <span className="truncate">{feat.name}</span>
                     {feat.incoming_dependents > 0 && (
-                      <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-200 dark:bg-white/10 font-sans">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-white/10 font-sans shrink-0 font-medium">
                         {feat.incoming_dependents} dep
                       </span>
                     )}
@@ -377,7 +405,7 @@ export function AnalyticsDashboard() {
           {blastRadius && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
               {/* Column 1: Flag State & Safe Toggle */}
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141A] flex flex-col justify-between">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
@@ -430,64 +458,64 @@ export function AnalyticsDashboard() {
               </div>
 
               {/* Column 2: Downstream Dependents (Blast Radius) */}
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141A]">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A]">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
-                    Downstream Impact ({blastRadius.downstream_impact_count || 0})
+                    Downstream Impact ({uniqueDownstream.length})
                   </span>
                   <Tooltip content="Features that break or stop working if this flag is disabled">
                     <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
                   </Tooltip>
                 </div>
 
-                {blastRadius.downstream_dependents && blastRadius.downstream_dependents.length > 0 ? (
+                {uniqueDownstream.length > 0 ? (
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                    {blastRadius.downstream_dependents.map((dep, idx) => (
+                    {uniqueDownstream.map((dep, idx) => (
                       <div
                         key={`${dep.name}-${idx}`}
-                        className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs"
+                        className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 text-xs shadow-xs hover:border-slate-300 dark:hover:border-white/20 transition-all"
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className={`w-1.5 h-1.5 rounded-full ${dep.enabled ? 'bg-rose-500' : 'bg-slate-400'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dep.enabled ? 'bg-rose-500' : 'bg-slate-400'}`} />
                           <span className="font-mono truncate font-medium">{dep.name}</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 shrink-0 ml-2">
-                          Hop {dep.depth}
+                        <span className="text-[10px] text-slate-400 shrink-0 ml-2 font-mono">
+                          Hop {dep.depth || 1}
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <div className="py-8 text-center text-xs text-slate-400">
-                    <Check className="w-6 h-6 mx-auto mb-2 text-emerald-500 opacity-80" strokeWidth={2} />
+                    <Check className="w-6 h-6 mx-auto mb-2 text-emerald-500 opacity-80" strokeWidth={2.5} />
                     <span>Zero downstream dependents. Safe to toggle without cascading breaking changes.</span>
                   </div>
                 )}
               </div>
 
               {/* Column 3: Upstream Prerequisites */}
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141A]">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A]">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
-                    Upstream Prerequisites ({blastRadius.upstream_prerequisites?.length || 0})
+                    Upstream Prerequisites ({uniqueUpstream.length})
                   </span>
                   <Tooltip content="Features required to be active before this flag can safely execute">
                     <Layers className="w-3.5 h-3.5 text-slate-400" />
                   </Tooltip>
                 </div>
 
-                {blastRadius.upstream_prerequisites && blastRadius.upstream_prerequisites.length > 0 ? (
+                {uniqueUpstream.length > 0 ? (
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-                    {blastRadius.upstream_prerequisites.map((pre, idx) => (
+                    {uniqueUpstream.map((pre, idx) => (
                       <div
                         key={`${pre.name}-${idx}`}
-                        className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs"
+                        className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 text-xs shadow-xs hover:border-slate-300 dark:hover:border-white/20 transition-all"
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className={`w-1.5 h-1.5 rounded-full ${pre.enabled ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${pre.enabled ? 'bg-emerald-500' : 'bg-amber-500'}`} />
                           <span className="font-mono truncate font-medium">{pre.name}</span>
                         </div>
-                        <span className={`text-[10px] font-bold ${pre.enabled ? 'text-emerald-500' : 'text-amber-500'}`}>
+                        <span className={`text-[10px] font-mono font-bold ${pre.enabled ? 'text-emerald-500' : 'text-amber-500'}`}>
                           {pre.enabled ? 'SATISFIED' : 'MISSING'}
                         </span>
                       </div>
@@ -535,13 +563,13 @@ export function AnalyticsDashboard() {
           </div>
 
           {/* Code Textarea */}
-          <div className="relative rounded-xl border border-slate-200 dark:border-white/10 bg-slate-900 text-slate-100 overflow-hidden shadow-inner">
-            <div className="flex items-center justify-between px-3.5 py-2 bg-slate-950/60 border-b border-white/5 text-[11px] text-slate-400 font-mono">
+          <div className="relative rounded-xl border border-slate-200 dark:border-white/10 bg-[#07080A] text-slate-100 overflow-hidden shadow-inner">
+            <div className="flex items-center justify-between px-3.5 py-2 bg-slate-950/80 border-b border-white/5 text-[11px] text-slate-400 font-mono">
               <div className="flex items-center gap-2">
                 <FileCode2 className="w-3.5 h-3.5 text-cyan-400" />
                 <span>snippet.js</span>
               </div>
-              <span>JavaScript / TypeScript AST Parser</span>
+              <span className="text-[10px] tracking-wide text-slate-400">AST Parser (Babel Core / Acorn)</span>
             </div>
             <textarea
               value={astCode}
@@ -551,14 +579,14 @@ export function AnalyticsDashboard() {
               className="w-full p-3.5 bg-transparent font-mono text-xs text-emerald-400 placeholder-slate-500 focus:outline-none resize-none leading-relaxed"
               placeholder="// Paste source code containing Flagsmith SDK calls here..."
             />
-            <div className="p-3 bg-slate-950/40 border-t border-white/5 flex items-center justify-between">
+            <div className="p-3 bg-slate-950/60 border-t border-white/5 flex items-center justify-between">
               <span className="text-[11px] text-slate-400 font-mono">
                 {astCode.split('\n').length} lines
               </span>
               <button
                 onClick={handleScanAst}
                 disabled={isScanningAst || !astCode.trim()}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-colors disabled:opacity-50 cursor-pointer shadow"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-colors disabled:opacity-50 cursor-pointer shadow-sm"
               >
                 <Play className={`w-3.5 h-3.5 ${isScanningAst ? 'animate-spin' : ''}`} />
                 <span>{isScanningAst ? 'Parsing AST...' : 'Analyze Code AST'}</span>
@@ -596,7 +624,7 @@ export function AnalyticsDashboard() {
                     {astResult.flags.map((f) => (
                       <div
                         key={f.name}
-                        className="p-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141A] flex items-center justify-between"
+                        className="p-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A] flex items-center justify-between"
                       >
                         <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -637,7 +665,7 @@ export function AnalyticsDashboard() {
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141A] text-center text-xs text-slate-400">
+                  <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A] text-center text-xs text-slate-400">
                     Zero Flagsmith feature flag invocations detected in snippet.
                   </div>
                 )}
@@ -654,7 +682,7 @@ export function AnalyticsDashboard() {
                     {astResult.dependencies.map((dep, idx) => (
                       <div
                         key={idx}
-                        className="p-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141A] flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs"
+                        className="p-3 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A] flex flex-col md:flex-row md:items-center justify-between gap-2 text-xs"
                       >
                         <div className="flex items-center gap-2">
                           <span className="font-mono font-bold text-slate-900 dark:text-white">
