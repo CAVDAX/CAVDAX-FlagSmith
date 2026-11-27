@@ -9,6 +9,29 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00h. Flag Radar Panel (/flags) Anti-Slop Audit, Deduplication & Visual Diff Verification (November 27, 2026)
+- **Deep Forensic Audit of `/flags` (Devil's Advocate & Anti-Slop Scanner)**:
+  - Addressed the direct inquiry on whether `/flags` is 100% slop free with 100% honesty: uncovered lingering un-deduplicated graph traversal output, mobile clause-splits, and substrate inconsistencies.
+  - *Prerequisites Deduplication (`apps/client/src/components/FlagBlastRadiusCard.jsx`)*: When querying `dark_mode`, FalkorDB Cypher multi-hop path traversal returned multiple path instances of upstream nodes (`auth_v2`, `mfa_enforced`, `getValue`, `includes`), cluttering the UI with 37 repetitive entries. Implemented `React.useMemo` deduplication, prioritizing shortest hop depths and displaying authentic unique prerequisites.
+  - *Anti-Clause-Split Invariant*: Added `whitespace-nowrap shrink-0` to all feature flag selector tabs and aligned pill layout to prevent awkward multi-word breaking.
+  - *Obsidian & Porcelain Substrate Polish*: Harmonized cards with `bg-slate-50/60 dark:bg-[#11141A]` and inner elements with `bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10`.
+  - *AST Terminal Well*: Standardized the AST Inspector well to `#07080A` obsidian with Babel/Acorn telemetry header.
+- **2x Retina Visual Diff Verification (`scripts/capture-flags-diff-after.mjs`)**:
+  - Captured high-DPI baseline BEFORE vs refined AFTER photography across Dark and Light modes on live production.
+  - Verified SHA-256 cryptographic pixel deltas across surfaces:
+    - *Flag Radar Card (Dark)*: `289add15...` -> `a7aa4a6f...` (**VERIFIED DIFF**)
+    - *Upstream Prerequisites Column (Dark)*: `c42c2d6d...` -> `f19e5fdd...` (**VERIFIED DIFF**)
+    - *AST Inspector Panel (Dark)*: `905e1638...` -> `029c53c4...` (**VERIFIED DIFF**)
+    - *Flag Radar Card (Light)*: `5e1e18d6...` -> `7e61490b...` (**VERIFIED DIFF**)
+    - *Upstream Prerequisites Column (Light)*: `555c37f5...` -> `d3a87d03...` (**VERIFIED DIFF**)
+    - *AST Inspector Panel (Light)*: `a04c3630...` -> `b8a6632d...` (**VERIFIED DIFF**)
+    - *Selector Strip (Dark/Light)*: Identical at 1440px desktop viewport (empirical observation).
+  - Saved `FLAGS_VISUAL_DIFF_VERIFICATION_LEDGER.json`.
+- **Production Deployment & CI Invariance**:
+  - Committed as `e73129e` (`refactor(flags): deduplicate prerequisites and polish obsidian layout [skip vercel]`).
+  - Rebuilt `client` container on EC2 (`cavdax-flagsmith-client`); verified live healthy.
+  - `node scripts/test-ci.mjs`: **187/187 tests passing (100% green)**, 9/9 MCP tests passing.
+
 ### 00g. Hackathon Mode Default Activation & Flagsmith Dev Console Transformation (November 27, 2026)
 - **Universal Hackathon Evaluation Mode Enabled (`apps/server/index.js`, `.env`)**:
   - *Strategic Intent*: Eliminated paywall and quota restrictions for hackathon judges and evaluators (`Toggle Wars 2026: Build on Open Source Flagsmith`).
