@@ -3131,7 +3131,9 @@ setInterval(() => {
 app.get('/api/auth/github', (req, res) => {
   const candidatePath = (typeof req.query.returnTo === 'string' ? req.query.returnTo.split('?')[0] : '/mcp');
   const VALID_RETURN_ROUTES = ['/overview', '/console', '/mcp', '/walkthrough', '/audit', '/team', '/profile', '/support', '/devteam'];
-  const safeReturnTo = VALID_RETURN_ROUTES.includes(candidatePath) ? req.query.returnTo : '/mcp';
+  const safeReturnTo = (typeof req.query.returnTo === 'string' && VALID_RETURN_ROUTES.includes(candidatePath))
+    ? req.query.returnTo
+    : '/mcp';
 
   if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
     // If navigated in browser directly, redirect back gracefully to UI with informative error parameter
