@@ -101,26 +101,24 @@
 
 | # | Route | Purpose | Theme Support | Primary User Story |
 |---|---|---|---|---|
-| **1** | `/flags` | **Flagsmith Blast Radius Radar** | Dark + Light | Inspect multi-hop flag ripple effects & simulate safe toggle barrier (409 Conflict) |
-| **2** | `/dev` | **Developer Diagnostics Console** | Dark + Light | Toggle Hackathon Mode (zero-paywall access for judges) & inspect system telemetry |
-| **3** | `/overview` | **Architectural Causal DAG** | Dark + Light | Explore full-viewport Cytoscape.js directed graph & Linear-grade search ribbon |
-| **4** | `/console` | **Connected Repository Workspace** | Dark + Light | Multi-tenant GitHub repository linking & bidirectional ADR-to-graph sync |
-| **5** | `/mcp` | **MCP Action Playground** | Dark + Light | Simulate pre-flight verification queries with dynamic hop sliders (`1..4`) |
-| **6** | `/walkthrough` | **4-Act Storyline Stepper** | Dark + Light | Guided evaluation walk through baseline, upstream mutation, rejection & revalidation |
-| **7** | `/audit` | **Compliance Audit Ledger** | Dark + Light | Tamper-evident execution trail of all agent actions and causal provenance |
-| **8** | `/team` | **Core Maintainers & Attribution** | Dark + Light | Team research background, systems architecture, and contributor credentials |
-| **9** | `/profile` | **Developer Profile & Viewports** | Dark + Light | Subscription tier management, quota consumption, and secure MCP key generation |
-| **10**| `/support` | **Operational Backing & Patrons** | Dark + Light | Community stewardship breakdown and honorary recognition galaxy |
-| **11**| `/flagsmith/api/v1/`| **Self-Hosted Flagsmith Portal** | Built-in | Direct Django REST interface for project overrides, identities, and traits |
+| **1** | `/` (`overview`) | **Product Immersion & Architecture Overview** | Dark + Light | Explore core problem statement, 3-signal architecture flow, embedded video walkthrough & backer galaxy |
+| **2** | `/flags` | **Flagsmith Blast Radius Radar** | Dark + Light | Inspect multi-hop flag ripple effects, AST code references, and simulate safe toggle barrier (409 Conflict) |
+| **3** | `/mcp` | **Repo Scanner & Agent MCP Gateway** | Dark + Light | Connect Git repositories, scan code for Flagsmith SDK invocations, and configure IDE agents (Cursor, Claude) |
+| **4** | `/audit` | **Compliance Audit Ledger** | Dark + Light | Immutable execution trail of all agent actions, blast radius validations, and safe cutover events |
+| **5** | `/dev` | **Developer Diagnostics Console** | Dark + Light | Toggle Hackathon Mode (zero-paywall access for judges), inspect system health & GraphBLAS telemetry |
+| **6** | `/console` | **Interactive Causal Verification Console** | Dark + Light | Step through Acts I–IV: Flag baseline, blast radius detection, enclosed MCP gate block & topological safe cutover |
+| **7** | `/flagsmith/api/v1/`| **Self-Hosted Flagsmith Portal** | Built-in | Direct Django REST interface for project overrides, identities, segments, and traits |
 
 ---
 
-## 3. Production Anti-Slop & Visual Diff Verification Status (November 27, 2026)
+## 7. Production Anti-Slop, Orb Purge & Visual Diff Verification Status (November 27, 2026)
 
 | Target Surface | Defect Purged | Before vs After Artifacts | Production Deployment Status |
 |---|---|---|---|
-| **Flag Radar Panel (`/flags`)** | Subtitle truncation (`line-clamp-1`), wrapped `Sync Mesh` button, junk JS methods (`forEach`, `length`, etc.) | `live_card_after_light.png` / `live_card_after_dark.png` | **100% Deployed & Rebuilt** (`--no-cache`) |
-| **Global Header (`Header.jsx`)** | Monospace typography on tabs, `ToggleRight` icon, avatar black dot badge | `live_after_flags_radar_light.png` | **100% Deployed & Rebuilt** |
-| **Hero Callout Banner (`LandingPage.jsx`)** | Harsh monospace border & typewriter font | `live_track03_after_light.png` | **100% Deployed & Rebuilt** |
-| **FalkorDB GraphBLAS Database** | Phantom AST feature flag nodes | Cypher query `DETACH DELETE` executed live | **Verified Clean (13 real flags, 0 junk)** |
+| **Flag Radar Panel (`/flags`)** | Purged all colored circular dot orbs from chips, downstream rows, upstream rows, turn-off button, and 3-signal bar; unboxed nested cards into clean telemetry rows | `live_purged_card_dark.png` / `live_purged_card_light.png` | **100% Deployed & Rebuilt** (`--no-cache`) |
+| **Global Header (`Header.jsx`)** | Consolidated navbar from 7 tabs to 4 high-signal tabs; purged floating tier status dot orb from user profile avatar | `live_purged_flags_radar_dark.png` | **100% Deployed & Rebuilt** |
+| **Hero Callout Banner (`LandingPage.jsx`)** | Purged `animate-ping rounded-full` pulsing green dot orb; replaced with precision monospace `[TRACK 03]` tag; removed ambient background blur halos | `live_purged_overview_dark.png` | **100% Deployed & Rebuilt** |
+| **Console Story Stepper (`StoryStepper.jsx`, `App.jsx`)** | Converted legacy ADR TokenAuth simulation into the Flagsmith Feature Flag Causal Story (Acts I–IV) with live Flagsmith SDK calls | `live_flagsmith_console_dark.png` | **100% Deployed & Rebuilt** |
+| **Connected Repo Workspace (`ConnectedRepoWorkspace.jsx`)** | Replaced legacy ADR scanning empty state with Flagsmith Feature Flag Code Scanner | Code inspection verified | **100% Deployed & Rebuilt** |
+| **FalkorDB GraphBLAS Database** | Phantom AST feature flag nodes purged; 12 authentic Flagsmith features mapped | Cypher traversal verified live (34.15ms) | **Verified Clean (12 real flags, 0 junk)** |
 
