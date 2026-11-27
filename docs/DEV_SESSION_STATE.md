@@ -9,6 +9,16 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00e. Dedicated GitHub OAuth App Live Deployment & Activation (November 27, 2026)
+- **Production Credentials Ingestion**:
+  - Retrieved genuine GitHub OAuth App credentials generated specifically for `https://cavdax-flagsmith.sahnirmaan.live` (`Client ID: Ov23limzkc8n4He8Y7NK`).
+  - Synchronized `.env` on production AWS EC2 instance (`/home/ubuntu/CAVDAX-FlagSmith/.env`) and recreated Docker containers (`cavdax-server`, `cavdax-client`).
+- **Defensive Route Hardening (`apps/server/index.js`)**:
+  - Sanitized `safeReturnTo` ternary to prevent `undefined.includes('?')` crash when `req.query.returnTo` is omitted.
+  - Verified live endpoint `GET /api/auth/github`: returns clean `HTTP 302 Found` with direct redirect to GitHub's authorization consent page (`https://github.com/login/oauth/authorize?client_id=Ov23limzkc8n4He8Y7NK&redirect_uri=https%3A%2F%2Fcavdax-flagsmith.sahnirmaan.live%2Fapi%2Fauth%2Fgithub%2Fcallback...`).
+- **Zero-Secret Commit Invariant**:
+  - Verified local and production `.env` files remain strictly untracked by Git (`.gitignore` verified; `git status -s` clean).
+
 ### 00d. Full AI-Slop Mechanical Purge & Headless Puppeteer Visual Verification (November 27, 2026)
 - **Mechanical AST AI-Slop Eradication (`apps/client/src/components`)**:
   - *Pure Ticks Law (IC-01)*: Purged 59 occurrences of `CheckCircle2` across 11 components (`CommandPalette`, `ConnectedRepoWorkspace`, `DevTeamPanel`, `FlagBlastRadiusCard`, `LandingPage`, `McpActionPlayground`, `NodeInspector`, `ProfilePage`, `StoryStepper`, `SupportPage`, `TerminalView`), transmuting them to bare `Check` line SVGs (`strokeWidth={2.5}`).
