@@ -9,6 +9,16 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00c. GitHub OAuth Fallback Hardening & CISO Security Threat Model (November 27, 2026)
+- **GitHub OAuth Unconfigured Fallback Trap Eliminated (`apps/server/index.js`)**:
+  - *Diagnosis*: Unset `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` returned raw HTTP 503 JSON to browser direct navigations (`window.location.href = '/api/auth/github'`), trapping judges on a raw JSON error screen.
+  - *Remedy*: Express OAuth route updated to detect HTML browser navigation requests and redirect gracefully back to the calling view (`${safeReturnTo}?oauth_error=not_configured`), displaying a polished inline notification toast advising Personal Access Token or Demo Mode usage.
+  - *Dynamic Callback Discovery*: Replaced static fallback to `cavdax.sahnirmaan.live` with dynamic origin resolution (`req.protocol + '://' + req.get('host') + '/api/auth/github/callback'`), guaranteeing seamless operation across `cavdax-flagsmith.sahnirmaan.live` and local environments.
+- **Client Toast Ergonomics (`apps/client`)**:
+  - Enhanced `ConnectMcpPage.jsx` and `ProfilePage.jsx` to map `oauth_error=not_configured` to a clear, actionable user message: `"GitHub OAuth is not configured on this server. Please use a Personal Access Token or Demo Mode."` with 5-second auto-dismissal.
+- **CISO Security Governance & STRIDE Threat Ledger (`docs/SECURITY_PROGRESS_TRACKER.md`)**:
+  - Authored official project security ledger codifying STRIDE/DREAD threat evaluations, 14 Inviolable Laws, CVSS v3.1 scores, and remediation SLAs per `Suneet-MASTER-Security-Product-Manager-Skill`.
+
 ### 00b. Toggle Wars Track 03: Flagsmith Blast Radius Engine, 6 MCP Tools & npm OIDC Provenance (November 26–27, 2026)
 - **Track 03 Engine Architecture (Three-Signal Dependency Discovery)**:
   - **Signal 1: Flagsmith REST API Ingestion** (`core/ingestion/flagsmithClient.js`):

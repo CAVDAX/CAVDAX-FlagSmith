@@ -192,7 +192,10 @@ function consumeOAuthCallbackParams(onUserResolved) {
     return true;
   } else if (params.get('oauth_error')) {
     const errCode = params.get('oauth_error');
-    onUserResolved(null, { type: 'error', text: `GitHub OAuth failed: ${errCode}` });
+    const errText = errCode === 'not_configured'
+      ? 'GitHub OAuth is not configured on this server. Please use a Personal Access Token or Demo Mode.'
+      : `GitHub OAuth failed: ${errCode}`;
+    onUserResolved(null, { type: 'error', text: errText });
     window.history.replaceState({}, '', '/profile');
     return true;
   }

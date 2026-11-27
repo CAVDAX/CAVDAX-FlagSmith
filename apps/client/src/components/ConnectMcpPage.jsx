@@ -266,8 +266,11 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
       window.history.replaceState({}, '', window.location.pathname);
     } else if (params.get('oauth_error')) {
       const errCode = params.get('oauth_error');
-      setOauthMsg({ type: 'error', text: `GitHub OAuth failed: ${errCode}` });
-      setTimeout(() => setOauthMsg(null), 3500);
+      const errText = errCode === 'not_configured'
+        ? 'GitHub OAuth is not configured on this server. Please use a Personal Access Token or Demo Mode.'
+        : `GitHub OAuth failed: ${errCode}`;
+      setOauthMsg({ type: 'error', text: errText });
+      setTimeout(() => setOauthMsg(null), 5000);
       window.history.replaceState({}, '', window.location.pathname);
     }
 

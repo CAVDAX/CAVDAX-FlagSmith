@@ -3108,10 +3108,10 @@ app.post('/api/mcp/messages', requireAuth, async (req, res) => {
 const GITHUB_CLIENT_ID     = process.env.GITHUB_CLIENT_ID     || null;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || null;
 const isProduction         = process.env.NODE_ENV === 'production';
-const CLIENT_URL           = process.env.CLIENT_URL           || (isProduction ? 'https://cavdax.sahnirmaan.live' : 'http://localhost:5173');
+const CLIENT_URL           = process.env.CLIENT_URL           || (isProduction ? 'https://cavdax-flagsmith.sahnirmaan.live' : 'http://localhost:5173');
 const GITHUB_CALLBACK_URL  = process.env.GITHUB_CALLBACK_URL
   || (isProduction
-      ? 'https://cavdax.sahnirmaan.live/api/auth/github/callback'
+      ? 'https://cavdax-flagsmith.sahnirmaan.live/api/auth/github/callback'
       : `http://localhost:${PORT}/api/auth/github/callback`);
 
 // In-memory CSRF state store (keyed by random state param, TTL 10 min)
@@ -3126,10 +3126,19 @@ setInterval(() => {
 /**
  * GET /api/auth/github
  * Redirects the browser to GitHub's authorization page.
- * If GITHUB_CLIENT_ID is not configured, returns a clear 503 explanation.
+ * If GITHUB_CLIENT_ID is not configured, returns a clear explanation or redirects gracefully.
  */
 app.get('/api/auth/github', (req, res) => {
+  const candidatePath = (typeof req.query.returnTo === 'string' ? req.query.returnTo.split('?')[0] : '/mcp');
+  const VALID_RETURN_ROUTES = ['/overview', '/console', '/mcp', '/walkthrough', '/audit', '/team', '/profile', '/support', '/devteam'];
+  const safeReturnTo = VALID_RETURN_ROUTES.includes(candidatePath) ? req.query.returnTo : '/mcp';
+
   if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
+    // If navigated in browser directly, redirect back gracefully to UI with informative error parameter
+    if (req.accepts('html')) {
+      const sep = safeReturnTo.includes('?') ? '&' : '?';
+      return res.redirect(`${safeReturnTo}${sep}oauth_error=not_configured`);
+    }
     return res.status(503).json({
       success: false,
       error: 'GITHUB_OAUTH_NOT_CONFIGURED',
@@ -3142,14 +3151,17 @@ app.get('/api/auth/github', (req, res) => {
   // Also persist the returnTo path so the callback can redirect back to the
   // originating page (e.g. /profile) rather than always landing on /mcp.
   const state = randomBytes(20).toString('hex');
-  const VALID_RETURN_ROUTES = ['/overview', '/console', '/mcp', '/walkthrough', '/audit', '/team', '/profile', '/support', '/devteam'];
-  const candidatePath = (typeof req.query.returnTo === 'string' ? req.query.returnTo.split('?')[0] : '/mcp');
-  const safeReturnTo = VALID_RETURN_ROUTES.includes(candidatePath) ? req.query.returnTo : '/mcp';
   oauthStateStore.set(state, { createdAt: Date.now(), returnTo: safeReturnTo });
+
+  // Dynamically resolve callback URL so host changes or proxy headers never break OAuth
+  const reqHost = (typeof req.get === 'function' ? req.get('host') : req.headers?.host) || 'cavdax-flagsmith.sahnirmaan.live';
+  const reqProto = req.protocol || 'https';
+  const activeCallbackUrl = process.env.GITHUB_CALLBACK_URL ||
+    `${reqProto}://${reqHost}/api/auth/github/callback`;
 
   const params = new URLSearchParams({
     client_id: GITHUB_CLIENT_ID,
-    redirect_uri: GITHUB_CALLBACK_URL,
+    redirect_uri: activeCallbackUrl,
     scope: 'repo workflow read:user read:org user:email',
     state
   });
@@ -3186,6 +3198,11 @@ app.get('/api/auth/github/callback', async (req, res) => {
   }
 
   try {
+    const reqHost = (typeof req.get === 'function' ? req.get('host') : req.headers?.host) || 'cavdax-flagsmith.sahnirmaan.live';
+    const reqProto = req.protocol || 'https';
+    const activeCallbackUrl = GITHUB_CALLBACK_URL || `${reqProto}://${reqHost}/api/auth/github/callback`;
+    const frontendBase = CLIENT_URL || (process.env.NODE_ENV === 'production' ? `${reqProto}://${reqHost}` : 'http://localhost:5173');
+
     // 1. Exchange code for access token
     const tokenRes = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
@@ -3194,14 +3211,13 @@ app.get('/api/auth/github/callback', async (req, res) => {
         client_id: GITHUB_CLIENT_ID,
         client_secret: GITHUB_CLIENT_SECRET,
         code,
-        redirect_uri: GITHUB_CALLBACK_URL
+        redirect_uri: activeCallbackUrl
       })
     });
     const tokenData = await tokenRes.json();
 
     if (tokenData.error || !tokenData.access_token) {
       console.error('[CAVDAX OAuth] Token exchange failed:', tokenData);
-      const frontendBase = CLIENT_URL || '';
       return res.redirect(`${frontendBase}${returnTo}?oauth_error=${encodeURIComponent(tokenData.error || 'token_exchange_failed')}`);
     }
 
@@ -3238,8 +3254,6 @@ app.get('/api/auth/github/callback', async (req, res) => {
     } catch (emailErr) {
       console.warn('[CAVDAX OAuth] Note fetching user emails:', emailErr.message);
     }
-
-    const frontendBase = CLIENT_URL || '';
 
     if (!userData.id) {
       const sep = returnTo.includes("?") ? "&" : "?";
