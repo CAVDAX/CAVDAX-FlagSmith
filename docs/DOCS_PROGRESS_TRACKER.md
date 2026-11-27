@@ -112,3 +112,15 @@
 | **9** | `/profile` | **Developer Profile & Viewports** | Dark + Light | Subscription tier management, quota consumption, and secure MCP key generation |
 | **10**| `/support` | **Operational Backing & Patrons** | Dark + Light | Community stewardship breakdown and honorary recognition galaxy |
 | **11**| `/flagsmith/api/v1/`| **Self-Hosted Flagsmith Portal** | Built-in | Direct Django REST interface for project overrides, identities, and traits |
+
+---
+
+## 3. Production Anti-Slop & Visual Diff Verification Status (November 27, 2026)
+
+| Target Surface | Defect Purged | Before vs After Artifacts | Production Deployment Status |
+|---|---|---|---|
+| **Flag Radar Panel (`/flags`)** | Subtitle truncation (`line-clamp-1`), wrapped `Sync Mesh` button, junk JS methods (`forEach`, `length`, etc.) | `live_card_after_light.png` / `live_card_after_dark.png` | **100% Deployed & Rebuilt** (`--no-cache`) |
+| **Global Header (`Header.jsx`)** | Monospace typography on tabs, `ToggleRight` icon, avatar black dot badge | `live_after_flags_radar_light.png` | **100% Deployed & Rebuilt** |
+| **Hero Callout Banner (`LandingPage.jsx`)** | Harsh monospace border & typewriter font | `live_track03_after_light.png` | **100% Deployed & Rebuilt** |
+| **FalkorDB GraphBLAS Database** | Phantom AST feature flag nodes | Cypher query `DETACH DELETE` executed live | **Verified Clean (13 real flags, 0 junk)** |
+
