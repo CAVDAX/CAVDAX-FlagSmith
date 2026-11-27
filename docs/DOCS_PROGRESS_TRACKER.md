@@ -19,9 +19,9 @@
 | **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | ISM elimination, secret-guard pre-commit, zero-emoji UI |
 | **Sprint Phases & Milestones** | [`docs/PHASES.md`](./PHASES.md) | Tutorial / Guide | ✅ Up to date | 2026-11-27 | Phase 1–4 completed, Track 03 Flagsmith deployed |
 | **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 2-line max subtexts, Team AWDAX |
-| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00h (Flag Radar Anti-Slop Audit, Deduplication & Visual Diff) |
+| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00i (Dev Console Dual-Theme Parity & Static Slop Remediation) |
 | **Track 03 Hackathon Blueprint** | [`docs/TRACK03_BLUEPRINT.md`](./TRACK03_BLUEPRINT.md) | Strategic Spec | ✅ Up to date | 2026-11-27 | Judging rubric alignment, 3-signal discovery, gap analysis |
-| **AI Slop Forensic Master** | [`docs/AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md`](./AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md) | Audit Ledger | ✅ Up to date | 2026-11-27 | Full /flags audit, 37-row deduplication, 2x Retina SHA-256 diffs |
+| **AI Slop Forensic Master** | [`docs/AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md`](./AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md) | Audit Ledger | ✅ Up to date | 2026-11-27 | Full /flags & /dev audit, dual-theme parity, 2x Retina SHA-256 diffs |
 
 ---
 

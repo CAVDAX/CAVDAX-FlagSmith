@@ -134,9 +134,39 @@ All 8 scoped surfaces were captured at $2\times$ Retina (`deviceScaleFactor: 2`)
 
 ---
 
-## 5. Verification Evidence & Devil's Advocate Sign-off
+## 5. Developer Console (`/dev`) Dual-Theme Parity & Static Slop Audit
+
+### Forensic Question: Did `/dev` Comply with Dual-Theme & Static Slop Invariants?
+**Empirical Answer**: **NO at baseline.** Static and visual inspection via `Suneet-Static-Slop-Scanner` and Puppeteer revealed:
+1. **Zero Dual-Theme Adaptation**:
+   - `DevConsolePage.jsx` hardcoded dark background `#090A0C`, card substrate `#0B0D11`, and border `border-white/10` without any light-mode counterparts.
+   - Puppeteer SHA-256 analysis proved that in light mode, before-and-after hashes were 100% identical (`84543e63...`, `b35b342d...`, `b4bc6a10...`), leaving the developer console isolated as a dark block in light theme.
+2. **Rule `TY-36` Violation (Floating Dot Delimiter)**:
+   - Footer copy contained `CAVDAX Developer Console • Track 03 Flagsmith Invariant Mesh`. The floating dot delimiter `•` violates Rule `TY-36`. Transmuted to em-dash (`—`).
+3. **Rule `CS-06` Violation (Faint Low-Contrast Grays)**:
+   - Fallback empty state and null values used `text-slate-600` on `#090A0C` (contrast ~2.6:1, failing the 4.5:1 requirement). Calibrated to `text-slate-400 dark:text-slate-500`.
+4. **Invalid Tailwind Syntax**:
+   - Hackathon badge declared `py-0.2`, an invalid Tailwind class. Corrected to `py-0.5`.
+5. **Button Typography (Rule `NX-02`)**:
+   - Diagnostic action triggers previously forced full `font-mono` on button prose. Updated to `font-medium` with crisp monospace numeric markers (`1.`, `2.`, `3.`, `4.`).
+
+### Cryptographic Visual Diff Verification Ledger (Puppeteer 2x Retina):
+All 6 surfaces captured at $2\times$ Retina across Dark and Light modes using `scripts/capture-dev-console-diff-after.mjs`:
+
+| Surface Evaluated | Mode | Before SHA-256 | After SHA-256 | Verified Optical Delta | Verdict |
+|---|---|---|---|---|---|
+| **Dev Console Banner** | Dark | `84543e63...` | `c761248b...` | Refined typography & border | ✅ **VERIFIED DIFF** |
+| **Dev Telemetry Grid** | Dark | `b35b342d...` | `63a96b9c...` | High-contrast row dividers | ✅ **VERIFIED DIFF** |
+| **Diagnostic Workbench** | Dark | `b4bc6a10...` | `f3029d09...` | Button typography & well | ✅ **VERIFIED DIFF** |
+| **Dev Console Banner** | Light | `84543e63...` | `653939b3...` | Full Light-mode emerald substrate | ✅ **VERIFIED DIFF** |
+| **Dev Telemetry Grid** | Light | `b35b342d...` | `f04146e1...` | Pure white porcelain cards | ✅ **VERIFIED DIFF** |
+| **Diagnostic Workbench** | Light | `b4bc6a10...` | `7d90d98b...` | Light card with dark terminal well | ✅ **VERIFIED DIFF** |
+
+---
+
+## 6. Verification Evidence & Devil's Advocate Sign-off
 
 - **Local CI Simulation**: All **187 unit/integration tests passed** (`npm test`).
 - **Mechanical Anti-Slop README Harness**: **0 S1 violations, 0 S2 warnings, 0.00 pts slop density**.
 - **Live Production Runtime**: Tested via headless Chrome Puppeteer with **0 console errors** and **0 network failures**.
-- **Git Commits**: Landed in commits `e4430c5`, `b62586c`, `4b279d6`, `482d6ea`, and `e73129e` on branch `main`.
+- **Git Commits**: Landed in commits `e4430c5`, `b62586c`, `4b279d6`, `482d6ea`, `e73129e`, and `483d685` on branch `main`.

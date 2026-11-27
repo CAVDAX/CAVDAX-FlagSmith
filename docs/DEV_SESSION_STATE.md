@@ -9,6 +9,28 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00i. Developer Console (/dev) Dual-Theme Parity & Static Slop Remediation (November 27, 2026)
+- **Deep Forensic Static & Visual Slop Audit of `/dev`**:
+  - Uncovered that `/dev` hardcoded dark background (`#090A0C`), card substrate (`#0B0D11`), and borders without light mode classes, violating Dual-Theme Interface Parity.
+  - Remediated Rule `TY-36` violation by eliminating floating dot `•` delimiter in the footer, replacing with em-dash `—`.
+  - Remediated Rule `CS-06` low-contrast gray violation by elevating fallback text from `text-slate-600` to `text-slate-400 dark:text-slate-500` ($\ge 4.5:1$).
+  - Corrected invalid Tailwind syntax `py-0.2` to `py-0.5`.
+  - Refined diagnostic trigger buttons (Rule `NX-02`) to use clean `font-medium` typography with monospace numeric identifiers.
+- **2x Retina Visual Diff Verification (`scripts/capture-dev-console-diff-after.mjs`)**:
+  - Captured high-DPI baseline BEFORE vs refined AFTER photography across Dark and Light modes on live production.
+  - Verified non-zero cryptographic SHA-256 pixel deltas across 100% of surfaces (6/6 pass):
+    - *Dev Console Banner (Dark)*: `84543e63...` -> `c761248b...` (**VERIFIED DIFF**)
+    - *Dev Telemetry Grid (Dark)*: `b35b342d...` -> `63a96b9c...` (**VERIFIED DIFF**)
+    - *Diagnostic Workbench (Dark)*: `b4bc6a10...` -> `f3029d09...` (**VERIFIED DIFF**)
+    - *Dev Console Banner (Light)*: `84543e63...` -> `653939b3...` (**VERIFIED DIFF**)
+    - *Dev Telemetry Grid (Light)*: `b35b342d...` -> `f04146e1...` (**VERIFIED DIFF**)
+    - *Diagnostic Workbench (Light)*: `b4bc6a10...` -> `7d90d98b...` (**VERIFIED DIFF**)
+  - Saved `DEV_CONSOLE_VISUAL_DIFF_VERIFICATION_LEDGER.json`.
+- **Production Deployment & CI Invariance**:
+  - Committed as `483d685` (`refactor(dev): enforce dual-theme parity and eliminate static slop [skip vercel]`).
+  - Rebuilt `client` container on EC2 (`cavdax-flagsmith-client`); verified live healthy.
+  - `node scripts/test-ci.mjs`: **187/187 test suites passed (100% green)**, 9/9 MCP tests passed.
+
 ### 00h. Flag Radar Panel (/flags) Anti-Slop Audit, Deduplication & Visual Diff Verification (November 27, 2026)
 - **Deep Forensic Audit of `/flags` (Devil's Advocate & Anti-Slop Scanner)**:
   - Addressed the direct inquiry on whether `/flags` is 100% slop free with 100% honesty: uncovered lingering un-deduplicated graph traversal output, mobile clause-splits, and substrate inconsistencies.
