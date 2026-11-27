@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Terminal, AlertTriangle, CheckCircle2, Clock, FileCode, Cpu, ChevronDown, ChevronUp, PanelLeftClose } from 'lucide-react';
+import { Terminal, AlertTriangle, Check, Clock, FileCode, Cpu, ChevronDown, ChevronUp, PanelLeftClose } from 'lucide-react';
 import CavdaxAgentStateIndicator from './CavdaxAgentStateIndicator';
 import Tooltip from './Tooltip.jsx';
 
@@ -161,7 +161,7 @@ export default function TerminalView({ terminalLogs, activeVerdict, latestAction
                 </span>
               ) : activeVerdict === 'APPROVED' ? (
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-emerald-100 dark:bg-[#06261B] border border-emerald-300 dark:border-emerald-500/40 text-[10px] font-mono font-bold text-emerald-800 dark:text-emerald-300">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                  <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" strokeWidth={2.5} />
                   200 MCP GATE APPROVED
                 </span>
               ) : (
@@ -250,7 +250,7 @@ export default function TerminalView({ terminalLogs, activeVerdict, latestAction
         {currentAct === 4 && (
           <div className="p-3 bg-emerald-50 dark:bg-[#06261B] border-b border-emerald-200 dark:border-emerald-900/50 flex items-center justify-between gap-4">
             <div className="flex items-start gap-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+              <Check className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" strokeWidth={2.5} />
               <div className="text-xs">
                 <div className="font-bold text-emerald-900 dark:text-emerald-300 font-mono tracking-wide">
                   VERIFIED CAUSAL PROVENANCE: APPROVED

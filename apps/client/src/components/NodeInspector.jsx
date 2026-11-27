@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { X, GripHorizontal, Zap, AlertTriangle, CheckCircle2, Database, Clock, ExternalLink, Activity, GitPullRequest, Loader2, FileCode2, ChevronDown, Search } from 'lucide-react';
+import { X, GripHorizontal, Zap, AlertTriangle, Check, Database, Clock, ExternalLink, Activity, GitPullRequest, Loader2, FileCode2, ChevronDown, Search } from 'lucide-react';
 import { playClick } from '../utils/soundFx';
 
 /**
@@ -328,7 +328,7 @@ export default function NodeInspector({
           {isStale ? (
             <AlertTriangle className="w-3.5 h-3.5 text-rose-500 dark:text-rose-400 shrink-0" />
           ) : (
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
+            <Check className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" strokeWidth={2.5} />
           )}
           <span className="font-bold text-slate-800 dark:text-slate-100 truncate text-[11px]">
             Node: <span className="text-slate-950 dark:text-white font-bold">{node.id}</span>

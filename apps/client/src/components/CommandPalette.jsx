@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import { Search, FileText, CheckCircle2, AlertTriangle, Cpu, Terminal, ArrowRight, CornerDownLeft, X } from 'lucide-react';
+import { Search, FileText, Check, AlertTriangle, Cpu, Terminal, ArrowRight, CornerDownLeft, X } from 'lucide-react';
 import { playClick } from '../utils/soundFx';
 
 export default function CommandPalette({
@@ -93,7 +93,7 @@ export default function CommandPalette({
       case 'Source':
         return <FileText className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />;
       case 'Decision':
-        return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />;
+        return <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" strokeWidth={2.5} />;
       case 'Fact':
         return <Terminal className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />;
       case 'AgentAction':

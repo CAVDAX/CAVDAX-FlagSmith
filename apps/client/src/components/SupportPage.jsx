@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef, useLayoutEffect, useId } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Coffee, CheckCircle2, Heart, HandHeart, Loader2, ExternalLink, AlertTriangle, Users, Lock, LayoutGrid, PieChart, BarChartHorizontal, ArrowUpRight, Eye, EyeOff, SlidersHorizontal, ArrowDownLeft } from 'lucide-react';
+import { Coffee, Check, Heart, HandHeart, Loader2, ExternalLink, AlertTriangle, Users, Lock, LayoutGrid, PieChart, BarChartHorizontal, ArrowUpRight, Eye, EyeOff, SlidersHorizontal, ArrowDownLeft } from 'lucide-react';
 import { playClick } from '../utils/soundFx';
 import { isUserAuthorized, getActiveDevSession } from '../services/devAuth';
 import BackerConsentModal from './BackerConsentModal';
@@ -1238,12 +1238,12 @@ export default function SupportPage({ onLaunchConsole, onNavigateHome, onNavigat
             >
               {isCurrentEvalTier && tier.popular ? (
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 bg-amber-400 text-slate-950 font-mono font-extrabold text-[9px] uppercase tracking-widest rounded-full z-20 shadow-xs flex items-center gap-1">
-                  <CheckCircle2 className="w-2.5 h-2.5" />
+                  <Check className="w-2.5 h-2.5" />
                   <span>ACTIVE</span>
                 </div>
               ) : isCurrentEvalTier ? (
                 <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 bg-slate-950 dark:bg-white text-white dark:text-slate-950 font-mono font-bold text-[9px] uppercase tracking-wider rounded-full z-20 shadow-xs flex items-center gap-1">
-                  <CheckCircle2 className="w-2.5 h-2.5" />
+                  <Check className="w-2.5 h-2.5" />
                   <span>ACTIVE</span>
                 </div>
               ) : tier.popular ? (
@@ -1306,7 +1306,7 @@ export default function SupportPage({ onLaunchConsole, onNavigateHome, onNavigat
                 <ul className="text-xs font-mono space-y-2 mb-6 text-slate-600 dark:text-slate-300">
                   {tier.perks.map((perk) => (
                     <li key={perk} className="flex items-start gap-2 leading-relaxed">
-                      <CheckCircle2 className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${
+                      <Check className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${
                         isDiamond
                           ? 'text-slate-900 dark:text-slate-200'
                           : isAmber
@@ -1376,7 +1376,7 @@ export default function SupportPage({ onLaunchConsole, onNavigateHome, onNavigat
                     {isLoading || isEvalLoading ? (
                       <><Loader2 className="w-3.5 h-3.5 animate-spin" />Processing...</>
                     ) : isCurrentEvalTier ? (
-                      <><CheckCircle2 className="w-3.5 h-3.5 shrink-0" />Active Sponsor Tier</>
+                      <><Check className="w-3.5 h-3.5 shrink-0" />Active Sponsor Tier</>
                     ) : currentActiveTierId ? (
                       <><TierIcon className="w-3 h-3 shrink-0" />Switch to {tier.tierName}</>
                     ) : hasEvaluationPass ? (
@@ -1991,7 +1991,7 @@ export default function SupportPage({ onLaunchConsole, onNavigateHome, onNavigat
           className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-slate-900/95 dark:bg-white/95 text-white dark:text-slate-900 text-xs font-mono font-medium shadow-2xl backdrop-blur-md flex items-center gap-2 border border-white/10 dark:border-slate-900/10 pointer-events-none transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 whitespace-nowrap"
         >
           {toast.ok ? (
-            <CheckCircle2 className="w-3.5 h-3.5 text-current shrink-0" />
+            <Check className="w-3.5 h-3.5 text-current shrink-0" />
           ) : (
             <Heart className="w-3.5 h-3.5 text-rose-400 shrink-0" />
           )}

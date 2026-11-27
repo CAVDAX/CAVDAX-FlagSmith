@@ -22,7 +22,7 @@ import { motion } from 'framer-motion';
  */
 
 import React, { useState, useEffect, useCallback, useMemo, useRef, useLayoutEffect } from 'react';
-import { Activity, RefreshCw, FileText, CheckCircle2, Clock, Database, Compass, ScrollText, OctagonX, CheckCheck, GitBranch, Loader2 } from 'lucide-react';
+import { Activity, RefreshCw, FileText, Clock, Database, Compass, ScrollText, OctagonX, CheckCheck, GitBranch, Loader2 } from 'lucide-react';
 import { playClick } from '../utils/soundFx';
 import Combobox from './Combobox';
 

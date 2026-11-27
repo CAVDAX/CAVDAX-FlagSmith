@@ -16,8 +16,6 @@ import {
 
   AlertTriangle, 
 
-  CheckCircle2, 
-
   KeyRound, 
 
   Lock,
@@ -923,7 +921,7 @@ export default function LandingPage({
             }}
             className="group inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300 dark:border-white/10 bg-slate-100/80 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] hover:border-slate-400 dark:hover:border-white/20 transition-all text-xs font-mono text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span className="font-semibold text-slate-900 dark:text-slate-100">Toggle Wars Track 03:</span>
             <span>Flagsmith Blast Radius Radar &amp; MCP Gate</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white" />
@@ -933,7 +931,7 @@ export default function LandingPage({
         {/* Primary Hero Heading: Monumental Display Hierarchy (Wordmark elevated to Section 0) */}
         <h1 className="max-w-6xl tracking-tight leading-[1.05] mb-8 sm:mb-12 flex flex-col items-center">
 
-          <span className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[4.75rem] text-balance font-black tracking-tight leading-[1.1] sm:leading-[1.04] bg-clip-text text-transparent bg-gradient-to-b from-slate-950 via-slate-900 to-slate-700 dark:from-white dark:via-slate-100 dark:to-slate-400 block pb-2 sm:pb-3 px-2 max-w-full">
+          <span className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[4.75rem] text-balance font-black tracking-tight leading-[1.1] sm:leading-[1.04] text-slate-950 dark:text-white block pb-2 sm:pb-3 px-2 max-w-full">
 
             <span className="inline-block whitespace-normal break-words">Eliminating Silent Cache Rot</span>
 

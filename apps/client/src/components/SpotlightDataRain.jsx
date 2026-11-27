@@ -278,11 +278,11 @@ export default function SpotlightDataRain({ isDarkTheme = true, opacity = 1 }) {
         };
       } else {
         return {
-          source: '#0f172a',         // Slate-950 obsidian
+          source: '#090A0C',         // Pure Obsidian ink
           fact: '#475569',           // Slate-600
           decision: '#b45309',       // Deep amber
           gate: '#e11d48',
-          edge: 'rgba(15, 23, 42, ',  // Obsidian ink lines
+          edge: 'rgba(9, 10, 12, ',  // Obsidian ink lines
           pulse: '#b45309',
         };
       }

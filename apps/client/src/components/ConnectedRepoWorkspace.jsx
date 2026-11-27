@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   GitBranch, FolderGit2, ArrowUpRight, FileText, RefreshCw, Terminal, GitPullRequest,
-  CheckCircle2, AlertTriangle, ExternalLink, Unlink, Unlink2, Loader2, ChevronDown, Check, Search, Plus, Copy, X, Code2, Cpu, PanelLeftClose } from 'lucide-react';
+  AlertTriangle, ExternalLink, Unlink, Unlink2, Loader2, ChevronDown, Check, Search, Plus, Copy, X, Code2, Cpu, PanelLeftClose } from 'lucide-react';
 import GraphCanvas from './GraphCanvas';
 import Tooltip from './Tooltip.jsx';
 import SubsystemErrorBoundary from './SubsystemErrorBoundary';
@@ -1500,7 +1500,7 @@ export default function ConnectedRepoWorkspace({
                         {verifyingDecisionId === activeValidDecision.id ? (
                           <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" strokeWidth={2} />
                         ) : (
-                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                          <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={2.5} />
                         )}
                         <span className="truncate">Verify: {activeValidDecision.id} (Valid)</span>
                       </button>
@@ -1947,7 +1947,7 @@ export default function ConnectedRepoWorkspace({
             {ciGatePrResult ? (
               <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-xs font-bold font-mono">
-                  <CheckCircle2 className="w-4 h-4" />
+                  <Check className="w-4 h-4" strokeWidth={2.5} />
                   <span>Pull Request #{ciGatePrResult.number} Opened Successfully</span>
                 </div>
                 <p className="text-xs text-emerald-900/90 dark:text-emerald-200/80 font-sans">
@@ -2104,7 +2104,7 @@ jobs:
             {proposeAdrResult ? (
               <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-300 dark:border-emerald-500/30 space-y-3">
                 <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 text-xs font-bold font-mono">
-                  <CheckCircle2 className="w-4 h-4" />
+                  <Check className="w-4 h-4" strokeWidth={2.5} />
                   <span>Pull Request #{proposeAdrResult.number} Opened: {proposeAdrResult.adrId}</span>
                 </div>
                 <p className="text-xs text-emerald-900/90 dark:text-emerald-200/80 font-sans">

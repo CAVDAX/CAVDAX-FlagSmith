@@ -4,11 +4,11 @@ import {
   ToggleLeft,
   ToggleRight,
   AlertCircle,
-  CheckCircle2,
+  Check,
   RefreshCw,
   Zap,
   ArrowRight,
-  ShieldAlert,
+  AlertTriangle,
   GitBranch,
   Layers,
   Code2,
@@ -345,7 +345,7 @@ export function AnalyticsDashboard() {
                 className="mb-4 p-3.5 rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs flex items-start justify-between gap-3"
               >
                 <div className="flex items-start gap-2">
-                  <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Safety Invariant Blocked: </span>
                     <span>{errorMessage}</span>
@@ -367,7 +367,7 @@ export function AnalyticsDashboard() {
                 exit={{ opacity: 0, y: -6 }}
                 className="mb-4 p-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2"
               >
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <Check className="w-4 h-4 shrink-0" strokeWidth={2.5} />
                 <span>{successMessage}</span>
               </motion.div>
             )}
@@ -459,7 +459,7 @@ export function AnalyticsDashboard() {
                   </div>
                 ) : (
                   <div className="py-8 text-center text-xs text-slate-400">
-                    <CheckCircle2 className="w-6 h-6 mx-auto mb-2 text-emerald-500 opacity-80" />
+                    <Check className="w-6 h-6 mx-auto mb-2 text-emerald-500 opacity-80" strokeWidth={2} />
                     <span>Zero downstream dependents. Safe to toggle without cascading breaking changes.</span>
                   </div>
                 )}

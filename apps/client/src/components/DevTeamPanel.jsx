@@ -15,7 +15,7 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  Terminal, Lock, LogOut, CheckCircle2, CreditCard, RefreshCw, ExternalLink,
+  Terminal, Lock, LogOut, Check, CreditCard, RefreshCw, ExternalLink,
   AlertTriangle, Play, RotateCcw, Download, Trash2,
   Radio, Layers, Flame, Users, Globe, EyeOff, Server,
   Cpu, Activity, Database, Key, Sliders, ArrowUpRight,
@@ -1284,7 +1284,7 @@ export default function DevTeamPanel({ githubUser, onNavigateHome }) {
           ) : (
             <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-900 dark:text-emerald-300 space-y-1.5">
               <div className="flex items-center gap-2 text-xs font-mono font-bold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                <Check className="w-4 h-4 text-emerald-500 shrink-0" strokeWidth={2.5} />
                 <span>OFFICIAL PRODUCTION ENVIRONMENT CONFIRMED</span>
               </div>
               <p className="text-[11px] text-slate-700 dark:text-slate-300 font-sans leading-relaxed">
@@ -1386,7 +1386,7 @@ export default function DevTeamPanel({ githubUser, onNavigateHome }) {
               <div className="flex items-center gap-2 text-xs font-mono font-bold mb-1.5">
                 {paymentResult.success ? (
                   <>
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <Check className="w-4 h-4 text-emerald-500 shrink-0" strokeWidth={2.5} />
                     <span>CRYPTOGRAPHIC SIGNATURE VERIFIED (₹1.00 TRANSACTION VALIDATED)</span>
                   </>
                 ) : (
@@ -1725,7 +1725,7 @@ export default function DevTeamPanel({ githubUser, onNavigateHome }) {
             role="status"
             className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-950 text-white dark:bg-white dark:text-slate-950 text-xs font-mono font-semibold shadow-2xl border border-slate-800 dark:border-white/20 pointer-events-none"
           >
-            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+            <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={2.5} />
             <span>{panelToast}</span>
           </motion.div>
         )}

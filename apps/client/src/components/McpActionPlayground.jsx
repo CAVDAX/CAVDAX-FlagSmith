@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Terminal, AlertTriangle, CheckCircle2, RefreshCw, FileCode, X, Cpu } from 'lucide-react';
+import { Play, Terminal, AlertTriangle, Check, RefreshCw, FileCode, X, Cpu } from 'lucide-react';
 import { playClick, playRejectBuzz, playApprovalChime } from '../utils/soundFx';
 
 export default function McpActionPlayground({ onRunCustomAction, repo = null, decisions = [], onClose = null }) {
@@ -154,7 +154,7 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
           }`}
         >
-          <CheckCircle2 className="w-3.5 h-3.5" />
+          <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
           <span>Pre-Flight Clearance</span>
         </button>
         <button
@@ -272,7 +272,7 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
               </>
             ) : isClearanceMode ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                <Check className="w-3.5 h-3.5" strokeWidth={2.5} />
                 <span>Check Clearance</span>
               </>
             ) : (
@@ -297,7 +297,7 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
           <div className="flex items-center justify-between font-bold mb-1">
             <span className="flex items-center gap-1.5">
               {isApprovedResult ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" strokeWidth={2.5} />
               ) : (
                 <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
               )}

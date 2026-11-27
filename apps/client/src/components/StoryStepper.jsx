@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, GitCommit, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Play, GitCommit, AlertTriangle, Check } from 'lucide-react';
 
 export default function StoryStepper({ currentAct, onSelectAct, loadingAct }) {
   const acts = [
@@ -29,7 +29,7 @@ export default function StoryStepper({ currentAct, onSelectAct, loadingAct }) {
       title: 'Act IV: Revalidation',
       subtitle: 'DEC-103 Verified & Written',
       desc: 'Agent synthesizes DEC-103; Gate approves & writes OAuth2 code to disk.',
-      icon: CheckCircle2,
+      icon: Check,
     }
   ];
 

@@ -8,7 +8,6 @@ import {
   Workflow, 
   X,
   Code2,
-  CheckCircle2,
   Mail
 } from 'lucide-react';
 import CurvyArrow from './CurvyArrow';

@@ -53,7 +53,6 @@ import {
   Users,
   ArrowUpRight,
   CircleDollarSign,
-  CheckCircle2,
   Lock,
   Loader2,
   Sun,

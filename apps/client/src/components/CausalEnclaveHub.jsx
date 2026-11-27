@@ -895,18 +895,10 @@ export default function CausalEnclaveHub() {
                 100% { background-position: 200% 0; }
               }
               .enclave-shimmer-title {
-                background: linear-gradient(110deg, #94a3b8 25%, #ffffff 50%, #94a3b8 75%);
-                background-size: 200% auto;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                animation: enclave-text-shimmer 2.8s linear infinite;
+                color: #ffffff;
               }
               html:not(.dark) .enclave-shimmer-title {
-                background: linear-gradient(110deg, #334155 25%, #0f172a 50%, #334155 75%);
-                background-size: 200% auto;
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                animation: enclave-text-shimmer 2.8s linear infinite;
+                color: #090A0C;
               }
               @keyframes arc-fluid-ripple {
                 0% { transform: translateX(-4px); }

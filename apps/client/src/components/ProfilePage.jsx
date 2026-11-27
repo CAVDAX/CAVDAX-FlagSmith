@@ -22,7 +22,7 @@ function ShinyGemIcon({ className = 'w-3.5 h-3.5' }) {
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  Compass, User, Copy, Check, CheckCircle2, Lock, Terminal, Building2,
+  Compass, User, Copy, Check, Lock, Terminal, Building2,
   SlidersHorizontal, Key, HardDrive, AlertTriangle, RefreshCw, Heart, ExternalLink, LogOut, Github, Eye, EyeOff,
   Award, Gauge, KeyRound, Cable, Sparkles, CreditCard, ChevronRight, ArrowUpRight, ArrowDownLeft, Coffee
 } from 'lucide-react';
@@ -1775,19 +1775,19 @@ export default function ProfilePage({
               </div>
               <ul className="text-xs font-mono space-y-2 mb-6 text-slate-600 dark:text-slate-300">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>1 Connected repository (1 branch)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>50 Causal verifications / mo</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Read-only graph inspector</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                   <span>Standard stdio MCP protocol gate</span>
                 </li>
               </ul>
@@ -1948,19 +1948,19 @@ export default function ProfilePage({
               </div>
               <ul className="text-xs font-mono space-y-2 mb-6 text-slate-600 dark:text-slate-300">
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                   <span>5 Connected repositories (All branches)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                   <span>500 Causal verifications / mo</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                   <span>CI/CD intercept &amp; pre-commit scanners</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                   <span>Write-interception &amp; guided repair</span>
                 </li>
               </ul>
@@ -2100,19 +2100,19 @@ export default function ProfilePage({
                 currentTier === 'enterprise' ? 'text-slate-200' : 'text-slate-600 dark:text-slate-300'
               }`}>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                  <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                   <span>Unlimited connected repositories</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                  <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                   <span>Corporate domain provisioning</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                  <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                   <span>Dedicated FalkorDB KeySpace</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                  <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                   <span>Unlimited multi-agent mutex locks</span>
                 </li>
               </ul>
@@ -2864,19 +2864,19 @@ export default function ProfilePage({
             </div>
             <ul className="text-[11px] sm:text-xs font-mono space-y-1 sm:space-y-1.5 mb-3 sm:mb-4 text-slate-600 dark:text-slate-300 flex-1">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>1 Connected repository (1 branch)</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>50 Causal verifications / mo</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>Read-only graph inspector</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                 <span>Standard stdio MCP protocol gate</span>
               </li>
             </ul>
@@ -3037,19 +3037,19 @@ export default function ProfilePage({
             </div>
             <ul className="text-[11px] sm:text-xs font-mono space-y-1 sm:space-y-1.5 mb-3 sm:mb-4 text-slate-600 dark:text-slate-300 flex-1">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>5 Connected repositories (All branches)</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>500 Causal verifications / mo</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>CI/CD intercept &amp; pre-commit scanners</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                 <span>Write-interception &amp; guided repair</span>
               </li>
             </ul>
@@ -3189,19 +3189,19 @@ export default function ProfilePage({
               currentTier === 'enterprise' ? 'text-slate-200' : 'text-slate-600 dark:text-slate-300'
             }`}>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 <span>Unlimited connected repositories</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 <span>Corporate domain provisioning</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 <span>Dedicated FalkorDB KeySpace</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+                <Check className={`w-3.5 h-3.5 shrink-0 ${currentTier === 'enterprise' ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 <span>Unlimited multi-agent mutex locks</span>
               </li>
             </ul>

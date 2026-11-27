@@ -11,7 +11,7 @@ const SOLUTION_STEPS = [
     title: 'ADR & Git Ingestion',
     punchline: 'Autonomous AST parser extracts markdown frontmatter and commit diffs into directed causal vertices.',
     accentDark: '#ffffff',
-    accentLight: '#0f172a', // Deep Architectural Slate/Steel in light mode
+    accentLight: '#090A0C', // Deep Architectural Obsidian in light mode
   },
   {
     id: 'step-graphblas',
@@ -1585,7 +1585,7 @@ export default function CausalSolutionScroller() {
           {/* Heading positioned BELOW the rolling sliding window */}
           <div className="text-center max-w-4xl mx-auto mt-6 mb-1">
             <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-950 dark:text-white tracking-tight flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-950 via-slate-700 to-slate-950 dark:from-white dark:via-slate-200 dark:to-slate-400">
+              <span className="text-slate-950 dark:text-white">
                 Graph-Grounded
               </span>
               <span className="text-slate-400 dark:text-slate-600 font-light select-none">→</span>
