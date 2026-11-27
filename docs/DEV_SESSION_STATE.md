@@ -30,6 +30,11 @@
 - **SEO & Route Metadata Harmonization (`SEOHead.jsx`)**:
   - Added dedicated `/flags` route to `SEO_MAP` for the Flagsmith Blast Radius Radar.
   - Aligned all page meta titles and descriptions to highlight Flagsmith, 3-signal causal DAGs, and safe toggle MCP gates.
+- **Walkthrough Navigation & Tab Restoration (`Header.jsx`, `App.jsx`, `ProjectVideoPage.jsx`)**:
+  - *Navbar Restoration*: Re-integrated `{ id: "project", label: "Walkthrough", icon: Play }` into `NAV_TABS` (between `MCP` and `Audit`), restoring direct 1-click access to the 4-Act interactive demonstration on desktop and mobile drawer.
+  - *Error Boundary Enclosure*: Wrapped `<ProjectVideoPage>` with `<SubsystemErrorBoundary name="System Walkthrough">` in `App.jsx`.
+  - *Tab Normalization*: Enhanced `handleSelectTab` in `App.jsx` to seamlessly normalize both `'walkthrough'` and `'demo'` aliases to `'project'`, preventing broken routes.
+  - *Flagsmith Alignment*: Refined `ProjectVideoPage` hero description to emphasize 3-signal causal discovery and Flagsmith safe toggles.
 
 ### 00m. Act 4 ReferenceError Fix, Multi-Workspace Flag Radar, Sliding Pillbar & MCP CLI Overhaul (November 27, 2026)
 - **Runtime Error Resolution (`App.jsx`, `apps/server/index.js`)**:

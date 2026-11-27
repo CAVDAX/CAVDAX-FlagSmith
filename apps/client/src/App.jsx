@@ -443,7 +443,8 @@ export default function App() {
   }, [isDarkTheme]);
 
     // Tab switch handler — uses HTML5 history.pushState for clean paths (/overview, /console, /mcp, etc.)
-  const handleSelectTab = (tab, options = {}) => {
+  const handleSelectTab = (rawTab, options = {}) => {
+    const tab = (rawTab === 'walkthrough' || rawTab === 'demo') ? 'project' : rawTab;
     const prevTab = activeTab;
     if (tab === 'landing') {
       const target = options.target || (window.location.pathname === '/' ? 'wordmark' : 'overview');
@@ -1633,10 +1634,12 @@ export default function App() {
         </SubsystemErrorBoundary>
       ) : activeTab === 'project' ? (
         /* Project & System Demo Video Page */
-        <ProjectVideoPage
-          onLaunchConsole={() => handleSelectTab('console')}
-          onOpenMcpPage={() => handleSelectTab('mcp')}
-        />
+        <SubsystemErrorBoundary name="System Walkthrough">
+          <ProjectVideoPage
+            onLaunchConsole={() => handleSelectTab('console')}
+            onOpenMcpPage={() => handleSelectTab('mcp')}
+          />
+        </SubsystemErrorBoundary>
       ) : activeTab === 'team' ? (
         /* Team Contrarians Presentation Page (CAVDAX Style) */
         <TeamPage

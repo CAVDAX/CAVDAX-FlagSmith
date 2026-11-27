@@ -345,7 +345,7 @@ export default function ProjectVideoPage({ onLaunchConsole, onOpenMcpPage }) {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto leading-relaxed font-sans">
-            End-to-end demonstration of FalkorDB causal invalidation, real-time MCP write protection, and autonomous agent self-correction.
+            End-to-end demonstration of 3-signal causal discovery, real-time Flagsmith safe toggle protection, and autonomous agent self-correction.
           </p>
         </div>
 

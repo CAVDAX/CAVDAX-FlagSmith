@@ -43,6 +43,7 @@ const NAV_TABS = [
   { id: "console", label: "Console", icon: Terminal },
   { id: "flags", label: "Flag Radar", icon: RadarIcon },
   { id: "mcp", label: "MCP", icon: Cable },
+  { id: "project", label: "Walkthrough", icon: Play },
   { id: "audit", label: "Audit", icon: ClipboardList },
 ];
 
