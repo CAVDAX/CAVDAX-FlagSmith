@@ -282,14 +282,14 @@ export function AnalyticsDashboard() {
     return Array.from(map.values()).filter(d => !JUNK_FLAG_NAMES.has(d.name)).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
   }, [blastRadius?.upstream_prerequisites]);
 
-  // Compute Risk Tier styling
+  // Compute Risk Tier styling with strict high-contrast dark & light mode parity
   const riskColor = blastRadius?.risk_tier === 'CRITICAL'
-    ? 'text-rose-500 bg-rose-500/10 border-rose-500/20'
+    ? 'text-rose-800 dark:text-rose-400 bg-rose-100/90 dark:bg-rose-950/40 border-rose-300 dark:border-rose-500/40'
     : blastRadius?.risk_tier === 'HIGH'
-    ? 'text-amber-500 bg-amber-500/10 border-amber-500/20'
+    ? 'text-amber-800 dark:text-amber-400 bg-amber-100/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-500/40'
     : blastRadius?.risk_tier === 'MODERATE'
-    ? 'text-yellow-500 bg-yellow-500/10 border-yellow-500/20'
-    : 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20';
+    ? 'text-yellow-800 dark:text-yellow-400 bg-yellow-100/90 dark:bg-yellow-950/40 border-yellow-300 dark:border-yellow-500/40'
+    : 'text-emerald-800 dark:text-emerald-400 bg-emerald-100/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40';
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-6 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0B0D11] text-slate-900 dark:text-white shadow-xl transition-all">
@@ -374,8 +374,12 @@ export function AnalyticsDashboard() {
                   >
                     <span className="truncate">{feat.name}</span>
                     {feat.incoming_dependents > 0 && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 font-sans shrink-0 font-medium">
-                        {feat.incoming_dependents} dep
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold shrink-0 tracking-tight transition-colors ${
+                        isSelected
+                          ? 'bg-white/20 text-white dark:bg-slate-900/15 dark:text-slate-900'
+                          : 'bg-slate-200/80 text-slate-700 dark:bg-white/10 dark:text-slate-300'
+                      }`}>
+                        {feat.incoming_dependents} DEP
                       </span>
                     )}
                   </button>
@@ -520,8 +524,12 @@ export function AnalyticsDashboard() {
                         <div className="flex items-center gap-1.5 min-w-0">
                           <span className="font-mono text-slate-900 dark:text-white font-medium truncate">{pre.name}</span>
                         </div>
-                        <span className={`text-[10px] font-mono font-bold ${pre.enabled ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                          [{pre.enabled ? 'SATISFIED' : 'MISSING'}]
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold tracking-wider border shrink-0 ${
+                          pre.enabled
+                            ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100/80 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/30'
+                            : 'text-amber-700 dark:text-amber-400 bg-amber-100/80 dark:bg-amber-950/40 border-amber-300 dark:border-amber-500/30'
+                        }`}>
+                          {pre.enabled ? 'SATISFIED' : 'MISSING'}
                         </span>
                       </div>
                     ))}

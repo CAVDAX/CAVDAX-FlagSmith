@@ -353,22 +353,68 @@ export default function GraphCanvas({
       return true;
     });
 
-    const LAYER_X = {
+    const isFlagsmithGraph = filteredRawNodes.some(n => n.label === 'FlagsmithFeature' || n.label === 'CodeReference');
+
+    const LAYER_X = isFlagsmithGraph ? {
+      Foundation: 110,
+      Source: 110,
+      CodeReference: 110,
+      CoreFeature: 340,
+      Fact: 340,
+      FlagsmithFeature: 340,
+      Downstream: 580,
+      Decision: 580,
+      AgentAction: 820
+    } : {
       Source: 95,
       Fact: 295,
       Decision: 495,
       AgentAction: 715
     };
 
-    const sources = filteredRawNodes
-      .filter(n => n.label === 'Source')
-      .sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+    let col1Nodes = [];
+    let col2Nodes = [];
+    let col3Nodes = [];
+    let col4Nodes = filteredRawNodes.filter(n => n.label === 'AgentAction' || n.id?.startsWith('act-'));
 
-    const facts = filteredRawNodes.filter(n => n.label === 'Fact');
-    const decisions = filteredRawNodes.filter(n => n.label === 'Decision');
-    const actions = filteredRawNodes.filter(n => n.label === 'AgentAction' || n.id?.startsWith('act-'));
+    if (isFlagsmithGraph) {
+      const flags = filteredRawNodes.filter(n => n.label === 'FlagsmithFeature');
+      const otherNodes = filteredRawNodes.filter(n => n.label !== 'FlagsmithFeature' && n.label !== 'AgentAction' && !n.id?.startsWith('act-'));
 
-    const maxColumnItems = Math.max(sources.length, facts.length, decisions.length, actions.length, 1);
+      // Sort flagsmith features into 3 distinct topological columns based on dependencies
+      flags.forEach((f) => {
+        const isFoundation = f.incoming_dependents > 0 && (!f.outgoing_dependencies || f.outgoing_dependencies === 0);
+        const isDownstream = (!f.incoming_dependents || f.incoming_dependents === 0) && f.outgoing_dependencies > 0;
+        if (isFoundation || f.name === 'theme_system' || f.name === 'auth_v2') {
+          col1Nodes.push(f);
+        } else if (isDownstream || f.name === 'analytics_dashboard' || f.name === 'haptic_feedback' || f.name === 'voice_dsp') {
+          col3Nodes.push(f);
+        } else {
+          col2Nodes.push(f);
+        }
+      });
+
+      // Distribute any remaining flags evenly if one column is empty
+      if (col1Nodes.length === 0 && col2Nodes.length > 2) {
+        col1Nodes = col2Nodes.splice(0, Math.ceil(col2Nodes.length / 3));
+      }
+      if (col3Nodes.length === 0 && col2Nodes.length > 2) {
+        col3Nodes = col2Nodes.splice(Math.ceil(col2Nodes.length / 2));
+      }
+
+      // Add non-flag nodes into appropriate columns
+      otherNodes.forEach(n => {
+        if (n.label === 'Source' || n.label === 'CodeReference') col1Nodes.push(n);
+        else if (n.label === 'Fact') col2Nodes.push(n);
+        else col3Nodes.push(n);
+      });
+    } else {
+      col1Nodes = filteredRawNodes.filter(n => n.label === 'Source').sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+      col2Nodes = filteredRawNodes.filter(n => n.label === 'Fact');
+      col3Nodes = filteredRawNodes.filter(n => n.label === 'Decision');
+    }
+
+    const maxColumnItems = Math.max(col1Nodes.length, col2Nodes.length, col3Nodes.length, col4Nodes.length, 1);
     const computedHeight = Math.max(480, maxColumnItems * 95 + 65);
 
     function getColumnYPositions(count, totalHeight) {
@@ -384,36 +430,43 @@ export default function GraphCanvas({
       return Array.from({ length: count }, (_, i) => Math.round(topPadding + i * step));
     }
 
-    const sourceYs = getColumnYPositions(sources.length, computedHeight);
-    const factYs = getColumnYPositions(facts.length, computedHeight);
-    const decYs = getColumnYPositions(decisions.length, computedHeight);
+    const col1Ys = getColumnYPositions(col1Nodes.length, computedHeight);
+    const col2Ys = getColumnYPositions(col2Nodes.length, computedHeight);
+    const col3Ys = getColumnYPositions(col3Nodes.length, computedHeight);
 
     const calculatedPositions = new Map();
 
-    sources.forEach((s, idx) => {
-      calculatedPositions.set(s.id, { x: LAYER_X.Source, y: sourceYs[idx] });
+    const col1X = isFlagsmithGraph ? 110 : LAYER_X.Source;
+    const col2X = isFlagsmithGraph ? 350 : LAYER_X.Fact;
+    const col3X = isFlagsmithGraph ? 590 : LAYER_X.Decision;
+    const col4X = isFlagsmithGraph ? 830 : LAYER_X.AgentAction;
+
+    col1Nodes.forEach((node, idx) => {
+      calculatedPositions.set(node.id, { x: col1X, y: col1Ys[idx] });
     });
 
-    facts.forEach((f, idx) => {
-      calculatedPositions.set(f.id, { x: LAYER_X.Fact, y: factYs[idx] });
+    col2Nodes.forEach((node, idx) => {
+      calculatedPositions.set(node.id, { x: col2X, y: col2Ys[idx] });
     });
 
-    decisions.forEach((d, idx) => {
-      calculatedPositions.set(d.id, { x: LAYER_X.Decision, y: decYs[idx] });
+    col3Nodes.forEach((node, idx) => {
+      calculatedPositions.set(node.id, { x: col3X, y: col3Ys[idx] });
     });
 
-    // Align AgentAction nodes with their target Decision whenever possible
-    const actionYs = getColumnYPositions(actions.length, computedHeight);
-    actions.forEach((act, idx) => {
-      const groundedEdge = rawEdges.find(e => (e.source === act.id && e.type === 'GROUNDED_IN') || (e.type === 'ACTION_ON' && e.source === act.id));
-      const targetDecId = groundedEdge?.target || act.decision_id;
-      const targetDecPos = targetDecId ? calculatedPositions.get(targetDecId) : null;
-      const posY = targetDecPos ? targetDecPos.y : actionYs[idx];
-      calculatedPositions.set(act.id, { x: LAYER_X.AgentAction, y: posY });
+    // Align AgentAction nodes with their target Decision/Flag whenever possible
+    const actionYs = getColumnYPositions(col4Nodes.length, computedHeight);
+    col4Nodes.forEach((act, idx) => {
+      const groundedEdge = rawEdges.find(e => (e.source === act.id && e.type === 'GROUNDED_IN') || (e.type === 'ACTION_ON' && e.source === act.id) || (e.type === 'TARGETS_FLAG' && e.source === act.id));
+      const targetId = groundedEdge?.target || act.decision_id || act.flag_name;
+      const targetPos = targetId ? calculatedPositions.get(targetId) : null;
+      const posY = targetPos ? targetPos.y : actionYs[idx];
+      calculatedPositions.set(act.id, { x: col4X, y: posY });
     });
 
-    const computedNodes = filteredRawNodes.map((node) => {
-      const pos = calculatedPositions.get(node.id) || { x: LAYER_X[node.label] || 495, y: 220 };
+    const computedNodes = filteredRawNodes.map((node, index) => {
+      // Guaranteed anti-collision fallback: if node was unmapped, place it staggered in col2
+      const fallbackY = 80 + (index % 6) * 70;
+      const pos = calculatedPositions.get(node.id) || { x: col2X, y: fallbackY };
       return { ...node, ...pos };
     });
 
@@ -567,12 +620,51 @@ export default function GraphCanvas({
         };
       }
 
+      if (node.label === 'FlagsmithFeature') {
+        const isEnabled = node.enabled !== false;
+        if (node.has_missing_prereqs) {
+          return {
+            fill: '#240B10',
+            stroke: '#FB7185',
+            glow: 'rgba(251, 113, 133, 0.35)',
+            text: '#FECDD3',
+            badge: 'BLOCKED'
+          };
+        }
+        if (isEnabled) {
+          return {
+            fill: '#061D15',
+            stroke: '#10B981',
+            glow: 'rgba(16, 185, 129, 0.35)',
+            text: '#A7F3D0',
+            badge: 'ENABLED'
+          };
+        }
+        return {
+          fill: '#0F1218',
+          stroke: '#64748B',
+          glow: 'none',
+          text: '#94A3B8',
+          badge: 'DISABLED'
+        };
+      }
+
+      if (node.label === 'CodeReference') {
+        return {
+          fill: '#11141B',
+          stroke: '#38BDF8',
+          glow: 'rgba(56, 189, 248, 0.25)',
+          text: '#BAE6FD',
+          badge: 'AST_CALL'
+        };
+      }
+
       return {
         fill: '#11141B',
         stroke: '#475569',
         glow: 'none',
         text: '#94A3B8',
-        badge: 'UNKNOWN'
+        badge: 'FEATURE'
       };
     } else {
       if (node.label === 'Source') {
@@ -660,12 +752,51 @@ export default function GraphCanvas({
         };
       }
 
+      if (node.label === 'FlagsmithFeature') {
+        const isEnabled = node.enabled !== false;
+        if (node.has_missing_prereqs) {
+          return {
+            fill: '#FFF1F2',
+            stroke: '#F43F5E',
+            glow: 'rgba(244, 63, 94, 0.25)',
+            text: '#9F1239',
+            badge: 'BLOCKED'
+          };
+        }
+        if (isEnabled) {
+          return {
+            fill: '#ECFDF5',
+            stroke: '#059669',
+            glow: 'rgba(5, 150, 105, 0.25)',
+            text: '#065F46',
+            badge: 'ENABLED'
+          };
+        }
+        return {
+          fill: '#F8FAFC',
+          stroke: '#94A3B8',
+          glow: 'none',
+          text: '#475569',
+          badge: 'DISABLED'
+        };
+      }
+
+      if (node.label === 'CodeReference') {
+        return {
+          fill: '#F0F9FF',
+          stroke: '#0284C7',
+          glow: 'rgba(2, 132, 199, 0.2)',
+          text: '#0369A1',
+          badge: 'AST_CALL'
+        };
+      }
+
       return {
         fill: '#FFFFFF',
         stroke: '#CBD5E1',
         glow: 'none',
         text: '#64748B',
-        badge: 'UNKNOWN'
+        badge: 'FEATURE'
       };
     }
   }
@@ -1569,9 +1700,9 @@ export default function GraphCanvas({
                   <>
                     {/* Rect Transparent Hit Area */}
                     <rect
-                      x="-38"
+                      x="-44"
                       y="-28"
-                      width="76"
+                      width="88"
                       height="56"
                       rx="12"
                       ry="12"
@@ -1581,9 +1712,9 @@ export default function GraphCanvas({
 
                     {/* Rect Outer Glow Halo */}
                     <rect
-                      x="-36"
+                      x="-42"
                       y="-26"
-                      width="72"
+                      width="84"
                       height="52"
                       rx="10"
                       ry="10"
@@ -1597,9 +1728,9 @@ export default function GraphCanvas({
 
                     {/* Rect Double-Bezel Body */}
                     <rect
-                      x="-32"
+                      x="-38"
                       y="-22"
-                      width="64"
+                      width="76"
                       height="44"
                       rx="8"
                       ry="8"
@@ -1612,9 +1743,9 @@ export default function GraphCanvas({
                     {/* Rect Luminous Pulse Feedback Ring */}
                     {node.last_probed_at && (Date.now() - node.last_probed_at < 2500) && (
                       <rect
-                        x="-38"
+                        x="-44"
                         y="-28"
-                        width="76"
+                        width="88"
                         height="56"
                         rx="12"
                         ry="12"
@@ -1628,17 +1759,20 @@ export default function GraphCanvas({
                   </>
                 )}
 
-                {/* Node ID Label */}
+                {/* Node Label / Name (Intelligent truncation) */}
                 <text
                   textAnchor="middle"
                   dy="-3"
                   fill={colors.text}
-                  fontSize={isDecision ? "9" : "9.5"}
+                  fontSize={isDecision ? "8.5" : "9"}
                   fontFamily="monospace"
                   fontWeight="bold"
                   className="select-none pointer-events-none"
                 >
-                  {node.id.length > 9 ? node.id.slice(0, 8) + '…' : node.id}
+                  {(() => {
+                    const labelText = node.name || node.title || node.id || '';
+                    return labelText.length > 12 ? labelText.slice(0, 11) + '…' : labelText;
+                  })()}
                 </text>
 
                 {/* Status Subtitle Badge */}
@@ -1680,20 +1814,20 @@ export default function GraphCanvas({
           <span className="w-px h-3 bg-slate-300 dark:bg-white/20 shrink-0" aria-hidden="true" />
           <span className="text-slate-500 dark:text-slate-400 font-semibold">TOPOLOGY:</span>
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded bg-slate-900 dark:bg-white" />
-            <span className="text-slate-700 dark:text-slate-300">:Source</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded bg-slate-400" />
-            <span className="text-slate-700 dark:text-slate-300">:Fact</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-[7px] h-[7px] rotate-45 rounded-[0.5px] bg-amber-500 dark:bg-amber-400 shrink-0" />
-            <span className="text-slate-700 dark:text-slate-300">:Decision</span>
+            <span className="w-2 h-2 rounded bg-sky-500 dark:bg-sky-400" />
+            <span className="text-slate-700 dark:text-slate-300">:Prerequisite</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded bg-emerald-500" />
-            <span className="text-slate-700 dark:text-slate-300">:Action</span>
+            <span className="text-slate-700 dark:text-slate-300">:Feature</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-[7px] h-[7px] rotate-45 rounded-[0.5px] bg-amber-500 dark:bg-amber-400 shrink-0" />
+            <span className="text-slate-700 dark:text-slate-300">:Dependent</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded bg-purple-500" />
+            <span className="text-slate-700 dark:text-slate-300">:MCP_Action</span>
           </div>
         </div>
       </div>

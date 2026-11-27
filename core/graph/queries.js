@@ -209,18 +209,23 @@ export async function fetchGraphState(graph, { repo = null } = {}) {
     MATCH (a)-[r]->(b)
     ${edgeFilter}
     RETURN id(a) AS source_internal, id(b) AS target_internal,
-           coalesce(a.id, a.ref) AS source_id,
-           coalesce(b.id, b.ref) AS target_id,
+           coalesce(a.name, a.id, a.ref) AS source_id,
+           coalesce(b.name, b.id, b.ref) AS target_id,
            type(r) AS rel_type
     LIMIT 500
   `, repo ? { params: { repo } } : {});
 
-  const nodes = (nodesResult.data || []).map(row => ({
-    id: row.props.id || row.props.ref || String(row.internal_id),
-    internalId: row.internal_id,
-    label: row.label,
-    ...row.props
-  }));
+  const nodes = (nodesResult.data || []).map(row => {
+    const primaryId = row.props.name || row.props.id || row.props.ref || String(row.internal_id);
+    return {
+      id: primaryId,
+      name: row.props.name || primaryId,
+      title: row.props.name || row.props.title || primaryId,
+      internalId: row.internal_id,
+      label: row.label,
+      ...row.props
+    };
+  });
 
   const edges = (edgesResult.data || []).map(row => ({
     source: row.source_id || String(row.source_internal),

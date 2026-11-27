@@ -1051,14 +1051,14 @@ export default function ConnectedRepoWorkspace({
                 </Tooltip>
               )}
 
-              {/* Causal Divergence / Decision Count Indicator */}
+              {/* Causal Divergence / Feature Flag Count Indicator */}
               {phase === 'ready' && scan && (
                 <span
                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-mono text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 bg-slate-100/60 dark:bg-white/[0.04]"
-                  title={`${scan.count} Architecture Decision Records indexed on branch "${selectedBranch}"`}
+                  title={`${scan.count} Flagsmith Feature Flags indexed on branch "${selectedBranch}"`}
                 >
                   <FileText className="w-3 h-3 text-slate-400 dark:text-slate-500 shrink-0" />
-                  <span>{scan.count} {scan.count === 1 ? 'ADR' : 'ADRs'}</span>
+                  <span>{scan.count} {scan.count === 1 ? 'FLAG' : 'FLAGS'}</span>
                 </span>
               )}
             </div>
@@ -1115,7 +1115,7 @@ export default function ConnectedRepoWorkspace({
       {phase === 'scanning' && (
         <StateCard icon={<RefreshCw className="w-6 h-6 text-slate-700 dark:text-slate-300 animate-spin" />}
           title="Scanning repository"
-          body={<>Reading ADR files from <strong className="font-mono text-slate-950 dark:text-white">{repo.full_name}</strong> on branch <strong className="font-mono">{scan?.branch || repo.default_branch || 'main'}</strong>.</>} />
+          body={<>Scanning AST for Flagsmith SDK calls in <strong className="font-mono text-slate-950 dark:text-white">{repo.full_name}</strong> on branch <strong className="font-mono">{scan?.branch || repo.default_branch || 'main'}</strong>.</>} />
       )}
 
       {phase === 'error' && (
@@ -1689,10 +1689,10 @@ export default function ConnectedRepoWorkspace({
                   <h3 className="font-bold text-sm">Confirm Starter Pull Request</h3>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-400 font-sans leading-relaxed">
-                  CAVDAX will create branch <code className="font-mono px-1 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200">cavdax/init-adr</code> and open a starter Pull Request on repository <strong className="font-mono text-slate-900 dark:text-white">{repo.full_name}</strong>.
+                  CAVDAX will create branch <code className="font-mono px-1 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-slate-800 dark:text-slate-200">cavdax/init-flagsmith</code> and open a starter Pull Request on repository <strong className="font-mono text-slate-900 dark:text-white">{repo.full_name}</strong>.
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 font-sans leading-relaxed">
-                  Detected ecosystem manifests will be parsed to draft your initial Architecture Decision Record (ADR-001). Nothing is committed to <strong className="font-mono text-slate-800 dark:text-slate-200">{scan?.branch || repo.default_branch || 'main'}</strong> until you review and merge on GitHub.
+                  Detected ecosystem manifests will be parsed to draft your initial Flagsmith SDK configuration and feature flag schema. Nothing is committed to <strong className="font-mono text-slate-800 dark:text-slate-200">{scan?.branch || repo.default_branch || 'main'}</strong> until you review and merge on GitHub.
                 </p>
                 <div className="pt-2 flex items-center justify-end gap-2 text-xs">
                   <button

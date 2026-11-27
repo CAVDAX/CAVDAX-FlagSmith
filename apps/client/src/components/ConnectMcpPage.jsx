@@ -653,36 +653,35 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
   const agentRulesSnippet = `# CAVDAX Architecture Verification Gate Guardrails
 
 CRITICAL DIRECTIVE:
-You are operating in an architecture-verified repository governed by the CAVDAX MCP Gate.
-NEVER use native file-editing tools (e.g., Edit, Write, bash echo/sed) to bypass architectural checks.
-All protected codebase modifications MUST be routed through the CAVDAX MCP verification gate.
+You are operating in an environment governed by the CAVDAX Flagsmith MCP Gate.
+NEVER toggle feature flags or mutate feature-guarded code paths without verifying upstream prerequisites and downstream blast radius.
+All feature flag operations and guarded writes MUST be routed through the CAVDAX Flagsmith MCP gate.
 
 EXECUTION WORKFLOW:
-1. Architectural Discovery & Situational Awareness:
-   - Call \`list_active_decisions\` to retrieve governing ADRs, decision statuses, and assigned file paths.
-   - Call \`query_causal_graph\` to inspect the multi-tier dependency subgraph.
+1. Feature Flag Discovery & Inventory:
+   - Call \`list_flagsmith_features\` to retrieve all active feature flags, enabled states, and dependency metrics.
+   - Call \`scan_code_for_flags\` to scan repository AST for Flagsmith SDK calls and code-level feature bindings.
 
-2. Blast Radius & Downstream Risk Analysis:
-   - Call \`explain_blast_radius\` (or \`explain_architectural_impact\`) with \`node_id\` (e.g. DEC-102 or ADR-002) to verify all affected downstream decisions and governed files.
+2. Blast Radius & Causal Traversal:
+   - Call \`get_flag_blast_radius\` with \`flag_name\` (e.g. "dark_mode" or "auth_v2") to verify upstream prerequisites and all affected downstream dependent features.
 
-3. Multi-Agent Concurrency & Intent Clearance:
-   - Call \`check_intent_clearance\` with \`decision_id\`, \`target_file\`, and your \`agent_id\` before generating code.
-   - For multi-agent workflows, lease an exclusive lock via \`acquire_decision_lock\` (\`decision_id\`, \`agent_id\`) and release when finished via \`release_decision_lock\`.
+3. Temporal Coupling & Git Co-Change Analysis:
+   - Call \`compute_temporal_couplings\` to detect hidden temporal dependencies from Git commit history.
 
-4. Enclosed Execution Gate:
-   - Apply modifications strictly through \`apply_code_change\`:
+4. Enclosed Safe Execution Gate:
+   - Apply toggles strictly through \`safe_toggle_flag\`:
      Required parameters:
-       • \`decision_id\`: Active Architecture Decision ID (e.g. "DEC-102")
-       • \`file_path\`: Relative target file path (e.g. "src/auth.js")
-       • \`code_payload\`: Full verified file content to write
-     Optional: \`agent_id\` (for lock lease), \`reasoning\` (technical rationale)
+       • \`flag_name\`: Target feature flag name (e.g. "dark_mode")
+       • \`enabled\`: Desired boolean state (true | false)
+     Optional:
+       • \`force\`: Set to true only if explicitly overriding blocked downstream invariants
+       • \`reason\`: Audit rationale for compliance logging
 
-5. Invalidation & Act IV Revalidation:
-   - If CAVDAX returns BLOCKED_DECISION_INVALIDATED or BLOCKED_SUPERSEDED_SOURCE:
-     a. Do NOT attempt direct filesystem overrides.
-     b. Call \`revalidate_decision\` passing:
-        \`new_source_id\` (e.g. "ADR-002"), \`old_decision_id\` ("DEC-102"), \`new_decision_id\` ("DEC-103"), \`new_fact_id\` ("F-OAuth2"), and \`title\`.
-     c. Align code with the new architectural contract and re-request clearance.`;
+5. Prerequisite Resolution:
+   - If CAVDAX returns BLOCKED_UNSATISFIED_PREREQUISITE:
+     a. Review missing prerequisites returned by the gate.
+     b. Resolve upstream flags or activate required dependencies in order.
+     c. Re-request toggle verification through \`safe_toggle_flag\`.`;
 
 
 
@@ -932,10 +931,8 @@ EXECUTION WORKFLOW:
               <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-sans leading-relaxed text-pretty">
 
                 {githubUser
-
-                  ? 'Your GitHub account is linked. CAVDAX can now ingest ADRs and decision events from your repositories.'
-
-                  : 'Authenticate with GitHub to enable live ADR ingestion, webhook events, and per-repo causal graphs.'}
+                  ? 'Your GitHub account is linked. CAVDAX can now scan Flagsmith SDK calls, AST dependencies, and flag mesh events from your repositories.'
+                  : 'Authenticate with GitHub to enable live Flagsmith AST scanning, webhook events, and per-repo causal flag graphs.'}
 
               </p>
 
@@ -1972,7 +1969,7 @@ EXECUTION WORKFLOW:
 
 
               <p className="text-xs sm:text-[13px] text-slate-600 dark:text-slate-400 font-sans leading-relaxed mb-4 [text-wrap:balance]">
-                GraphBLAS BFS traverses active ADRs in RAM to verify every grounding decision.
+                GraphBLAS BFS traverses active feature flags in RAM to verify every prerequisite before toggle execution.
               </p>
 
 

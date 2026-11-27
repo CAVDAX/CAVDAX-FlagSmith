@@ -3,36 +3,32 @@ import { Play, Terminal, AlertTriangle, Check, RefreshCw, FileCode, X, Cpu } fro
 import { playClick, playRejectBuzz, playApprovalChime } from '../utils/soundFx';
 
 export default function McpActionPlayground({ onRunCustomAction, repo = null, decisions = [], onClose = null }) {
-  const [activeTool, setActiveTool] = useState('check_intent_clearance'); // 'check_intent_clearance' | 'apply_code_change'
-  const [decisionId, setDecisionId] = useState('DEC-102');
-  const [filePath, setFilePath] = useState('src/services/payment.js');
-  const [proposedAction, setProposedAction] = useState('Implement TokenAuth v1 checkout handler');
-  const [codeSnippet, setCodeSnippet] = useState(`// Proposed code change relying on TokenAuth v1:\napp.post('/api/checkout', (req, res) => {\n  verifyToken(req.headers['authorization']);\n});`);
+  const [activeTool, setActiveTool] = useState('safe_toggle_flag'); // 'safe_toggle_flag' | 'get_flag_blast_radius'
+  const [flagName, setFlagName] = useState('auth_v2');
+  const [filePath, setFilePath] = useState('apps/client-pwa/src/components/ThemeWrapper.jsx');
+  const [proposedAction, setProposedAction] = useState('Disable feature flag auth_v2');
+  const [codeSnippet, setCodeSnippet] = useState(`// Proposed tool call to safe_toggle_flag:\nconst result = await mcp.callTool('safe_toggle_flag', {\n  flag_name: 'auth_v2',\n  enabled: false\n});`);
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState(null);
 
   const handleToggleDecision = () => {
     playClick();
-    if (decisionId === 'DEC-102') {
-      setDecisionId('DEC-103');
-      setProposedAction('Implement OAuth2 checkout token validation');
-      setCodeSnippet(`// Updated code change compliant with ADR-002 OAuth2:\napp.post('/api/checkout', (req, res) => {\n  verifyOAuth2Token(req.headers['authorization']);\n});`);
+    if (flagName === 'auth_v2') {
+      setFlagName('dark_mode');
+      setProposedAction('Toggle dark_mode feature flag');
+      setCodeSnippet(`// Safe toggle call for dark_mode:\nconst result = await mcp.callTool('safe_toggle_flag', {\n  flag_name: 'dark_mode',\n  enabled: true\n});`);
     } else {
-      setDecisionId('DEC-102');
-      setProposedAction('Implement TokenAuth v1 checkout handler');
-      setCodeSnippet(`// Proposed code change relying on TokenAuth v1:\napp.post('/api/checkout', (req, res) => {\n  verifyToken(req.headers['authorization']);\n});`);
+      setFlagName('auth_v2');
+      setProposedAction('Disable feature flag auth_v2');
+      setCodeSnippet(`// Unsafe toggle call for auth_v2 (has dependents):\nconst result = await mcp.callTool('safe_toggle_flag', {\n  flag_name: 'auth_v2',\n  enabled: false\n});`);
     }
   };
 
   const handleSelectDecisionChip = (id) => {
     playClick();
-    setDecisionId(id);
-    if (id.toLowerCase().includes('103') || id.toLowerCase().includes('oauth')) {
-      setProposedAction('Implement OAuth2 token authentication flow');
-      setCodeSnippet(`// OAuth2 compliant implementation:\napp.post('/api/checkout', verifyOAuth2Token);`);
-    } else {
-      setProposedAction(`Implement directive grounded in ${id}`);
-    }
+    setFlagName(id);
+    setProposedAction(`Evaluate blast radius for ${id}`);
+    setCodeSnippet(`// Inquire blast radius for ${id}:\nconst blast = await mcp.callTool('get_flag_blast_radius', { flag_name: '${id}' });`);
   };
 
   const handleSubmit = async (e) => {
@@ -41,23 +37,20 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
     setIsRunning(true);
     setResult(null);
 
-    const isClearance = activeTool === 'check_intent_clearance';
-    const bodyPayload = isClearance
+    const isToggle = activeTool === 'safe_toggle_flag';
+    const bodyPayload = isToggle
       ? {
-          toolName: 'check_intent_clearance',
+          toolName: 'safe_toggle_flag',
           args: {
-            decision_id: decisionId,
-            target_file: filePath,
-            proposed_action: proposedAction,
+            flag_name: flagName,
+            enabled: false,
             ...(repo?.full_name ? { repo: repo.full_name } : {})
           }
         }
       : {
-          toolName: 'apply_code_change',
+          toolName: 'get_flag_blast_radius',
           args: {
-            decision_id: decisionId,
-            file_path: filePath,
-            code_payload: codeSnippet,
+            flag_name: flagName,
             ...(repo?.full_name ? { repo: repo.full_name } : {})
           }
         };
@@ -73,9 +66,7 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
       const data = await res.json();
       setResult(data);
 
-      const isApproved = isClearance
-        ? Boolean(data.clearance_granted || data.gate_verdict === 'APPROVED')
-        : Boolean(data.is_approved || data.gate_verdict === 'APPROVED');
+      const isApproved = Boolean(data.success || data.is_approved || data.gate_verdict === 'APPROVED');
 
       if (isApproved) {
         playApprovalChime();
@@ -87,27 +78,18 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
         onRunCustomAction(data);
       }
     } catch (err) {
-      const isApproved = decisionId === 'DEC-103';
-      const simResult = isClearance
-        ? {
-            isError: !isApproved,
-            clearance_granted: isApproved,
-            gate_verdict: isApproved ? 'APPROVED' : 'BLOCKED_SUPERSEDED_SOURCE',
-            latency_ms: 1.84,
-            simulated: true,
-            violation_paths: !isApproved ? [['Decision:DEC-102', 'Fact:F-Auth-v1', 'Source:ADR-001']] : [],
-            message: isApproved
-              ? "CLEARANCE GRANTED: Decision 'DEC-103' is verified and grounded in active architecture records."
-              : "CLEARANCE DENIED: Decision 'DEC-102' is grounded in superseded source 'ADR-001'."
-          }
-        : {
-            isError: !isApproved,
-            is_approved: isApproved,
-            gate_verdict: isApproved ? 'APPROVED' : 'BLOCKED_SUPERSEDED_SOURCE',
-            latency_ms: 1.84,
-            simulated: true,
-            violation_paths: !isApproved ? [['Decision:DEC-102', 'Fact:F-Auth-v1', 'Source:ADR-001']] : []
-          };
+      const isApproved = flagName === 'dark_mode';
+      const simResult = {
+        isError: !isApproved,
+        is_approved: isApproved,
+        gate_verdict: isApproved ? 'APPROVED' : 'BLOCKED_DOWNSTREAM_DEPENDENTS',
+        latency_ms: 1.84,
+        simulated: true,
+        violation_paths: !isApproved ? [['FlagsmithFeature:auth_v2', 'FlagsmithFeature:dark_mode', 'FlagsmithFeature:premium_analytics']] : [],
+        message: isApproved
+          ? `CLEARANCE GRANTED: Feature '${flagName}' prerequisites verified. Safe to toggle without cascading breaking changes.`
+          : `CLEARANCE DENIED: Feature '${flagName}' has 2 active downstream dependents. Disabling would break production telemetry.`
+      };
       setResult(simResult);
       if (isApproved) playApprovalChime();
       else playRejectBuzz();
@@ -116,8 +98,8 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
     }
   };
 
-  const isClearanceMode = activeTool === 'check_intent_clearance';
-  const isApprovedResult = result
+  const isClearanceMode = activeTool === 'safe_toggle_flag';
+  const isApprovedResult = result && (result.success || result.is_approved || result.gate_verdict === 'APPROVED');
     ? Boolean(result.clearance_granted || result.is_approved || result.gate_verdict === 'APPROVED')
     : false;
 
@@ -315,26 +297,14 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
           </div>
 
           <div className="text-[11px] leading-relaxed mt-1 text-slate-700 dark:text-slate-300">
-            {isClearanceMode ? (
-              isApprovedResult ? (
-                <span>
-                  Active provenance verified. Decision <code className="font-bold text-emerald-950 dark:text-white">{decisionId}</code> grounded in active baseline.
-                </span>
-              ) : (
-                <span>
-                  Clearance rejected. Decision <code className="font-bold text-rose-950 dark:text-rose-200">{decisionId}</code> depends on superseded source <code className="font-bold text-rose-950 dark:text-rose-200">ADR-001</code>.
-                </span>
-              )
+            {isApprovedResult ? (
+              <span>
+                Causal safety verified. Feature flag <code className="font-bold text-emerald-950 dark:text-white">{flagName}</code> has zero prerequisite conflicts.
+              </span>
             ) : (
-              isApprovedResult ? (
-                <span>
-                  Causal chain verified. Write authorized for <code className="font-bold text-emerald-950 dark:text-white">{filePath}</code>.
-                </span>
-              ) : (
-                <span>
-                  Write blocked. Decision <code className="font-bold text-rose-950 dark:text-rose-200">{decisionId}</code> depends on superseded source <code className="font-bold text-rose-950 dark:text-rose-200">ADR-001</code>.
-                </span>
-              )
+              <span>
+                Safe toggle blocked. Feature flag <code className="font-bold text-rose-950 dark:text-rose-200">{flagName}</code> has active downstream dependents or missing prerequisites.
+              </span>
             )}
           </div>
 

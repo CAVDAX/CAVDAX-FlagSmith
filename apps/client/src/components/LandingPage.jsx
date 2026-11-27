@@ -958,7 +958,7 @@ export default function LandingPage({
             }}
             className="btn-secondary group tactile-btn inline-flex items-center justify-center gap-2 leading-none"
           >
-            <span>ADR Causal Console</span>
+            <span>Flagsmith Causal Console</span>
             <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
           </button>
 
@@ -1088,21 +1088,15 @@ export default function LandingPage({
               <div className="p-4 rounded-xl bg-slate-100/80 dark:bg-black/40 border border-slate-200 dark:border-white/5 font-mono text-xs flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-800 dark:text-slate-300">
 
                 <div className="flex items-center gap-2 text-rose-700 dark:text-rose-400 font-bold">
-
                   <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-
-                  <span>ADR-001 (Deprecated v1)</span>
-
+                  <span>auth_v1 (Deprecated Flag)</span>
                 </div>
 
                 <span className="text-slate-600 dark:text-slate-400 font-bold">≈ 0.89 Cosine Match ≈</span>
 
                 <div className="flex items-center gap-2 text-slate-600 dark:text-slate-400">
-
                   <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
-
-                  <span>ADR-002 (Active OAuth2)</span>
-
+                  <span>auth_v2 (Active Prerequisite)</span>
                 </div>
 
               </div>
@@ -1274,11 +1268,8 @@ export default function LandingPage({
               <div className="p-4 rounded-xl bg-slate-100/80 dark:bg-black/40 border border-slate-200 dark:border-white/5 font-mono text-xs flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-800 dark:text-slate-300">
 
                 <div className="flex items-center gap-2">
-
                   <span className="w-2.5 h-2.5 rounded-full bg-slate-900 dark:bg-white" />
-
-                  <span>ADR-001 Invalidation</span>
-
+                  <span>auth_v1 Invalidation</span>
                 </div>
 
                 <span className="text-slate-600 dark:text-slate-400 font-bold">-- 3 Hops Lost in RAG --</span>

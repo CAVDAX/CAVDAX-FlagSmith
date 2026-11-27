@@ -2219,7 +2219,7 @@ export default function ProfilePage({
                 </span>
               </div>
               <div className="py-1.5 sm:py-2 px-2.5 rounded-lg border border-slate-200/60 dark:border-white/5 bg-slate-100/60 dark:bg-white/[0.02] flex flex-col justify-center">
-                <span className="text-[8px] text-slate-500 uppercase tracking-tight block mb-0.5">Decisions</span>
+                <span className="text-[8px] text-slate-500 uppercase tracking-tight block mb-0.5">Feature Flags</span>
                 <span className="text-xs font-bold text-slate-950 dark:text-white leading-tight">
                   {userDecisionsCount} <span className="text-[10px] font-normal text-slate-500">/ {decisionsCapacity === -1 ? '∞' : decisionsCapacity.toLocaleString()}</span>
                 </span>
@@ -3310,7 +3310,7 @@ export default function ProfilePage({
               </span>
             </div>
             <div className="py-1 sm:py-1.5 px-2 rounded-lg border border-slate-200/60 dark:border-white/5 bg-slate-100/60 dark:bg-white/[0.02] flex flex-col justify-center">
-              <span className="text-[8px] text-slate-500 uppercase tracking-tight block mb-0.5">Decisions</span>
+              <span className="text-[8px] text-slate-500 uppercase tracking-tight block mb-0.5">Feature Flags</span>
               <span className="text-xs font-bold text-slate-950 dark:text-white leading-tight">
                 {userDecisionsCount} <span className="text-[10px] font-normal text-slate-500">/ {decisionsCapacity === -1 ? '∞' : decisionsCapacity.toLocaleString()}</span>
               </span>

@@ -967,7 +967,7 @@ export default function TierBenefitsPage({
               Distributed Mutex Lock Engine
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-2 leading-relaxed line-clamp-2">
-              Leases exclusive locks on decisions so parallel agent fleets cannot mutate the same ADR concurrently or cause split-brain drift.
+              Leases exclusive locks on feature flags so parallel agent fleets cannot mutate the same toggle concurrently or cause split-brain drift.
             </p>
 
             <div className="mt-6 space-y-3 font-mono text-xs">
@@ -1144,7 +1144,7 @@ export default function TierBenefitsPage({
                   },
                   {
                     name: 'Secondary Branch Causal Isolation',
-                    desc: 'Per-branch DAGs preventing staging edits from corrupting ADRs.',
+                    desc: 'Per-branch DAGs preventing staging edits from corrupting feature flag meshes.',
                     community: { base: 'Main Branch only', vsPro: 'Main Only', vsEnterprise: 'Main Only' },
                     pro: { base: 'Multi-Branch DAG' },
                     enterprise: { base: 'Tenant Multi-Branch' }
@@ -1179,7 +1179,7 @@ export default function TierBenefitsPage({
                   },
                   {
                     name: 'CI/CD Invariant Blocking Gate',
-                    desc: 'Pull request status check verifying commit SHAs against ADRs.',
+                    desc: 'Pull request status check verifying commit SHAs and AST against feature flag invariants.',
                     community: { base: 'Manual CLI Check', vsPro: 'Manual Only', vsEnterprise: 'Manual Only' },
                     pro: { base: 'GitHub Action Gate', vsEnterprise: 'Advisory Only' },
                     enterprise: { base: 'Enforced Blocker' }

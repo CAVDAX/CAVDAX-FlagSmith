@@ -10,7 +10,7 @@ const COMPARISON_DATA = [
 
     description: 'Structure of stored architecture decisions',
 
-    staticAdrs: 'Flat Markdown Files',
+    staticAdrs: 'Isolated Cloud Toggles',
 
     vectorRag: '1536d Float Vectors',
 
@@ -246,9 +246,9 @@ export default function ArchitecturalComparisonMatrix() {
 
                 <th className="py-2 pro-27:py-3.5 px-3 sm:px-4 pro-27:px-5 text-[10px] sm:text-[10.5px] pro-27:text-[11.5px] font-mono font-medium text-slate-600 dark:text-slate-400 w-[15%] whitespace-nowrap">
 
-                  Static ADRs
+                  Standard Flags
 
-                  <span className="block text-[8.5px] pro-27:text-[10px] text-slate-400 dark:text-slate-500 font-sans font-normal mt-0.5 whitespace-nowrap">adr-tools / Log4brains</span>
+                  <span className="block text-[8.5px] pro-27:text-[10px] text-slate-400 dark:text-slate-500 font-sans font-normal mt-0.5 whitespace-nowrap">Isolated Cloud Toggles</span>
 
                 </th>
 

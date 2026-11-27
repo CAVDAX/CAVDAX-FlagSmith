@@ -9,6 +9,26 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00l. Forensic FalkorDB Graph Node Bug Fix, UI Badge Refinements & Complete Sub-Page ADR Purge (November 27, 2026)
+- **FalkorDB Graph Node ID & Column Stacking Resolution (`core/graph/queries.js`, `apps/client/src/components/GraphCanvas.jsx`)**:
+  - *Root Cause Uncovered & Fixed*: `:FlagsmithFeature` nodes created in FalkorDB contain `props.name` but no `props.id` or `props.ref`. `fetchGraphState()` fell back to `String(row.internal_id)` = `"16"`, and `GraphCanvas` lacked an entry in `LAYER_X`, dumping all 16 feature flag nodes at coordinate `(495, 220)`. Node 16 stacked on top, displaying `16 UNKNOWN :FlagsmithFeature` with 5 incoming `GUARDS` edges.
+  - *Query Engine Fix*: Updated `queries.js` so node ID maps `row.props.name || row.props.id || String(row.internal_id)`, and edges coalesce `coalesce(a.name, a.id, a.ref)`.
+  - *Intelligent Layout Engine*: Added native 4-column layout in `GraphCanvas.jsx` for Flagsmith graphs: Col 1 (`x: 110` Prerequisites & CodeReferences), Col 2 (`x: 350` Core Features), Col 3 (`x: 590` Downstream Dependents), Col 4 (`x: 830` Agent Actions & Gate Enclosures) with staggered anti-collision positioning.
+  - *Node Box & Colors*: Widened node body from 64px to 76px/88px for clean readability. Added native `:FlagsmithFeature` color states (`ENABLED` emerald `#10B981`, `DISABLED` slate `#64748B`, `BLOCKED` rose `#FB7185`) and updated bottom topology legend.
+- **UI Micro-Interactions & Contrast Audit (`FlagBlastRadiusCard.jsx`)**:
+  - *`HIGH RISK` Badge Refined*: Eliminated blurry glowing amber. Added crisp high-contrast border and typography (`text-amber-800 dark:text-amber-400 bg-amber-100/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-500/40`).
+  - *`[dep]` Badge Transformed*: Unified into monospace pill `[2 DEP]`. Fixed dark mode bug where selected button rendered faint white-on-white text by adding explicit inverted contrast tokens (`bg-white/20 text-white dark:bg-slate-900/15 dark:text-slate-900`).
+  - *`[SATISFIED]` / `[MISSING]` Upstream Status*: Replaced unpadded raw ASCII brackets with tabular micro-badges (`px-2 py-0.5 rounded-full border`) with clean baseline alignment.
+- **Comprehensive ADR Purge Across All Sub-Pages**:
+  - *`LandingPage.jsx`*: Replaced `ADR Causal Console` with `Flagsmith Causal Console`; converted `ADR-001/002` tags to `auth_v1/v2` feature flag tokens.
+  - *`ConnectedRepoWorkspace.jsx`*: Replaced ADR scanning copy with Flagsmith AST code scanning and SDK initialization (`cavdax/init-flagsmith`).
+  - *`McpActionPlayground.jsx`*: Transformed legacy `TokenAuth v1` action test into Flagsmith `safe_toggle_flag` and `get_flag_blast_radius` clearance tests.
+  - *`ConnectMcpPage.jsx`*: Replaced legacy ADR agent system prompts with Flagsmith Feature Flag safety directives and 6 core MCP tool descriptions.
+  - *`TierBenefitsPage.jsx` & `ProfilePage.jsx`*: Replaced ADR locks and decision quotas with Feature Flag mesh quotas and AST CI gates.
+  - *`CausalSolutionScroller.jsx` & `ArchitecturalComparisonMatrix.jsx`*: Replaced static ADR references with Flagsmith SDK toggles and Boolean Semiring GraphBLAS verification.
+- **Top Navigation Streamlined (`Header.jsx`)**:
+  - Top navigation organized into 5 clear operational tabs (`Overview`, `Console`, `Flag Radar`, `Repo & MCP`, `Audit`), removing marketing clutter (`Walkthrough`, `Team`) from top bar.
+
 ### 00k. Master README Architecture & Invariant Enforcement (`Suneet-Master-README-Creator`, `devils-advocate`) (November 27, 2026)
 - **13-Pillar Architectural Anatomy Enforcement**:
   - *Pillar 1 (Hero & Title)*: Refined header with `<picture>` vector logo, clear declarative thesis, and Hackathon Track 03 badge clusters.

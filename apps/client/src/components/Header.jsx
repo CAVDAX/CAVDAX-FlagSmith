@@ -40,9 +40,10 @@ function RadarIcon({ size = 13, className = "" }) {
 
 const NAV_TABS = [
   { id: "landing", label: "Overview", icon: Layers },
+  { id: "console", label: "Console", icon: Terminal },
   { id: "flags", label: "Flag Radar", icon: RadarIcon },
   { id: "mcp", label: "Repo & MCP", icon: Cable },
-  { id: "audit", label: "Audit Ledger", icon: ClipboardList },
+  { id: "audit", label: "Audit", icon: ClipboardList },
 ];
 
 const ALL_NAV_ITEMS = [

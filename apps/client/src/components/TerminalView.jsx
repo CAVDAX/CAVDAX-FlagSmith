@@ -215,10 +215,10 @@ export default function TerminalView({ terminalLogs, activeVerdict, latestAction
               <Cpu className="w-5 h-5 text-amber-600 dark:text-[#d9a353] shrink-0 mt-0.5" />
               <div className="text-xs">
                 <div className="font-bold text-amber-950 dark:text-[#fef08a] font-mono tracking-wide">
-                  INGESTION PIPELINE: EVALUATING AST &amp; INVALIDATING DAG
+                  INGESTION PIPELINE: TRAVERSING TOPOLOGICAL BLAST RADIUS
                 </div>
                 <div className="text-amber-900/80 dark:text-amber-200/80 mt-0.5 font-mono text-[11px]">
-                  AST parser parsed superseding ADR-002; GraphBLAS actively recomputing dependency reachability in 2.1ms.
+                  FalkorDB GraphBLAS traversed 2-hop downstream blast radius for <span className="font-bold">dark_mode</span> in 4.5ms. Found 2 dependent features.
                 </div>
               </div>
             </div>
@@ -234,10 +234,10 @@ export default function TerminalView({ terminalLogs, activeVerdict, latestAction
               <AlertTriangle className="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" />
               <div className="text-xs">
                 <div className="font-bold text-rose-900 dark:text-rose-300 font-mono tracking-wide">
-                  EXECUTION INTERCEPTED: BLOCKED_SUPERSEDED_SOURCE
+                  EXECUTION INTERCEPTED: BLOCKED_UNSATISFIED_PREREQUISITE
                 </div>
                 <div className="text-rose-800/90 dark:text-rose-200/90 mt-0.5 font-mono text-[11px]">
-                  FalkorDB Cypher traversal verified that <span className="font-bold text-slate-900 dark:text-white">DEC-102</span> depends on <span className="text-rose-700 dark:text-rose-300 font-bold">ADR-001 (SUPERSEDED)</span>. Zero files written to disk.
+                  FalkorDB Cypher traversal verified that <span className="font-bold text-slate-900 dark:text-white">auth_v2</span> is missing required prerequisite. Unsafe toggle intercepted &amp; blocked in &lt;15ms.
                 </div>
               </div>
             </div>
@@ -256,7 +256,7 @@ export default function TerminalView({ terminalLogs, activeVerdict, latestAction
                   VERIFIED CAUSAL PROVENANCE: APPROVED
                 </div>
                 <div className="text-emerald-800/90 dark:text-emerald-200/90 mt-0.5 font-mono text-[11px]">
-                  <span className="font-bold text-slate-900 dark:text-white">DEC-103</span> verified against fresh source <span className="text-emerald-700 dark:text-emerald-300 font-bold">ADR-002 (ACTIVE)</span>. Code written to <span className="font-bold text-slate-900 dark:text-white">payment.js</span>.
+                  Prerequisites satisfied across GraphBLAS matrix. Tool <span className="font-bold text-slate-900 dark:text-white">safe_toggle_flag</span> approved; Flagsmith API &amp; FalkorDB audit ledger signed.
                 </div>
               </div>
             </div>

@@ -8,8 +8,8 @@ const SOLUTION_STEPS = [
   {
     id: 'step-ingestion',
     indexStr: '01',
-    title: 'ADR & Git Ingestion',
-    punchline: 'Autonomous AST parser extracts markdown frontmatter and commit diffs into directed causal vertices.',
+    title: 'Flagsmith & Git Ingestion',
+    punchline: 'Autonomous AST parser extracts Flagsmith SDK calls and commit co-changes into directed causal vertices.',
     accentDark: '#ffffff',
     accentLight: '#090A0C', // Deep Architectural Obsidian in light mode
   },
@@ -87,8 +87,8 @@ function WidescreenVisualIngestion({ triggerKey = 0 }) {
             strokeWidth="2.5"
           />
           <circle cx="140" cy="35" r="4" className="fill-white dark:fill-slate-950"/>
-          <text x="140" y="16" textAnchor="middle" className="fill-slate-900 dark:fill-white font-mono text-[13px] font-bold">ADR-002</text>
-          <text x="140" y="65" textAnchor="middle" className="fill-slate-500 dark:fill-[#a1a1aa] font-mono text-[10px]">New Proposal</text>
+          <text x="140" y="16" textAnchor="middle" className="fill-slate-900 dark:fill-white font-mono text-[13px] font-bold">dark_mode</text>
+          <text x="140" y="65" textAnchor="middle" className="fill-slate-500 dark:fill-[#a1a1aa] font-mono text-[10px]">New Feature Toggle</text>
         </g>
 
         {/* Central Inflow Conduit & Animated Traveling Packet */}
@@ -168,17 +168,17 @@ function WidescreenVisualIngestion({ triggerKey = 0 }) {
             <rect x="0" y="0" width="205" height="54" rx="8" className="fill-white dark:fill-[#18181b] stroke-emerald-600 dark:stroke-emerald-400" strokeWidth="2"/>
             <circle cx="30" cy="27" r="11" className="fill-emerald-600 dark:fill-emerald-500"/>
             <polyline points="25,27 29,31 36,23" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            <text x="52" y="25" className="fill-slate-900 dark:fill-white font-mono text-[13px] font-bold">ADR-002</text>
-            <text x="52" y="42" className="fill-emerald-600 dark:fill-emerald-400 font-mono text-[10.5px] font-bold">VERIFIED ACTIVE</text>
+            <text x="52" y="25" className="fill-slate-900 dark:fill-white font-mono text-[13px] font-bold">auth_v2</text>
+            <text x="52" y="42" className="fill-emerald-600 dark:fill-emerald-400 font-mono text-[10.5px] font-bold">VERIFIED PREREQUISITE</text>
           </g>
 
-          {/* Bottom Superseded Block: ADR-001 Stale */}
+          {/* Bottom Superseded Block: auth_v1 Stale */}
           <rect x="0" y="74" width="205" height="54" rx="8" className="fill-slate-50 dark:fill-[#121214] stroke-rose-400 dark:stroke-rose-600" strokeWidth="1.5" strokeDasharray="5 4"/>
           <circle cx="30" cy="101" r="11" className="fill-rose-100 dark:fill-rose-950/40 stroke-rose-500 dark:stroke-rose-600" strokeWidth="1.5"/>
           <line x1="25" y1="96" x2="35" y2="106" className="stroke-rose-600 dark:stroke-rose-400" strokeWidth="2"/>
           <line x1="35" y1="96" x2="25" y2="106" className="stroke-rose-600 dark:stroke-rose-400" strokeWidth="2"/>
-          <text x="52" y="99" className="fill-slate-600 dark:fill-slate-400 font-mono text-[12px] font-medium">ADR-001</text>
-          <text x="52" y="116" className="fill-rose-600 dark:fill-rose-400 font-mono text-[10px] font-bold">SUPERSEDED (STALE)</text>
+          <text x="52" y="99" className="fill-slate-600 dark:fill-slate-400 font-mono text-[12px] font-medium">auth_v1</text>
+          <text x="52" y="116" className="fill-rose-600 dark:fill-rose-400 font-mono text-[10px] font-bold">DEPRECATED (STALE)</text>
         </g>
       </svg>
     </div>
@@ -519,7 +519,7 @@ function WidescreenVisualMcpGate() {
             animate={{ opacity: [0.8, 1, 0.8] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >
-            GROUNDING: STALE [ADR-001]
+            PREREQUISITE: MISSING [auth_v2]
           </motion.text>
         </g>
 
@@ -653,10 +653,10 @@ function WidescreenVisualRevalidation() {
           
           {/* Clean Unboxed Monospace Labels */}
           <text x="16" y="24" className="fill-slate-900 dark:fill-white font-mono text-[11.5px] font-bold tracking-wider">
-            ADR-002
+            auth_v2
           </text>
           <text x="204" y="24" textAnchor="end" className="fill-slate-500 dark:fill-[#a1a1aa] font-mono text-[11.5px] font-bold tracking-wider">
-            DEC-103
+            FLAG_MUTATION
           </text>
 
           {/* Clean Solid Oval Cycle Track Base */}
