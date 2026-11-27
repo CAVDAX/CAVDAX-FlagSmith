@@ -111,8 +111,8 @@ export default function CavdaxWordmark({
 
           /* Staggered Word-by-Word Reveal (13.5s Cycle):
              Phase 1 (0% - 31%): CAVDAX Full-Form Acronym words appear sequentially, hold, exit.
-             Phase 2 (33% - 64%): Explore the CAVDAX Causal Engine appears sequentially, holds, exits.
-             Phase 3 (66% - 96%): Immunize Your Codebase Against Architectural Rot appears sequentially, holds, exits.
+             Phase 2 (33% - 64%): 3-Signal Causal Mesh for Flagsmith appears sequentially, holds, exits.
+             Phase 3 (66% - 96%): Eliminate Blind Toggles Across Production Flags appears sequentially, holds, exits.
              Breath Pause (96% - 100%): Subtle breath pause before clean loop restart.
           */
           @keyframes wmWord_0 {
@@ -151,7 +151,7 @@ export default function CavdaxWordmark({
             31%, 100% { opacity: 0; transform: translateY(-4px); filter: blur(3px); }
           }
 
-          /* Phase 2: Explore the CAVDAX Causal Engine */
+          /* Phase 2: 3-Signal Causal Mesh for Flagsmith */
           @keyframes wmExp_0 {
             0%, 33% { opacity: 0; transform: translateY(4px); filter: blur(3px); }
             36%, 60% { opacity: 1; transform: translateY(0); filter: blur(0px); }
@@ -178,7 +178,7 @@ export default function CavdaxWordmark({
             64%, 100% { opacity: 0; transform: translateY(-4px); filter: blur(3px); }
           }
 
-          /* Phase 3: Immunize Your Codebase Against Architectural Rot */
+          /* Phase 3: Eliminate Blind Toggles Across Production Flags */
           @keyframes wmImm_0 {
             0%, 66% { opacity: 0; transform: translateY(4px); filter: blur(3px); }
             69%, 92% { opacity: 1; transform: translateY(0); filter: blur(0px); }
@@ -317,7 +317,7 @@ export default function CavdaxWordmark({
       {/* 3. Staggered Word-by-Word Subheading Carousel (3 Symmetrical Phases) */}
       <div
         id="wordmark-subtext-container"
-        aria-label="Contextual Action & Verified Decision Autonomous eXecution — Explore the CAVDAX Causal Engine — Immunize Your Codebase Against Architectural Rot"
+        aria-label="Contextual Action & Verified Decision Autonomous eXecution — 3-Signal Causal Mesh for Flagsmith — Eliminate Blind Toggles Across Production Flags"
         className="mt-3 sm:mt-4 relative min-h-[26px] sm:min-h-[28px] w-full flex items-center justify-center font-mono text-[11px] sm:text-xs md:text-[13px] tracking-[0.16em] uppercase select-none pointer-events-none"
       >
         {/* Phase 1: Contextual Action & Verified Decision Autonomous eXecution */}
@@ -352,44 +352,44 @@ export default function CavdaxWordmark({
           </span>
         </div>
 
-        {/* Phase 2: Explore the CAVDAX Causal Engine */}
+        {/* Phase 2: 3-Signal Causal Mesh for Flagsmith */}
         <div className="absolute inset-0 flex items-center justify-center gap-x-2 gap-y-1 flex-wrap text-center">
-          <span className="wm-exp-0 inline-block text-slate-600 dark:text-slate-400 font-medium">
-            Explore
+          <span className="wm-exp-0 inline-block font-extrabold text-slate-900 dark:text-white">
+            3-Signal
           </span>
           <span className="wm-exp-1 inline-block text-slate-600 dark:text-slate-400 font-medium">
-            the
-          </span>
-          <span className="wm-exp-2 inline-block font-extrabold text-slate-900 dark:text-white">
-            CAVDAX
-          </span>
-          <span className="wm-exp-3 inline-block text-slate-600 dark:text-slate-400 font-medium">
             Causal
           </span>
-          <span className="wm-exp-4 inline-block text-slate-600 dark:text-slate-400 font-medium">
-            Engine
+          <span className="wm-exp-2 inline-block font-extrabold text-slate-900 dark:text-white">
+            Mesh
+          </span>
+          <span className="wm-exp-3 inline-block text-slate-600 dark:text-slate-400 font-medium">
+            for
+          </span>
+          <span className="wm-exp-4 inline-block font-extrabold text-slate-900 dark:text-white">
+            Flagsmith
           </span>
         </div>
 
-        {/* Phase 3: Immunize Your Codebase Against Architectural Rot */}
+        {/* Phase 3: Eliminate Blind Toggles Across Production Flags */}
         <div className="absolute inset-0 flex items-center justify-center gap-x-2 gap-y-1 flex-wrap text-center">
           <span className="wm-imm-0 inline-block font-extrabold text-slate-900 dark:text-white">
-            Immunize
+            Eliminate
           </span>
           <span className="wm-imm-1 inline-block text-slate-600 dark:text-slate-400 font-medium">
-            Your
+            Blind
           </span>
           <span className="wm-imm-2 inline-block font-extrabold text-slate-900 dark:text-white">
-            Codebase
+            Toggles
           </span>
           <span className="wm-imm-3 inline-block text-slate-600 dark:text-slate-400 font-medium">
-            Against
+            Across
           </span>
-          <span className="wm-imm-4 inline-block text-slate-600 dark:text-slate-400 font-medium">
-            Architectural
+          <span className="wm-imm-4 inline-block font-extrabold text-slate-900 dark:text-white">
+            Production
           </span>
           <span className="wm-imm-5 inline-block font-extrabold text-slate-900 dark:text-white">
-            Rot
+            Flags
           </span>
         </div>
       </div>

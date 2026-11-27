@@ -9,6 +9,28 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00n. Wordmark Subtext Alignment, Hero Rotating Headlines & Tier Benefits Overhaul (November 27, 2026)
+- **Bespoke Typographic Wordmark Subtext Carousel Overhaul (`CavdaxWordmark.jsx`)**:
+  - *Phase 1 (Preserved)*: Kept official brand acronym `Contextual Action & Verified Decision Autonomous eXecution` (C A V D A X) with staggered character typography.
+  - *Phase 2 (Refined)*: Replaced generic `Explore the CAVDAX Causal Engine` with `3-Signal Causal Mesh for Flagsmith` across 5 kinetic animation phases (`wm-exp-0` through `wm-exp-4`).
+  - *Phase 3 (Purged & Replaced)*: Permanently purged legacy `Immunize Your Codebase Against Architectural Rot`. Replaced with `Eliminate Blind Toggles Across Production Flags` across 6 kinetic animation phases (`wm-imm-0` through `wm-imm-5`).
+  - *Accessibility Synchronized*: Updated `aria-label` to match the 3 exact subtext phrases.
+- **Landing Page Dynamic Headlines & Typewriter Refinement (`LandingPage.jsx`)**:
+  - *Primary Headline*: Replaced `Eliminating Silent Cache Rot` with `Eliminating Blind Feature Flag Toggles`.
+  - *KineticRollingHeadline*: Updated phrases to `"In Autonomous AI Coding Agents"`, `"Across 3-Signal Dependency Meshes"`, `"Inside Enclosed Flagsmith MCP Gates"`, and `"With GraphBLAS Causal Verification"`.
+  - *ThanosTypewriterHeadline*: Updated "Why Vector RAG Fails" typewriter dissolution cycle to `"Flag Dependencies?"`, `"Multi-Hop Breakers?"`, `"Upstream Prerequisites?"`, and `"Cascading Outages?"`.
+- **Subscription Cards & Capability Matrix Alignment (`TierBenefitsPage.jsx`, `ProfilePage.jsx`)**:
+  - *Tier Descriptions & Quotas*: Updated Community tier description to `For solo developers & local feature flag evaluation.` and CI/CD spec to `Manual CLI (npx cavdax radar)`.
+  - *Feature Narratives*: Updated GraphBLAS sweep copy to `across the 3-signal feature flag dependency DAG` and CI/CD gate narrative to `if code toggles flags with broken dependencies or breaches blast radius invariants.`
+  - *Node Quota Metric*: Clarified to `Maximum feature flag & AST dependency graph nodes before write rejection.`
+  - *Profile Page Tier Cards*: Replaced `Read-only graph inspector` with `Read-only flag blast radius inspector`, `Write-interception & guided repair` with `Flagsmith safe toggle & blast radius gate`, and `Team Multi-Tenancy` with `Team Flag Mesh`.
+- **Support & Sponsor Perks Modernization (`SupportPage.jsx`, `SponsorsPage.jsx`)**:
+  - *Support Tiers*: Aligned Tier 1 description to `Fueling daily Flagsmith causal engine dev.`, Tier 2 to `Powers automated flag AST fuzzing.` with perk `Flagsmith Safe Toggle MCP Access`, and Tier 3 to `Funds multi-repo Flagsmith clusters.` with perk `Personal Acknowledgment in CLI & Docs`.
+  - *Sponsors Page Subtext*: Updated hero summary to `Independent engineers and organizations backing open-source causal feature flag governance.`
+- **SEO & Route Metadata Harmonization (`SEOHead.jsx`)**:
+  - Added dedicated `/flags` route to `SEO_MAP` for the Flagsmith Blast Radius Radar.
+  - Aligned all page meta titles and descriptions to highlight Flagsmith, 3-signal causal DAGs, and safe toggle MCP gates.
+
 ### 00m. Act 4 ReferenceError Fix, Multi-Workspace Flag Radar, Sliding Pillbar & MCP CLI Overhaul (November 27, 2026)
 - **Runtime Error Resolution (`App.jsx`, `apps/server/index.js`)**:
   - *`ReferenceError: oauthCode is not defined`*: Fixed Act 4 simulation fallback where `flagsmithToggleCode` was passed instead of undefined legacy `oauthCode`.

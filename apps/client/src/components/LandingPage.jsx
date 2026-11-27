@@ -909,7 +909,7 @@ export default function LandingPage({
 
           <span className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[4.25rem] xl:text-[4.75rem] text-balance font-black tracking-tight leading-[1.1] sm:leading-[1.04] text-slate-950 dark:text-white block pb-2 sm:pb-3 px-2 max-w-full">
 
-            <span className="inline-block whitespace-normal break-words">Eliminating Silent Cache Rot</span>
+            <span className="inline-block whitespace-normal break-words">Eliminating Blind Feature Flag Toggles</span>
 
           </span>
 
@@ -921,11 +921,11 @@ export default function LandingPage({
 
                 "In Autonomous AI Coding Agents",
 
-                "Across Multi-Hop Git Commits",
+                "Across 3-Signal Dependency Meshes",
 
-                "Inside Model Context Protocols",
+                "Inside Enclosed Flagsmith MCP Gates",
 
-                "For Deterministic Agentic Workflows"
+                "With GraphBLAS Causal Verification"
 
               ]}
 
@@ -1027,13 +1027,13 @@ export default function LandingPage({
 
               phrases={[
 
-                "Coding Agents?",
+                "Flag Dependencies?",
 
-                "Autonomous Writes?",
+                "Multi-Hop Breakers?",
 
-                "Temporal Decisions?",
+                "Upstream Prerequisites?",
 
-                "Production Repos?"
+                "Cascading Outages?"
 
               ]} 
 

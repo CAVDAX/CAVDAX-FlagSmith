@@ -2873,7 +2873,7 @@ export default function ProfilePage({
               </li>
               <li className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
-                <span>Read-only graph inspector</span>
+                <span>Read-only flag blast radius inspector</span>
               </li>
               <li className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
@@ -3050,7 +3050,7 @@ export default function ProfilePage({
               </li>
               <li className="flex items-center gap-2">
                 <Check className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-                <span>Write-interception &amp; guided repair</span>
+                <span>Flagsmith safe toggle &amp; blast radius gate</span>
               </li>
             </ul>
             </div>
@@ -3183,7 +3183,7 @@ export default function ProfilePage({
             <div className={`text-[10px] font-mono font-medium mb-2 sm:mb-2.5 ${
               currentTier === 'enterprise' ? 'text-slate-300' : 'text-slate-600 dark:text-slate-400'
             }`}>
-              Dedicated KeySpace &amp; Team Multi-Tenancy
+              Dedicated KeySpace &amp; Team Flag Mesh
             </div>
             <ul className={`text-[11px] sm:text-xs font-mono space-y-1 sm:space-y-1.5 mb-2.5 sm:mb-3 flex-1 ${
               currentTier === 'enterprise' ? 'text-slate-200' : 'text-slate-600 dark:text-slate-300'

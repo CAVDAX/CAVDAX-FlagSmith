@@ -492,7 +492,7 @@ export default function SponsorsPage({ onNavigateToSupport, onPrefetchTab, user,
             <ArchitecturalHexNexus align="right" className="w-7 h-7 sm:w-8 sm:h-8 text-slate-900 dark:text-white shrink-0 transition-transform duration-300 hover:scale-105" />
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto font-sans leading-relaxed text-balance">
-            Independent engineers and organizations backing open-source causal AI graph governance.
+            Independent engineers and organizations backing open-source causal feature flag governance.
           </p>
 
           {/* Interactive 3D Supporter Galaxy Sphere */}

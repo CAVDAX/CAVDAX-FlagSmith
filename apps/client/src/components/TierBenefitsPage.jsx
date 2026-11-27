@@ -86,7 +86,7 @@ const TIERS = [
     tag: 'Free Forever',
     price: '₹0',
     period: '/ mo',
-    desc: 'For solo developers & local architectural evaluation.',
+    desc: 'For solo developers & local feature flag evaluation.',
     btnLabel: 'Current Plan',
     specs: {
       graphblas: '< 1.0ms (Local In-Memory)',
@@ -95,7 +95,7 @@ const TIERS = [
       mutex: 'Single Agent (1 lease max)',
       crossProcess: 'Local Stdio MCP only',
       preflight: '100 req/min (30 tools/min)',
-      cicd: 'Manual CLI (npx cavdax check)',
+      cicd: 'Manual CLI (npx cavdax radar)',
       provisioning: 'Individual GitHub PAT',
       audit: '10 Entries History Window',
       deployment: 'Local Self-Hosted Mesh'
@@ -907,7 +907,7 @@ export default function TierBenefitsPage({
               FalkorDB GraphBLAS Matrix Invalidation
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-2 leading-relaxed line-clamp-2">
-              Sparse algebraic semiring sweeps computing multi-hop reachability across the entire AST dependency DAG.
+              Sparse algebraic semiring sweeps computing multi-hop reachability across the 3-signal feature flag dependency DAG.
             </p>
 
             <div className="mt-6 space-y-3 font-mono text-xs">
@@ -1024,7 +1024,7 @@ export default function TierBenefitsPage({
               CI/CD Invariant Blocking Gate &amp; Audit Trail
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-sans mt-2 leading-relaxed line-clamp-2">
-              Mandatory GitHub Status Check blocking pull requests if code touches invalidated decisions or breaches architectural invariants.
+              Mandatory GitHub Status Check blocking pull requests if code toggles flags with broken dependencies or breaches blast radius invariants.
             </p>
 
             <div className="mt-6 space-y-3 font-mono text-xs">
@@ -1172,7 +1172,7 @@ export default function TierBenefitsPage({
                   },
                   {
                     name: 'Graph Storage & Node Quota',
-                    desc: 'Maximum architectural nodes before write rejection.',
+                    desc: 'Maximum feature flag & AST dependency graph nodes before write rejection.',
                     community: { base: '500 Nodes Max' },
                     pro: { base: '10,000 Nodes Max' },
                     enterprise: { base: 'Unlimited Nodes' }

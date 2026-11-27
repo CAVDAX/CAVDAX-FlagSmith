@@ -2,9 +2,14 @@ import { useEffect } from 'react';
 
 const SEO_MAP = {
   landing: {
-    title: 'CAVDAX | Graph-Grounded Decision Execution for Coding Agents',
-    description: 'Prevent autonomous coding agents from hallucinating or executing on stale architectural decisions via FalkorDB causal DAGs and enclosed MCP gates.',
+    title: 'CAVDAX | 3-Signal Causal Mesh & Safe Toggles for Flagsmith',
+    description: 'Prevent blind feature flag toggles and downstream breaks in production via FalkorDB GraphBLAS causal DAGs and enclosed Flagsmith MCP gates.',
     path: '/'
+  },
+  flags: {
+    title: 'CAVDAX | Flagsmith Feature Flag Blast Radius Radar',
+    description: 'Real-time FalkorDB GraphBLAS multi-hop blast radius, upstream prerequisites, and AST call verification across your feature flag mesh.',
+    path: '/flags'
   },
   console: {
     title: 'CAVDAX | Real-Time Execution Console & GraphBLAS Observability',
@@ -13,22 +18,22 @@ const SEO_MAP = {
   },
   mcp: {
     title: 'CAVDAX | Enclosed Model Context Protocol (MCP) Gate & Integration',
-    description: 'Connect Cursor, Claude Code, and autonomous coding agents to the CAVDAX MCP server over stdio or SSE. Hard-gate writes against stale ADRs.',
+    description: 'Connect Cursor, Claude Code, and autonomous coding agents to the CAVDAX MCP server. Hard-gate flag toggles against broken dependencies.',
     path: '/mcp'
   },
   project: {
     title: 'CAVDAX | Interactive Causal Protocol Walkthrough & Architectural Proof',
-    description: 'Step through Act I to Act IV: from ADR ingestion and cascading invalidation to agent interception and deterministic self-healing.',
+    description: 'Step through Act I to Act IV: from flag ingestion and cascading blast radius analysis to safe toggle MCP interception and self-healing.',
     path: '/walkthrough'
   },
   team: {
     title: 'CAVDAX | Founding Engineering Team & Architectural Foundations',
-    description: 'The engineers, researchers, and systems architects building graph-grounded causal safety for autonomous coding agents.',
+    description: 'The engineers, researchers, and systems architects building graph-grounded causal safety for Flagsmith feature flags.',
     path: '/team'
   },
   audit: {
-    title: 'CAVDAX | Agent Action History & Compliance Ledger',
-    description: 'Cryptographically ordered audit trail of every agent file modification, grounding ADR decision, and verification latency record.',
+    title: 'CAVDAX | Feature Flag Audit Trail & Compliance History',
+    description: 'Ordered audit trail of every flag state transition, AST dependency reference, grounding decision, and verification latency record.',
     path: '/audit'
   },
   profile: {
@@ -43,7 +48,7 @@ const SEO_MAP = {
   },
   support: {
     title: 'CAVDAX | Open-Source Sponsorship & Community Backing',
-    description: 'Support the development of open-source causal DAG governance for AI software engineering agents.',
+    description: 'Support the development of open-source causal DAG governance for Flagsmith and AI software engineering agents.',
     path: '/support'
   },
   '404': {
