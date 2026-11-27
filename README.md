@@ -22,11 +22,12 @@
 </picture>
 
 <h1>CAVDAX: Contextual Action &amp; Verified Decision Autonomous eXecution</h1>
-<p><strong>Graph-Grounded Decision Execution for Coding Agents</strong></p>
+<p><strong>Graph-Grounded Feature Flag Causal Dependency Firewall for Autonomous Coding Agents &bull; Flagsmith Edition</strong></p>
 <p>
-<strong>Deterministic Causal Verification Firewall for Autonomous Coding Agents</strong><br />
+<strong>Deterministic 3-Signal Causal Verification Firewall for Autonomous Coding Agents</strong><br />
 <strong>Execution Gate:</strong> Model Context Protocol (MCP) Inline Verification &bull; 
-<strong>Graph Engine:</strong> FalkorDB GraphBLAS Matrix Multiplication
+<strong>Graph Engine:</strong> FalkorDB GraphBLAS Matrix Multiplication &bull;
+<strong>Feature Platform:</strong> Self-Hosted Open-Source Flagsmith
 </p>
 <p>
 <a href="https://youtu.be/Nhdd7spj1RA"><img src="https://img.shields.io/badge/YouTube-10--Minute%20Demo%20Walkthrough-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube Demo Walkthrough" /></a>
@@ -46,6 +47,41 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose%20Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](./docker-compose.yml)
 [![License: Apache 2.0 / BSL 1.1](https://img.shields.io/badge/License-Apache_2.0_%2F_BSL_1.1-blue.svg?style=for-the-badge)](./LICENSE)
 [![Latency](https://img.shields.io/badge/Gate%20Latency-%3C%2035ms-8B5CF6?style=for-the-badge)](#empirical-benchmarks)
+
+</div>
+
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/live_purged_flags_radar_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/live_purged_flags_radar_light.png" />
+  <img src="./assets/screenshots/live_purged_flags_radar_dark.png" alt="Flagsmith Blast Radius Radar Interface" width="100%" />
+</picture>
+
+<p><em>Figure 1: Full-width live production showcase of the Flagsmith Blast Radius Radar at <code>https://cavdax-flagsmith.sahnirmaan.live/flags</code> featuring 3-signal dependency telemetry, multi-hop transitive ripple detection, upstream prerequisite guards, and 409 Conflict safety barrier.</em></p>
+
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/live_flagsmith_console_dark.png" />
+        <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/live_flagsmith_console_light.png" />
+        <img src="./assets/screenshots/live_flagsmith_console_dark.png" alt="Causal Verification Console" width="100%" />
+      </picture>
+      <br />
+      <em>Figure 2a: Flagsmith Causal Verification Console (/console) — Windowed Mode</em>
+    </td>
+    <td width="50%" align="center">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/dev_console_dark.png" />
+        <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/dev_console_light.png" />
+        <img src="./assets/screenshots/dev_console_dark.png" alt="Developer Diagnostics Console" width="100%" />
+      </picture>
+      <br />
+      <em>Figure 2b: Developer Diagnostics &amp; Hackathon Mode Console (/dev) — Windowed Mode</em>
+    </td>
+  </tr>
+</table>
 
 </div>
 
@@ -246,62 +282,76 @@ CAVDAX models engineering knowledge and agent actions using a formal 4-tier Caus
 
 ```mermaid
 graph TD
-    subgraph Active_Path["Active Invariant Chain (Valid)"]
+    subgraph Active_Path["Active Flagsmith Dependency Invariant Chain (Grounding & Downstream Dependency)"]
         direction TB
-        S2["(:Source {id: 'ADR-002', status: 'ACTIVE'})"]
-        F2["(:Fact {id: 'F-OAuth2-v2', is_stale: false})"]
-        D2["(:Decision {id: 'DEC-103', status: 'VALID'})"]
-        A1["(:AgentAction {verdict: 'APPROVED'})"]
+        F1["(:FlagsmithFeature {name: 'auth_v2', enabled: true})"]
+        F2["(:FlagsmithFeature {name: 'dark_mode', enabled: true})"]
+        F3["(:FlagsmithFeature {name: 'premium_analytics', enabled: true})"]
+        F4["(:FlagsmithFeature {name: 'analytics_dashboard', enabled: true})"]
+        CR["(:CodeReference {file: 'Header.jsx', line: 42, usage: 'useFlags'})"]
+        A1["(:AgentAction {tool: 'safe_toggle_flag', verdict: 'APPROVED'})"]
 
-        S2 -- "[:EXTRACTED_FROM]" --> F2
-        F2 -- "[:DEPENDS_ON]" --> D2
-        D2 -- "[:GROUNDED_IN]" --> A1
+        F2 -- "[:REQUIRES_PREREQUISITE]" --> F1
+        F3 -- "[:DEPENDS_ON]" --> F2
+        F4 -- "[:DEPENDS_ON]" --> F3
+        CR -- "[:INVOKES_FLAG]" --> F2
+        A1 -- "[:TARGETS_FLAG]" --> F2
     end
 
-    subgraph Stale_Path["Superseded Chain (Invalidated)"]
+    subgraph Blocked_Path["Unsafe Mutation Path (Blocked by Enclosed MCP Gate)"]
         direction TB
-        S1["(:Source {id: 'ADR-001', status: 'SUPERSEDED'})"]
-        F1["(:Fact {id: 'F-Auth-v1', is_stale: true})"]
-        D1["(:Decision {id: 'DEC-102', status: 'INVALIDATED'})"]
+        Agent["Autonomous Coding Agent"]
+        Mutate["safe_toggle_flag(flag: 'dark_mode', state: false)"]
+        Gate{"Enclosed MCP Gate<br/>FalkorDB GraphBLAS"}
+        BlockedAction["(:AgentAction {verdict: 'BLOCKED_CRITICAL_BLAST_RADIUS'})"]
+        ViolationReport["409 Conflict: 2 Active Dependents<br/>['premium_analytics', 'analytics_dashboard']"]
 
-        S1 -- "[:EXTRACTED_FROM]" --> F1
-        F1 -- "[:DEPENDS_ON]" --> D1
+        Agent --> Mutate
+        Mutate --> Gate
+        Gate -. "[:HARD_BLOCK]" .-> BlockedAction
+        BlockedAction --> ViolationReport
     end
-
-    S2 -. "[:SUPERSEDES]" .-> S1
-    D2 -. "[:REPLACES]" .-> D1
 ```
 
 ### 1. Node Schemas & Labels
-* **`(:Source)` — Authoritative Engineering Artifacts:**
-  * `id` *(String, Primary Key)*: Unique identifier (e.g., `'ADR-001'`, `'commit-9f8a2b'`).
-  * `title` *(String)*: Human-readable title of the document or change.
-  * `type` *(String)*: Polymorphic artifact type (`'ADR'`, `'COMMIT'`, `'CODEOWNERS'`, `'PACKAGE_JSON'`).
-  * `status` *(String)*: `'ACTIVE'` or `'SUPERSEDED'`.
-  * `superseded_at` *(Integer, Optional)*: Unix millisecond epoch timestamp when superseded.
-* **`(:Fact)` — Atomic Invariant Claims:**
-  * `id` *(String, Primary Key)*: Unique claim ID (e.g., `'F-Auth-v1'`, `'F-OAuth2-v2'`).
-  * `claim` *(String)*: Normalized atomic statement (e.g., `'TokenAuth v1 active'`, `'OAuth2 enforced'`).
-  * `is_stale` *(Boolean)*: `false` when active; flipped to `true` when parent source is superseded.
-  * `invalidated_at` *(Integer, Optional)*: Unix timestamp when marked stale.
-* **`(:Decision)` — Architecture & Implementation Directives:**
-  * `id` *(String, Primary Key)*: Directive identifier (e.g., `'DEC-102'`, `'DEC-103'`).
-  * `title` *(String)*: Directive summary (e.g., `'Implement TokenAuth v1 for checkout'`).
-  * `status` *(String)*: `'VALID'`, `'INVALIDATED_NEEDS_REVALIDATION'`, or `'REPLACED_ARCHIVED'`.
-  * `created_at` *(Integer)*: Creation epoch timestamp.
+* **`(:FlagsmithFeature)` — Core Feature Toggle Entities:**
+  * `id` *(String, Primary Key)*: Feature identifier (e.g., `'dark_mode'`, `'premium_analytics'`).
+  * `name` *(String)*: Normalized feature name.
+  * `enabled` *(Boolean)*: Current production state (`true` / `false`).
+  * `description` *(String)*: Human-readable functional specification.
+  * `type` *(String)*: Flag type (`'STANDARD'`, `'MULTIVARIATE'`).
+  * `created_date` *(Integer)*: Epoch timestamp when registered in Flagsmith.
+* **`(:CodeReference)` — Static AST Code References (Signal 2):**
+  * `id` *(String, Primary Key)*: Unique code reference hash (e.g., `'ref-header-jsx-42'`).
+  * `file_path` *(String)*: Source file path (e.g., `'apps/client/src/components/Header.jsx'`).
+  * `line_number` *(Integer)*: Line number of flag access.
+  * `ast_identifier` *(String)*: Invoked SDK method (`'hasFeature'`, `'useFlags'`).
+  * `usage_type` *(String)*: Syntactic pattern (`'HOOK'`, `'CONDITIONAL_GUARD'`, `'PROP'`).
+* **`(:GitCommit)` — Historical Co-Change Commits (Signal 3):**
+  * `commit_hash` *(String, Primary Key)*: 40-character SHA commit hash.
+  * `timestamp` *(Integer)*: Unix commit author epoch timestamp.
+  * `author` *(String)*: Author identity and email.
+  * `jaccard_coupling` *(Float)*: Temporal coupling strength $J(A, B)$.
+* **`(:DownstreamDependent)` — Computed Transitive Ripple Entities:**
+  * `target_flag` *(String)*: Dependent feature identifier.
+  * `hop_depth` *(Integer)*: Topological graph distance (`1..6`).
+  * `signals` *(List of Strings)*: Validating signals (`['TAG', 'AST', 'GIT']`).
+  * `probability` *(Float)*: Bayesian unified link probability ($P = 1 - \prod(1 - c_i)$).
 * **`(:AgentAction)` — Verified Tool Execution Audit Log:**
   * `id` *(String, Primary Key)*: Unique audit event hash.
-  * `tool` *(String)*: Invoked MCP tool name (`'apply_code_change'`).
-  * `target_file` *(String)*: Protected file path (`'src/services/payment.js'`).
-  * `verdict` *(String)*: `'APPROVED'` or `'BLOCKED'`.
+  * `tool` *(String)*: Invoked MCP tool name (`'safe_toggle_flag'`).
+  * `target_flag` *(String)*: Protected feature flag name (`'dark_mode'`).
+  * `verdict` *(String)*: Gate verdict (`'APPROVED'` or `'BLOCKED_CRITICAL_BLAST_RADIUS'`).
+  * `latency_ms` *(Float)*: GraphBLAS query execution time in milliseconds.
   * `timestamp` *(Integer)*: Execution epoch timestamp.
 
 ### 2. Relationship Types & Causal Semantics
-* **`(:Source)-[:SUPERSEDES]->(:Source)`**: Directed temporal invalidation edge between a newer artifact and an obsolete artifact.
-* **`(:Fact)-[:EXTRACTED_FROM]->(:Source)`**: Provenance grounding attributing an atomic proposition to its authoritative origin.
-* **`(:Decision)-[:DEPENDS_ON]->(:Fact)`**: Directional dependency indicating that a decision's validity is conditional on the fact remaining fresh (`*1..4` hops).
-* **`(:Decision)-[:REPLACES]->(:Decision)`**: Evolutionary replacement edge linking a newly synthesized Act IV decision to an archived predecessor.
-* **`(:AgentAction)-[:GROUNDED_IN]->(:Decision)`**: Mandatory audit link created only upon verified gate approval.
+* **`(:FlagsmithFeature)-[:DEPENDS_ON]->(:FlagsmithFeature)`**: Directed multi-hop dependency indicating that a downstream feature requires an upstream feature to be enabled.
+* **`(:FlagsmithFeature)-[:REQUIRES_PREREQUISITE]->(:FlagsmithFeature)`**: Strict prerequisite edge; enabling target flag without this prerequisite active trips a validation block.
+* **`(:CodeReference)-[:INVOKES_FLAG]->(:FlagsmithFeature)`**: Static AST provenance binding source code lines directly to feature flag graph nodes.
+* **`(:GitCommit)-[:MODIFIES_FLAG]->(:FlagsmithFeature)`**: Historical co-change relationship contributing to Signal 3 temporal coupling matrices.
+* **`(:FlagsmithFeature)-[:GUARDS]->(:DownstreamDependent)`**: Transitive guard indicating downstream code paths executionally protected by the flag.
+* **`(:AgentAction)-[:TARGETS_FLAG]->(:FlagsmithFeature)`**: Mandatory audit link recorded in FalkorDB upon every MCP gate execution.
 
 ---
 
@@ -330,72 +380,78 @@ CAVDAX provides production engineering organizations with an architectural defen
 * **Variant B (Vertical `graph TB`)**: Deep-dive structural hierarchy detailing node schemas, state persistence, and protocol boundaries.
 
 #### Variant A: Horizontal 16:9 Widescreen Architecture Flowchart (Presentation View)
-*Flows left-to-right from AI Agents & Web HUD, through the Ingestion & MCP Gate, directly into FalkorDB's GraphBLAS Causal Core, and out to Target Codebases & the Out-of-Band Notification Plane:*
+*Flows left-to-right from AI Agents & Web HUD, through the 3-Signal Ingestion & MCP Gate, directly into FalkorDB's GraphBLAS Causal Core, and out to Flagsmith API & the Out-of-Band Notification Plane:*
 
 ```mermaid
 flowchart LR
     subgraph Client_Plane["1. Developer & Presentation Plane"]
         direction TB
-        AIAgents["Autonomous AI Coding Agents<br/><i>Claude Code / Cursor / Devin</i>"]
-        WebHUD["Web HUD & Visual Console<br/><i>/overview, /console, /mcp, /audit</i>"]
-        Canvas["Temporal DAG Canvas<br/><i>D3 Hairline Optics</i>"]
-        HUDAlerts["In-HUD Audio & Radar<br/><i>Web Audio Chime (880Hz)</i>"]
-        WebHUD --> Canvas
+        AIAgents["Autonomous AI Coding Agents<br/><i>Cursor / Claude Code / Windsurf</i>"]
+        WebHUD["Flagsmith Web HUD & Operational Console<br/><i>/overview, /flags, /console, /mcp, /audit, /dev</i>"]
+        RadarCanvas["Blast Radius Topology Radar<br/><i>GraphBLAS Adjacency Visualizer</i>"]
+        HUDAlerts["Audio Invalidation Radar<br/><i>Web Audio Chime (880Hz)</i>"]
+        WebHUD --> RadarCanvas
         WebHUD --> HUDAlerts
     end
 
-    subgraph Gateway_Plane["2. Gateway & Ingestion Plane"]
+    subgraph Gateway_Plane["2. 3-Signal Ingestion & MCP Gateway Plane"]
         direction TB
-        MCPGate["Enclosed MCP Gate<br/><i>core/mcp/server.js</i>"]
-        ServerAPI["Express Server & SSE<br/><i>apps/server/index.js</i>"]
-        GitScanner["GitHub ADR Scanner<br/><i>apps/server/githubAdr.js</i>"]
-        WebhookHandler["GitHub Webhook Listener<br/><i>POST /api/github/webhook</i>"]
+        MCPGate["Enclosed Flagsmith MCP Gate<br/><i>@cavdax/flagsmith-mcp</i>"]
+        ServerAPI["Express API Server & SSE Stream<br/><i>apps/server/index.js</i>"]
+        Sig1REST["Signal 1: Flagsmith REST Client<br/><i>core/ingestion/flagsmithClient.js</i>"]
+        Sig2AST["Signal 2: Static AST Code Scanner<br/><i>core/ingestion/astScanner.js</i>"]
+        Sig3Git["Signal 3: Git Temporal Coupling Miner<br/><i>core/ingestion/gitMiner.js</i>"]
         ServerAPI --> MCPGate
-        ServerAPI --> GitScanner
-        WebhookHandler --> ServerAPI
+        ServerAPI --> Sig1REST
+        ServerAPI --> Sig2AST
+        ServerAPI --> Sig3Git
     end
 
     subgraph Causal_Engine["3. FalkorDB GraphBLAS Causal Core (Mathematical Heart)"]
         direction TB
         FalkorDB[("FalkorDB 0.4+<br/>Sparse Matrix Engine")]
-        Sources["(:Source {id, title, status})"]
-        Facts["(:Fact {claim, is_stale})"]
-        Decisions["(:Decision {id, status})"]
-        AgentActions["(:AgentAction {target_file})"]
-        
-        FalkorDB --- Sources
-        FalkorDB --- Facts
-        FalkorDB --- Decisions
-        FalkorDB --- AgentActions
+        Features["(:FlagsmithFeature {name, enabled, type})"]
+        CodeRefs["(:CodeReference {file_path, line, usage})"]
+        GitCoupling["(:GitCommit {hash, jaccard_coupling})"]
+        Dependents["(:DownstreamDependent {hop_depth, probability})"]
+        Actions["(:AgentAction {tool: 'safe_toggle_flag', verdict})"]
 
-        Sources -. "[:SUPERSEDES]" .-> Sources
-        Facts -. "[:EXTRACTED_FROM]" .-> Sources
-        Decisions -. "[:DEPENDS_ON]" .-> Facts
-        AgentActions -. "[:GROUNDED_IN]" .-> Decisions
+        FalkorDB --- Features
+        FalkorDB --- CodeRefs
+        FalkorDB --- GitCoupling
+        FalkorDB --- Dependents
+        FalkorDB --- Actions
+
+        Features -. "[:REQUIRES_PREREQUISITE]" .-> Features
+        Dependents -. "[:DEPENDS_ON]" .-> Features
+        CodeRefs -. "[:INVOKES_FLAG]" .-> Features
+        GitCoupling -. "[:MODIFIES_FLAG]" .-> Features
+        Actions -. "[:TARGETS_FLAG]" .-> Features
     end
 
-    subgraph Target_Ecosystem["4. Target Repo & Notification Plane"]
+    subgraph Target_Ecosystem["4. Target Ecosystem & Notification Plane"]
         direction TB
-        GitHubRepos["External GitHub Repos<br/><i>Public & Private (OAuth)</i>"]
-        ProtectedDisk["Target Filesystem<br/><i>Sandboxed Safe Mutation</i>"]
-        EmailRadar["Resend Transactional Email<br/><i>sahnirmaan.live</i>"]
+        FlagsmithAPI["Self-Hosted Flagsmith API<br/><i>/flagsmith/api/v1/</i>"]
+        TargetRepo["Target Codebase & AST<br/><i>Safe Zero-Regression Mutation</i>"]
+        EmailRadar["Resend Transactional Divergence Alert<br/><i>sahnirmaan.live</i>"]
         WebPushBroker["VAPID Web Push Broker<br/><i>RFC 8292 (/sw.js)</i>"]
-        DevInbox["Developer Alerts Inbox<br/><i>Actionable Causal DAG Breadcrumb</i>"]
-        
+        DevInbox["Developer Alerts Inbox<br/><i>Blast-Radius Bound Notification</i>"]
+
         EmailRadar --> DevInbox
         WebPushBroker --> DevInbox
     end
 
     %% Left-to-Right Execution & Invalidation Flows
-    AIAgents ==>|"1. stdio / SSE (check_intent_clearance)"| MCPGate
-    WebHUD <==>|"REST & SSE Live Updates"| ServerAPI
-    MCPGate <==>|"2. Sub-millisecond Cypher (A^T · x)"| FalkorDB
-    MCPGate -->|"3a. 200 OK (Clearance Approved)"| ProtectedDisk
-    MCPGate -.->|"3b. 403 Forbidden (Blocked Invalidation)"| AIAgents
-    
-    GitScanner <==>|"Scan ADR ASTs & Stack"| GitHubRepos
-    GitHubRepos -->|"Git Push Webhook (breaks: DEC-xxx)"| WebhookHandler
-    ServerAPI -->|"Dispatch Transactional Invalidation"| EmailRadar
+    AIAgents ==>|"1. stdio / SSE (safe_toggle_flag, get_flag_blast_radius)"| MCPGate
+    WebHUD <==>|"REST & SSE Live Topology"| ServerAPI
+    MCPGate <==>|"2. Sub-millisecond Cypher (< 4.5ms GraphBLAS Traversal)"| FalkorDB
+    MCPGate -->|"3a. 200 OK (Safe Cutover Approved)"| FlagsmithAPI
+    MCPGate -.->|"3b. 409 Conflict (Blocked Critical Blast Radius)"| AIAgents
+
+    Sig1REST <==>|"Poll & Webhook Flag State"| FlagsmithAPI
+    Sig2AST <==>|"AST Syntactic Extraction"| TargetRepo
+    Sig3Git <==>|"Jaccard Co-Change Mining"| TargetRepo
+    ServerAPI -->|"Dispatch Transactional Email"| EmailRadar
     ServerAPI -->|"Dispatch Browser Push Notification"| WebPushBroker
     ServerAPI -->|"SSE Invalidation Event"| HUDAlerts
 ```
@@ -405,76 +461,84 @@ flowchart LR
 ```mermaid
 graph TB
     subgraph Client_Plane["1. Developer & Presentation Plane"]
-        WebHUD["Web HUD & Visual Console (/overview, /console, /mcp, /audit)"]
-        Canvas["Interactive Temporal DAG Canvas"]
-        NodeInspector["Draggable Node Inspector (Physics Bounds)"]
-        WhatIfBanner["What-If Blast Radius Simulation Engine"]
+        WebHUD["Web HUD & Visual Console (/overview, /flags, /console, /mcp, /audit, /dev)"]
+        Radar["Interactive Blast Radius Topology Radar"]
+        NodeInspector["Draggable Node Inspector & Live Dependency Chips"]
+        ASTViewer["AST Syntactic Call Site Inspector"]
         AIAgents["AI Coding Agents (Claude Code, Cursor, Windsurf, Devin)"]
         Notifications["Developer Inbox & Web Push Service Worker (/sw.js)"]
-        WebHUD --> Canvas
-        Canvas --> NodeInspector
-        Canvas --> WhatIfBanner
+        WebHUD --> Radar
+        Radar --> NodeInspector
+        Radar --> ASTViewer
     end
 
-    subgraph Gateway_Plane["2. Gateway & Protocol Ingestion Plane"]
+    subgraph Gateway_Plane["2. Gateway & 3-Signal Ingestion Plane"]
         Server["Express API Server (apps/server/index.js)"]
-        MCPGateway["Enclosed MCP Gateway (core/mcp/server.js)"]
-        GitHubScan["GitHub ADR AST Scanner & Stack Detector (apps/server/githubAdr.js)"]
-        StateStore["Atomic System State Store (apps/server/systemState.js)"]
-        SVGEngine["Standalone SVG & Vision OCR Engine (core/graph/renderSvg.js)"]
+        MCPGateway["Enclosed Flagsmith MCP Gateway (apps/flagsmith-mcp)"]
+        Signal1["Signal 1: Flagsmith REST Client (core/ingestion/flagsmithClient.js)"]
+        Signal2["Signal 2: Static AST Code Scanner (core/ingestion/astScanner.js)"]
+        Signal3["Signal 3: Git Temporal Coupling Miner (core/ingestion/gitMiner.js)"]
+        BayesianAggregator["Bayesian Link Aggregator: P = 1 - ∏(1 - c_i)"]
         EmailDispatcher["Transactional Alert Engine (Resend API / sahnirmaan.live)"]
         WebPushBroker["VAPID Web Push Broker (RFC 8292)"]
-        WebhookReceiver["GitHub Webhook Ingestion (/api/github/webhook)"]
-        
+        WebhookReceiver["Flagsmith Webhook Ingestion (/api/flagsmith/webhook)"]
+
         Server --> MCPGateway
-        Server --> GitHubScan
-        Server --> StateStore
-        Server --> SVGEngine
+        Server --> Signal1
+        Server --> Signal2
+        Server --> Signal3
+        Signal1 --> BayesianAggregator
+        Signal2 --> BayesianAggregator
+        Signal3 --> BayesianAggregator
+        BayesianAggregator --> Server
         Server --> EmailDispatcher
         Server --> WebPushBroker
         WebhookReceiver --> Server
     end
 
     subgraph Causal_Engine["3. FalkorDB GraphBLAS Causal Core"]
-        FalkorDB[("FalkorDB 0.4+ (RedisGraph Sparse Matrix Engine)")]
-        Sources["(:Source {id, title, status, commit})"]
-        Facts["(:Fact {id, claim, is_stale, verified})"]
-        Decisions["(:Decision {id, title, status, rationale})"]
-        AgentActions["(:AgentAction {id, tool, target_file, status})"]
-        FalkorDB --> Sources
-        FalkorDB --> Facts
-        FalkorDB --> Decisions
+        FalkorDB[("FalkorDB 0.4+ (GraphBLAS Matrix Engine)")]
+        Features["(:FlagsmithFeature {name, enabled, type})"]
+        CodeRefs["(:CodeReference {file_path, line, usage})"]
+        GitCommits["(:GitCommit {commit_hash, jaccard_coupling})"]
+        Dependents["(:DownstreamDependent {hop_depth, probability})"]
+        AgentActions["(:AgentAction {id, tool, target_flag, verdict})"]
+
+        FalkorDB --> Features
+        FalkorDB --> CodeRefs
+        FalkorDB --> GitCommits
+        FalkorDB --> Dependents
         FalkorDB --> AgentActions
-        Sources -. "[:SUPERSEDES]" .-> Sources
-        Facts -. "[:EXTRACTED_FROM]" .-> Sources
-        Decisions -. "[:DEPENDS_ON]" .-> Facts
-        AgentActions -. "[:GROUNDED_IN]" .-> Decisions
+
+        Features -. "[:REQUIRES_PREREQUISITE]" .-> Features
+        Dependents -. "[:DEPENDS_ON]" .-> Features
+        CodeRefs -. "[:INVOKES_FLAG]" .-> Features
+        GitCommits -. "[:MODIFIES_FLAG]" .-> Features
+        AgentActions -. "[:TARGETS_FLAG]" .-> Features
     end
 
-    subgraph Target_Ecosystem["4. Target Codebase & Version Control"]
-        GitHubRepos["External GitHub Repositories (e.g. acme-checkout)"]
-        InitBranch["Isolated Starter Branch (cavdax/init-adr)"]
-        SyncBranch["Isolated Status Patch Branch (cavdax/sync-*)"]
-        ProtectedDisk["Target Local Disk (Sandboxed Writes)"]
-        GitHubRepos --> InitBranch
-        GitHubRepos --> SyncBranch
+    subgraph Target_Ecosystem["4. Target Flagsmith Platform & Repositories"]
+        FlagsmithEngine["Self-Hosted Flagsmith API (/flagsmith/api/v1/)"]
+        TargetCodebases["Target Client & Backend Codebases"]
+        AuditLogStore["PostgreSQL Flagsmith Audit Store"]
+        FlagsmithEngine --> AuditLogStore
     end
 
-    AIAgents <==>|"MCP Stdio / HTTP SSE (apply_code_change, export_graph_image)"| MCPGateway
-    WebHUD <==>|"REST & SSE Events (/api/graph, /api/github/repos)"| Server
-    MCPGateway <==>|"Parameterized Cypher (< 2ms Matrix Traversal)"| FalkorDB
-    GitHubScan <==>|"GitHub REST API (Non-Destructive AST Scan)"| GitHubRepos
-    GitHubScan -->|"Draft Starter ADR / Sync PR"| InitBranch
-    GitHubScan -->|"Draft Superseded Status PR"| SyncBranch
-    MCPGateway -->|"Verified Write on Gate Approval"| ProtectedDisk
-    GitHubRepos -->|"Live Push / PR Webhook"| WebhookReceiver
-    EmailDispatcher -->|"Actionable Causal HTML Email"| Notifications
+    AIAgents <==>|"MCP Stdio / HTTP SSE (safe_toggle_flag, get_flag_blast_radius)"| MCPGateway
+    WebHUD <==>|"REST & SSE Events (/api/flags, /api/graph)"| Server
+    MCPGateway <==>|"Parameterized Cypher (< 4.5ms Matrix Traversal)"| FalkorDB
+    Signal1 <==>|"Flagsmith REST API Polling & Contract Sync"| FlagsmithEngine
+    Signal2 <==>|"AST Code Invocations (hasFeature, useFlags)"| TargetCodebases
+    Signal3 <==>|"Git Log Mining (Jaccard Co-Change)"| TargetCodebases
+    MCPGateway -->|"Verified Atomic Toggle on Gate Approval"| FlagsmithEngine
+    FlagsmithEngine -->|"Live Flag Change Webhooks"| WebhookReceiver
+    EmailDispatcher -->|"Actionable Causal HTML Divergence Email"| Notifications
     WebPushBroker -->|"Instant Desktop/Mobile Push"| Notifications
 ```
 
 #### Notification Plane (Out-of-Band Divergence Radar)
 CAVDAX treats notifications as an essential, enterprise-grade feedback loop that prevents AI agents from executing against stale context even when developers are offline:
-1. **Resend Transactional Email (`apps/server/email.js`)**: Invalids dispatch clean HTML emails via `sahnirmaan.live` with Decision ID, ASCII causal tree, and blast-radius deep links.
+1. **Resend Transactional Email (`apps/server/email.js`)**: Divergence events dispatch clean HTML emails via `sahnirmaan.live` with Feature Flag ID, ASCII causal dependency tree, and blast-radius deep links.
 2. **RFC 8292 VAPID Web Push (`apps/server/webPush.js` & `public/sw.js`)**: Hardware OS and browser-level notification badges delivering instant disruption alerts.
 3. **Procedural In-HUD Audio Chimes (`apps/client/src/App.jsx`)**: Synthesizes 880Hz / 440Hz dual-tone Web Audio chimes on invalidation events.
 4. **Live Invalidation Pitch Trigger (`Simulate Alert`)**: Accessible via top HUD toolbar and Preferences Modal for live demonstrations.
@@ -484,40 +548,35 @@ CAVDAX treats notifications as an essential, enterprise-grade feedback loop that
 
 ```mermaid
 graph LR
-    subgraph Ingestion_Layer["Layer 1: Ingestion & Extraction"]
-        ADRDoc["ADR / Markdown Files"] --> ASTParser["AST Frontmatter Parser"]
-        GitCommit["Git Commits / Webhooks"] --> IngestCommit["Commit Ingestion Hook"]
-        StackManifests["Package & Infra Manifests"] --> StackDetector["Smart Stack Detector"]
+    subgraph Ingestion_Layer["Layer 1: 3-Signal Ingestion & Bayesian Aggregator"]
+        Sig1["Signal 1: Flagsmith REST (Tags & Contracts)"] --> Bayes["Bayesian Aggregator<br/>P = 1 - ∏(1 - c_i)"]
+        Sig2["Signal 2: Static AST Code Scanner"] --> Bayes
+        Sig3["Signal 3: Git Temporal Co-Change Miner"] --> Bayes
     end
 
     subgraph Causal_Matrix["Layer 2: GraphBLAS Causal DAG (FalkorDB)"]
         direction TB
-        S1["(:Source {id: 'ADR-001', status: 'SUPERSEDED'})"]
-        S2["(:Source {id: 'ADR-002', status: 'ACTIVE'})"]
-        F1["(:Fact {id: 'F-Auth', is_stale: true})"]
-        F2["(:Fact {id: 'F-OAuth2', is_stale: false})"]
-        D1["(:Decision {id: 'DEC-102', status: 'INVALIDATED'})"]
-        D2["(:Decision {id: 'DEC-103', status: 'VALID'})"]
-        
-        S2 -- "[:SUPERSEDES]" --> S1
-        F1 -- "[:EXTRACTED_FROM]" --> S1
-        F2 -- "[:EXTRACTED_FROM]" --> S2
-        D1 -- "[:DEPENDS_ON]" --> F1
-        D2 -- "[:DEPENDS_ON]" --> F2
-        D2 -. "[:REPLACES]" .-> D1
+        F1["(:FlagsmithFeature {name: 'auth_v2', enabled: true})"]
+        F2["(:FlagsmithFeature {name: 'dark_mode', enabled: true})"]
+        F3["(:FlagsmithFeature {name: 'premium_analytics', enabled: true})"]
+        F4["(:FlagsmithFeature {name: 'analytics_dashboard', enabled: true})"]
+
+        F2 -- "[:REQUIRES_PREREQUISITE]" --> F1
+        F3 -- "[:DEPENDS_ON]" --> F2
+        F4 -- "[:DEPENDS_ON]" --> F3
     end
 
     subgraph Gating_Layer["Layer 3: Enclosed MCP Execution Gate"]
-        MCPTool["apply_code_change (decision_id, file, payload)"]
-        GateLogic{"verifyActionGate (BFS Cypher)"}
-        Approved["Verdict: APPROVED (< 2ms)"]
-        Blocked["Verdict: BLOCKED_SUPERSEDED_SOURCE"]
-        DiskWrite["Atomic Filesystem Write"]
+        MCPTool["safe_toggle_flag (flag_name, target_state)"]
+        GateLogic{"computeFlagBlastRadius (FalkorDB Cypher)"}
+        Approved["Verdict: APPROVED (< 4.5ms)"]
+        Blocked["Verdict: BLOCKED_CRITICAL_BLAST_RADIUS (409 Conflict)"]
+        FlagsmithPatch["Atomic REST Patch to Flagsmith API"]
         AuditLedger[("(:AgentAction Audit Node)")]
 
         MCPTool --> GateLogic
-        GateLogic -- "Grounded in DEC-103 (Fresh)" --> Approved --> DiskWrite --> AuditLedger
-        GateLogic -- "Grounded in DEC-102 (Stale)" --> Blocked --> AuditLedger
+        GateLogic -- "Zero Active Dependents / Fallback Verified" --> Approved --> FlagsmithPatch --> AuditLedger
+        GateLogic -- "Unmigrated Active Dependents Found" --> Blocked --> AuditLedger
     end
 
     Ingestion_Layer --> Causal_Matrix
@@ -529,26 +588,22 @@ graph LR
 
 ```mermaid
 graph TD
-    Start["Agent invokes 'apply_code_change' or 'check_intent_clearance'"] --> Extract["Extract Decision ID (e.g. DEC-102) & Target File"]
+    Start["Agent invokes 'safe_toggle_flag' or 'get_flag_blast_radius'"] --> Extract["Extract Flag Name (e.g. 'dark_mode') & Target State"]
     Extract --> Query["Execute Parameterized Cypher against FalkorDB GraphBLAS"]
     Query --> Traversal{"Trace Causal Path:
-Decision -> Fact -> Source
-Check if ANY source is SUPERSEDED"}
-    
-    Traversal -- "Active & Valid (0 Superseded Sources)" --> Approved["Gate Verdict: APPROVED (< 2ms)"]
-    Approved --> ConfinementCheck{"Path Confinement Check:
-Target resides within repo root?"}
-    ConfinementCheck -- "Yes (Clean Path)" --> DiskWrite["Atomic Write Code to Protected Disk"]
-    ConfinementCheck -- "No (Path Traversal Detected)" --> PathBlock["Gate Verdict: BLOCKED_PATH_TRAVERSAL
-Zero Bytes Written"]
-    DiskWrite --> LogApproved["Create (:AgentAction {status: 'EXECUTED'}) in FalkorDB"]
+Target Flag -> Downstream Dependents (Hop 1..6)
+Evaluate Active State of Dependents"}
+
+    Traversal -- "Clean Path: Zero Active Dependents / Fallbacks Present" --> Approved["Gate Verdict: APPROVED (< 4.5ms)"]
+    Approved --> FlagsmithCall["Atomic REST PATCH /api/v1/flags/ to Self-Hosted Flagsmith"]
+    FlagsmithCall --> LogApproved["Create (:AgentAction {status: 'APPROVED'}) in FalkorDB"]
     LogApproved --> ReturnApproved["Return JSON 200 OK + Execution Latency to Agent"]
 
-    Traversal -- "Superseded or Invalidated Path" --> Blocked["Gate Verdict: BLOCKED_SUPERSEDED_SOURCE"]
+    Traversal -- "Critical Blast Radius: Unmigrated Active Dependents" --> Blocked["Gate Verdict: BLOCKED_CRITICAL_BLAST_RADIUS"]
     Blocked --> LogBlocked["Create (:AgentAction {status: 'BLOCKED'}) in FalkorDB"]
-    LogBlocked --> ZeroBytes["ZERO BYTES WRITTEN TO DISK"]
-    ZeroBytes --> ReturnBlocked["Return JSON 403 Forbidden with exact violation path
-& Guidance to invoke 'revalidate_decision'"]
+    LogBlocked --> ZeroMutations["ZERO MUTATIONS DISPATCHED TO FLAGSMITH"]
+    ZeroMutations --> ReturnBlocked["Return JSON 409 Conflict with exact violation path
+& Guidance: migrate dependents or implement fallbacks"]
 ```
 
 ### 4. Autonomous Causal Invalidation & Verification Sequence
@@ -556,40 +611,41 @@ Zero Bytes Written"]
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Dev as Developer / GitHub
+    actor Dev as Developer / Flagsmith Admin
     actor Agent as Autonomous AI Agent
     participant Web as Visual Console HUD
-    participant Gate as Enclosed MCP Gate
+    participant Gate as Enclosed Flagsmith MCP Gate
     participant Graph as FalkorDB (GraphBLAS)
-    participant Repo as Target Repository
+    participant Flagsmith as Flagsmith REST API
 
-    Note over Dev, Graph: ACT I: Baseline Architectural Grounding
-    Dev->>Repo: Merge ADR-001 (TokenAuth v1 accepted)
-    Gate->>Graph: Ingest ADR-001 & Create Decision DEC-102 (status: VALID)
-    Web->>Graph: Fetch Causal DAG & Display Grounded Chain
+    Note over Dev, Flagsmith: ACT I: Baseline Flagsmith Ingestion and Grounding
+    Dev->>Flagsmith: Configure Flags dark_mode (ENABLED) and auth_v2 (ENABLED)
+    Gate->>Graph: Ingest Flag Inventory and Establish Prerequisite REQUIRES_PREREQUISITE
+    Web->>Graph: Fetch Causal DAG and Display Grounded Feature Chain
 
-    Note over Dev, Graph: ACT II: Temporal Invalidation (Superseding Commit)
-    Dev->>Repo: Commit ADR-002 (Mandatory OAuth2, supersedes ADR-001)
-    Gate->>Graph: Ingest ADR-002: CREATE (ADR-002)-[:SUPERSEDES] to (ADR-001)
-    Graph->>Graph: GraphBLAS Linear Algebra Invalidation Cascade (2.1ms)
-    Graph-->>Web: SSE Event: ADR-001 is SUPERSEDED, DEC-102 is INVALIDATED
+    Note over Dev, Flagsmith: ACT II: 3-Signal Dependency Mining
+    Gate->>Flagsmith: Signal 1 - Mine contract tags (confidence = 1.0)
+    Gate->>Flagsmith: Signal 2 - Scan codebase AST for useFlags / hasFeature (conf = 0.75-0.85)
+    Gate->>Graph: Signal 3 - Mine Git commit co-changes (Jaccard index)
+    Graph->>Graph: Formulate Bayesian Edge: premium_analytics and analytics_dashboard depend on dark_mode (3.1ms)
+    Graph-->>Web: SSE Event - Multi-Hop Blast Radius Mapped (2 Dependents, Hop 1 and 2)
 
-    Note over Agent, Repo: ACT III: Stale Agent Execution Intercepted
-    Agent->>Gate: apply_code_change(decision: 'DEC-102', file: 'payment.js')
-    Gate->>Graph: verifyActionGate(decisionId: 'DEC-102')
-    Graph-->>Gate: Verdict: BLOCKED_SUPERSEDED_SOURCE (stale fact detected)
-    Gate-->>Agent: 403 Forbidden: Zero bytes written to disk
+    Note over Agent, Flagsmith: ACT III: Blind Agent Toggle Intercepted
+    Agent->>Gate: safe_toggle_flag(flag 'dark_mode', enabled false)
+    Gate->>Graph: computeFlagBlastRadius(flagName 'dark_mode')
+    Graph-->>Gate: Verdict: BLOCKED_CRITICAL_BLAST_RADIUS (2 active dependents unmigrated)
+    Gate-->>Agent: 409 Conflict - Zero mutations sent to Flagsmith. Downstream crash prevented!
     Gate->>Web: Log BLOCKED attempt on Compliance Audit Ledger
 
-    Note over Agent, Repo: ACT IV: Autonomous Revalidation & Gated Write
-    Agent->>Gate: check_intent_clearance(decision: 'DEC-103')
-    Agent->>Gate: revalidate_decision(new_source: 'ADR-002', old_decision: 'DEC-102', new_decision: 'DEC-103')
-    Graph->>Graph: CREATE (DEC-103:Decision)-[:REPLACES] to (DEC-102)
-    Agent->>Gate: apply_code_change(decision: 'DEC-103', file: 'payment.js', code: 'OAuth2')
-    Gate->>Graph: verifyActionGate(decisionId: 'DEC-103')
-    Graph-->>Gate: Verdict: APPROVED (1.6ms)
-    Gate->>Repo: Atomic write verified OAuth2 implementation to disk
-    Gate-->>Agent: 200 OK: Code written with verified causal provenance
+    Note over Agent, Flagsmith: ACT IV: Autonomous Fallback Resolution and Safe Cutover
+    Agent->>Agent: Implement graceful fallback branch in analytics_dashboard.jsx
+    Agent->>Gate: safe_toggle_flag(flag 'dark_mode', enabled false, fallback_verified true)
+    Gate->>Graph: computeFlagBlastRadius(flagName 'dark_mode')
+    Graph-->>Gate: Verdict: APPROVED (1.8ms - fallbacks grounded)
+    Gate->>Flagsmith: PATCH /api/v1/flags/dark_mode/ with enabled false
+    Flagsmith-->>Gate: 200 OK - Flag safely disabled
+    Gate->>Web: Log APPROVED execution on Compliance Audit Ledger (ACT-004-SAFE-TOGGLE)
+    Gate-->>Agent: 200 OK - Flag toggled safely with zero downstream regressions
 ```
 
 ---
@@ -603,9 +659,9 @@ Captured directly from our live production deployment at [`https://cavdax-flagsm
 
 <div align="center">
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/flagsmith_radar_dark.png" />
-  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/flagsmith_radar_light.png" />
-  <img src="./assets/screenshots/flagsmith_radar_dark.png" alt="Flagsmith Blast Radius Radar" width="100%" />
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/live_purged_flags_radar_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/live_purged_flags_radar_light.png" />
+  <img src="./assets/screenshots/live_purged_flags_radar_dark.png" alt="Flagsmith Blast Radius Radar" width="100%" />
 </picture>
 
 <p><em>Figure 1: Real-time 3-Signal Flagsmith Blast Radius Radar featuring multi-hop transitive ripple detection, upstream prerequisite guards, and 409 Conflict safety barrier.</em></p>
@@ -628,38 +684,66 @@ Captured directly from our live production deployment at [`https://cavdax-flagsm
 > Deep AST syntactic inspection capturing conditional guards, boolean conjunctions, and SDK call sites across client and server source trees.
 
 <div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/ast_inspector.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/ast_inspector.png" />
   <img src="./assets/screenshots/ast_inspector.png" alt="Flagsmith AST Code Inspector" width="950" />
-  <p><em>Figure 3: Deep AST syntactic inspection capturing conditional guards, boolean conjunctions, and SDK call sites across client and server source trees.</em></p>
+</picture>
+
+<p><em>Figure 3: Deep AST syntactic inspection capturing conditional guards, boolean conjunctions, and SDK call sites across client and server source trees.</em></p>
 </div>
 
 ### 4. Connected Repository Developer Workspace (`/console`)
-> Real-time developer workspace and **Interactive Causal Verification Console** featuring our dynamic hierarchical DAG layout engine, **bespoke SVG Diamond Rhombus geometries for `:Decision` nodes**, zero-crossing right-corridor intra-column replacement arcs, live Cypher query inspector, branch tracking, and universal spring-loaded modal physics.
+> Real-time developer workspace and **Interactive Causal Verification Console** featuring dynamic hierarchical DAG layouts, Flagsmith code scanning, and live terminal provenance stream.
 
 <div align="center">
-  <img src="./assets/screenshots/02_developer_console.png" alt="CAVDAX Developer Console" width="950" />
-  <p><em>Figure 4: Real-time developer workspace and interactive causal verification console featuring dynamic hierarchical DAG layouts and Cypher inspector.</em></p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/live_flagsmith_console_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/live_flagsmith_console_light.png" />
+  <img src="./assets/screenshots/live_flagsmith_console_dark.png" alt="CAVDAX Flagsmith Developer Console" width="100%" />
+</picture>
+
+<p><em>Figure 4: Real-time developer workspace and interactive causal verification console featuring dynamic hierarchical DAG layouts, Flagsmith code scanning, and live terminal provenance stream.</em></p>
 </div>
 
 ### 5. Compliance Audit Ledger (`/audit`)
-> Tamper-evident operational ledger recording every tool execution, verdict, target file path, and grounding decision ID.
+> Tamper-evident operational ledger recording every tool execution, verdict, target feature flag, and grounding dependency state in FalkorDB.
 
 <div align="center">
-  <img src="./assets/screenshots/04_compliance_audit_ledger.png" alt="CAVDAX Compliance Audit Ledger" width="950" />
-  <p><em>Figure 5: Tamper-evident operational ledger recording every tool execution, verdict, target file path, and grounding decision ID.</em></p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/live_flagsmith_audit_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/live_flagsmith_audit_light.png" />
+  <img src="./assets/screenshots/live_flagsmith_audit_dark.png" alt="CAVDAX Compliance Audit Ledger" width="100%" />
+</picture>
+
+<p><em>Figure 5: Tamper-evident operational ledger recording every tool execution, verdict, target feature flag, and grounding dependency state in FalkorDB.</em></p>
+</div>
+
+### 6. Architectural Executive Overview (`/overview`)
+> Operational command HUD providing instant system telemetry, 3-signal mesh ingestion status, and rapid navigation across all platform capabilities.
+
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/live_purged_overview_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/live_purged_overview_light.png" />
+  <img src="./assets/screenshots/live_purged_overview_dark.png" alt="CAVDAX Executive Overview" width="100%" />
+</picture>
+
+<p><em>Figure 6: Monochromatic porcelain / obsidian operational HUD overview displaying live system state, active feature counts, and 3-signal mesh telemetry.</em></p>
 </div>
 
 ---
 
 ## Out-of-Band Divergence Radar & Real-Time Alerts
 
-While CAVDAX's enclosed MCP gate (`apply_code_change`) prevents active coding agents from writing stale code in real-time, production engineering is fundamentally asynchronous. If a security lead or teammate merges `ADR-002` at 10:00 AM deprecating TokenAuth v1, an offline developer's planned implementation decision (`DEC-102`) is instantly superseded.
+While CAVDAX's enclosed MCP gate (`safe_toggle_flag`) prevents active coding agents from flipping breaking feature flags blindly in real-time, production engineering is fundamentally asynchronous. If a teammate toggles or deprecates an upstream prerequisite flag like `dark_mode` or `auth_v2` directly in the Flagsmith dashboard, downstream systems and agent workflows depend on immediate notifications.
 
 CAVDAX provides **Dual-Plane Protection**:
-1. **In-Flight Enclosed Gate (MCP)**: Intercepts active coding agents in real-time.
-2. **Out-of-Band Divergence Radar (Email + Web Push + Webhooks)**: Automatically notifies the decision author or team asynchronously the millisecond a superseding ADR is pushed to the repository.
+1. **In-Flight Enclosed Gate (MCP)**: Intercepts active coding agents in real-time prior to any flag mutation.
+2. **Out-of-Band Divergence Radar (Email + Web Push + Webhooks)**: Automatically notifies the flag owner or engineering team asynchronously the millisecond an incompatible flag mutation is detected.
 
 ```
-[GitHub Push: ADR-002 Merged] ──► [POST /api/github/webhook]
+[Flagsmith Webhook: Flag Mutated] ──► [POST /api/flagsmith/webhook]
                                             │
                                             ▼
                       [FalkorDB GraphBLAS Causal Traversal]
@@ -674,14 +758,14 @@ CAVDAX provides **Dual-Plane Protection**:
 
 ### 1. Blast-Radius Bound Causal Notifications
 Unlike noisy CI bots that broadcast spam to an entire team, CAVDAX traverses the FalkorDB causal DAG:
-`(newerSource)-[:SUPERSEDES]->(oldSource)<-[:EXTRACTED_FROM]-(Fact)<-[:DEPENDS_ON]-(d:Decision)`  
-Alerts are dispatched **strictly to the registered owner or CODEOWNER of the affected decision**, completely eliminating alert fatigue.
+`(:FlagsmithFeature {name: $flagName})<-[:DEPENDS_ON*1..6]-(downstream:FlagsmithFeature)`  
+Alerts are dispatched **strictly to the registered owner or CODEOWNER of the affected downstream services**, completely eliminating alert fatigue.
 
 ### 2. Dual Out-of-Band Delivery Channels
 * **Developer-Console Transactional Email (Resend API)**:
   * Dispatched from `no-reply@sahnirmaan.live` with verified DKIM/SPF domain authentication.
-  * Formatted in an industrial monochromatic developer aesthetic containing the exact broken decision ID, superseding source ID, causal violation path, direct 1-click link to the visual Blast Radius diff in the CAVDAX HUD, and copy-paste remediation CLI directive.
-  * Includes an automated sliding-window alert debouncer (5-minute window) to prevent spam during rapid git commit sequences.
+  * Formatted in an industrial monochromatic developer aesthetic containing the exact mutated feature flag, affected downstream services, multi-hop transitive path depth, direct 1-click link to the visual Blast Radius Radar in the CAVDAX HUD, and copy-paste remediation CLI directive.
+  * Includes an automated sliding-window alert debouncer (5-minute window) to prevent spam during rapid flag reconfigurations.
 * **Background Web Push (Service Worker + VAPID)**:
   * Native browser `PushManager` subscription registered via `/sw.js` and managed by `apps/client/src/services/webPush.js`.
   * Elliptic-curve cryptography (ECDSA NIST P-256) VAPID key pairs generated and persisted server-side.
@@ -689,7 +773,7 @@ Alerts are dispatched **strictly to the registered owner or CODEOWNER of the aff
 
 ### 3. Interactive Pitch & Demo Trigger (`/api/alerts/simulate-invalidation`)
 For live team demonstrations and interactive architectural evaluation:
-* The HUD provides a **"Simulate Incompatible ADR Commit"** action in the Developer Console and Preferences.
+* The HUD provides a **"Simulate Incompatible Flag Mutation"** action in the Developer Console and Preferences.
 * Instantly triggers FalkorDB causal invalidation, broadcasts SSE to the live DAG canvas, and dispatches an authentic divergence alert to the evaluator's inbox with measured sub-second latency.
 
 ---
@@ -698,68 +782,70 @@ For live team demonstrations and interactive architectural evaluation:
 
 CAVDAX leverages FalkorDB's linear-algebraic matrix engine to run deep multi-hop traversals in sub-millisecond timeframes.
 
-### Query 1: Enclosed Action Gate Verification (`verifyActionGate`)
-Evaluates the full causal dependency tree and uses `ANY(...)` aggregation to prevent mixed-path false positives:
+### Query 1: Topological Multi-Hop Blast Radius (`computeFlagBlastRadius`)
+Traverses both upstream prerequisites and downstream dependents via GraphBLAS sparse matrix operations:
 
 ```cypher
-MATCH (d:Decision {id: $decisionId})
-WITH d, d.status AS decision_status
-OPTIONAL MATCH path = (d)-[:DEPENDS_ON*1..4]->(f:Fact)-[:EXTRACTED_FROM]->(s:Source)
-WITH d, decision_status,
-     collect({
-       path_nodes: [n IN nodes(path) | labels(n)[0] + ':' + coalesce(n.id, n.ref)],
-       fact_stale: coalesce(f.is_stale, false),
-       source_status: coalesce(s.status, 'ACTIVE')
-     }) AS dependencies
-RETURN d.id AS decision_id,
-       decision_status,
+MATCH (target:FlagsmithFeature {name: $flagName})
+OPTIONAL MATCH upstreamPath = (target)-[:DEPENDS_ON|GUARDS*1..3]->(up:FlagsmithFeature)
+OPTIONAL MATCH downstreamPath = (down:FlagsmithFeature)-[:DEPENDS_ON|GUARDS*1..3]->(target)
+OPTIONAL MATCH blocked = (target)-[:BLOCKS]->(b:FlagsmithFeature)
+RETURN target.name AS target_flag,
+       target.enabled AS target_enabled,
+       target.description AS target_description,
+       collect(DISTINCT {
+         name: up.name,
+         enabled: up.enabled,
+         depth: length(upstreamPath)
+       }) AS upstream_prerequisites,
+       collect(DISTINCT {
+         name: down.name,
+         enabled: down.enabled,
+         depth: length(downstreamPath)
+       }) AS downstream_dependents,
+       collect(DISTINCT {
+         name: b.name,
+         enabled: b.enabled
+       }) AS blocked_features
+```
+
+### Query 2: Feature Inventory & Centrality Degrees (`listFlagsmithFeatures`)
+Computes in-degree dependents and out-degree prerequisites across all synchronized feature flags:
+
+```cypher
+MATCH (f:FlagsmithFeature)
+OPTIONAL MATCH (f)-[out:DEPENDS_ON]->(:FlagsmithFeature)
+OPTIONAL MATCH (:FlagsmithFeature)-[inc:DEPENDS_ON]->(f)
+RETURN f.name AS name,
+       f.enabled AS enabled,
+       f.description AS description,
+       f.type AS type,
+       count(DISTINCT out) AS out_degree_dependencies,
+       count(DISTINCT inc) AS in_degree_dependents,
        CASE 
-         WHEN decision_status = 'INVALIDATED_NEEDS_REVALIDATION' THEN 'BLOCKED_DECISION_INVALIDATED'
-         WHEN size(dependencies) = 0 THEN 'BLOCKED_NO_GROUNDING'
-         WHEN ANY(dep IN dependencies WHERE dep.fact_stale = true) THEN 'BLOCKED_STALE_FACT'
-         WHEN ANY(dep IN dependencies WHERE dep.source_status = 'SUPERSEDED') THEN 'BLOCKED_SUPERSEDED_SOURCE'
-         ELSE 'APPROVED'
-       END AS gate_verdict,
-       [dep IN dependencies WHERE dep.fact_stale = true OR dep.source_status = 'SUPERSEDED' | dep.path_nodes] AS violation_paths
+         WHEN count(DISTINCT inc) >= 5 THEN 'CRITICAL'
+         WHEN count(DISTINCT inc) >= 2 THEN 'HIGH'
+         WHEN count(DISTINCT inc) = 1 THEN 'MODERATE'
+         ELSE 'LOW'
+       END AS risk_tier
+ORDER BY in_degree_dependents DESC, f.name ASC
 ```
 
-### Query 2: Cascading Invalidation Wave (`cascadeInvalidation`)
-Propagates invalidation from a newly ingested source down to all affected decisions in $< 3\text{ ms}$:
+### Query 3: Stale Flag Pruning & Sunset Detection (`listStaleFlags`)
+Discovers enabled feature flags that have zero downstream callers relying on them:
 
 ```cypher
-MATCH (newSource:Source {id: $newSourceId})
-MATCH (oldSource:Source {id: $oldSourceId})
-MERGE (newSource)-[:SUPERSEDES]->(oldSource)
-SET oldSource.status = 'SUPERSEDED',
-    oldSource.superseded_at = timestamp()
-WITH oldSource
-MATCH (oldSource)<-[:EXTRACTED_FROM]-(staleFact:Fact)
-SET staleFact.is_stale = true, 
-    staleFact.invalidated_at = timestamp()
-WITH staleFact
-MATCH (d:Decision)-[:DEPENDS_ON*1..4]->(staleFact)
-SET d.status = 'INVALIDATED_NEEDS_REVALIDATION',
-    d.invalidated_at = timestamp()
-RETURN count(DISTINCT d) AS affected_decisions, 
-       collect(DISTINCT d.id) AS invalidated_decision_ids
-```
-
-### Query 3: Act IV Revalidation Loop (`revalidateDecision`)
-Closes the loop by safely retiring the invalidated decision and grounding the fresh decision:
-
-```cypher
-MATCH (newSource:Source {id: $newSourceId})<-[:EXTRACTED_FROM]-(newFact:Fact {id: $newFactId})
-MATCH (oldDecision:Decision {id: $oldDecisionId})
-CREATE (newDecision:Decision {
-  id: $newDecisionId,
-  title: $title,
-  status: 'VALID',
-  created_at: timestamp()
-})
-CREATE (newDecision)-[:DEPENDS_ON]->(newFact)
-CREATE (newDecision)-[:REPLACES]->(oldDecision)
-SET oldDecision.status = 'REPLACED_ARCHIVED'
-RETURN newDecision.id AS active_decision_id, oldDecision.id AS archived_decision_id
+MATCH (f:FlagsmithFeature)
+WHERE f.enabled = true
+OPTIONAL MATCH (:FlagsmithFeature)-[inc:DEPENDS_ON|GUARDS]->(f)
+WITH f, count(inc) AS dependent_count
+WHERE dependent_count = 0
+RETURN f.name AS name,
+       f.description AS description,
+       f.type AS type,
+       0 AS active_dependents,
+       'Safe candidate to sunset and prune without downstream impact' AS recommendation
+ORDER BY f.name ASC
 ```
 
 ### FalkorDB GraphBLAS vs. Whole-Graph Batch Algorithms (Engineering Rationale)
@@ -828,12 +914,12 @@ Evaluated via `node benchmark/scale_generator.js` (Live FalkorDB measurement wit
 
 ## Live Demo: The 4-Act Storyline
 
-The Web HUD features an interactive 4-Act stepper designed for video demonstration:
+The Web HUD features an interactive 4-Act stepper designed for video demonstration and evaluation:
 
-* **Act I: Baseline (ADR-001 Active):** `DEC-102` is valid and authorized to scaffold checkout using `TokenAuth v1`.
-* **Act II: Commit Mutation (ADR-002 Ingested):** Security board commits `ADR-002` superseding `ADR-001`. Query 2 executes in 2.1ms, turning `ADR-001` red (`SUPERSEDED`), `F-Auth-v1` red (`STALE`), and `DEC-102` red (`INVALIDATED_NEEDS_REVALIDATION`).
-* **Act III: Enclosed MCP Gate Rejection:** The coding agent attempts to write `TokenAuth.v1` into `demo-repo/src/services/payment.js`. The enclosed MCP tool executes Query 1, detects the broken causal link, and emits `[ 403 MCP GATE BLOCKED: BLOCKED_SUPERSEDED_SOURCE ]`. The file remains 100% untouched on disk.
-* **Act IV: Revalidation & Safe Execution:** The agent synthesizes `DEC-103` (OAuth2 JWT/RS256) grounded in `ADR-002`. The gate verifies the fresh causal path in 1.62ms and emits `[ 200 MCP GATE APPROVED ]`. The verified OAuth2 code is safely written to disk.
+* **Act I: Baseline Grounding (`dark_mode` Active):** The baseline feature flag inventory is ingested from the self-hosted Flagsmith instance into FalkorDB. Upstream prerequisite `auth_v2` is satisfied, and `dark_mode` is enabled across the application.
+* **Act II: 3-Signal Dependency Mining:** Flagsmith contract tags (Signal 1), AST static code references (Signal 2), and Git temporal coupling matrices (Signal 3) are synthesized into FalkorDB in 3.1ms. Transitive dependents `premium_analytics` and `analytics_dashboard` are mapped downstream of `dark_mode`.
+* **Act III: Blind Agent Toggle Intercepted:** An autonomous coding agent attempts to invoke `safe_toggle_flag('dark_mode', false)` without verifying downstream callers. The enclosed MCP gate traverses the GraphBLAS adjacency matrix, detects 2 active unmigrated dependents with zero fallbacks, and emits `[ 409 CONFLICT: BLOCKED_CRITICAL_BLAST_RADIUS ]`. Zero mutations reach Flagsmith; production downtime is prevented.
+* **Act IV: Autonomous Fallback Resolution & Safe Cutover:** The agent synthesizes a defensive fallback branch in `analytics_dashboard.jsx`, satisfying topological invariants. The gate re-evaluates in 1.8ms, validates the fallback, and emits `[ 200 OK: APPROVED ]`. The atomic PATCH is dispatched to Flagsmith, and the execution is logged to the Compliance Audit Ledger.
 
 ---
 
@@ -850,21 +936,21 @@ CAVDAX is deployed and running live in production:
 
 ---
 
-## Web HUD Multi-Route Topology (11 Operational Views)
+## Web HUD Multi-Route Topology (Core Navigation & Operational Views)
 
-The CAVDAX for Flagsmith Web HUD provides an industrial-brutalist / porcelain operational interface spanning 11 specialized views:
+The CAVDAX for Flagsmith Web HUD provides a streamlined monochromatic porcelain / obsidian operational interface organized into **4 Primary Focus Tabs** plus dedicated developer and administration enclaves:
 
-1. **Flagsmith Blast Radius Radar (`/flags`) [PRIMARY TRACK 03 HUD]**: Real-time 3-Signal blast radius radar, multi-hop transitive ripple detection, upstream prerequisite guards, AST live code scanner, and Safe Toggle Switch with 409 Conflict barrier.
-2. **Developer Diagnostics Console & Hackathon Mode Enclave (`/dev`)**: Monochromatic hardware bench instrument displaying real-time FalkorDB/Redis connectivity, Hackathon Mode zero-paywall switch, live system state telemetry, and diagnostic triggers.
-3. **Architectural Overview (`/overview` or `/`)**: Value proposition, Causal Invalidation Radar, interactive Cytoscape.js Directed Acyclic Graph canvas with Linear-grade command search ribbon (`Cmd+K` / `Ctrl+K`), and 1-click kinetic sidebar collapse for 100% full-viewport exploration.
-4. **Connected Repository Developer Workspace (`/console`)**: Multi-tenant workspace for linking GitHub repositories with context-preserving OAuth reconnection, universal plan quota metering, and bi-directional ADR-to-Graph selection synchronization.
-5. **MCP Action Playground (`/mcp`)**: Interactive pre-flight verification console with dynamic traversal depth sliders (`1..4` hops), live Cypher inspection, and sub-millisecond execution timing metrics.
-6. **4-Act Storyline Stepper (`/walkthrough`)**: Interactive demonstration stepper guiding evaluators through baseline validity, upstream commit mutation, enclosed MCP gate rejection, and Act IV revalidation.
-7. **Compliance Audit Ledger (`/audit`)**: Signed audit trail providing full provenance and execution verification history across all agent actions.
-8. **Core Maintainers & Attribution (`/team`)**: Project research attribution, engineering background, and architecture credits.
-9. **Developer Profile & Multi-Display Viewport Engine (`/profile`)**: Live plan quota consumption monitoring, capability tiers, secure MCP key generation, and an adaptive multi-display responsive engine calibrated for both laptop and desktop displays.
-10. **Community Stewardship & Operational Backing (`/support`)**: Transparent operational resource breakdown and community sponsorship integration.
-11. **Flagsmith Self-Hosted Management Portal (`/flagsmith/api/v1/`)**: Fully functional Django REST Framework management portal with authenticated project overrides, flag administration, and reverse-proxy static asset delivery.
+### Primary Navigation Tabs:
+1. **Overview (`/overview` or `/`)**: Executive command dashboard, 3-signal mesh ingestion status, platform architecture breakdown, interactive team attribution, and video walkthrough showcase.
+2. **Flag Radar (`/flags`) [PRIMARY TRACK 03 HUD]**: Real-time 3-Signal blast radius radar, multi-hop transitive ripple detection, upstream prerequisite guards, AST live code scanner, and Safe Toggle Switch with 409 Conflict barrier.
+3. **Repo & MCP (`/mcp` / `/console`)**: Repository code scanner for Flagsmith feature toggles, connected repository workspace, MCP drop-in configuration guides (Cursor, Claude Code, Windsurf), and interactive tool execution playground.
+4. **Audit Ledger (`/audit`)**: Tamper-evident operational ledger recording every tool execution, verdict, target feature flag, and grounding dependency state in FalkorDB.
+
+### Specialized Developer Enclaves:
+5. **Developer Diagnostics Console & Hackathon Mode Enclave (`/dev`)**: Monochromatic hardware bench instrument displaying real-time FalkorDB/Redis connectivity, Hackathon Mode zero-paywall switch, live system state telemetry, and diagnostic triggers.
+6. **Flagsmith Self-Hosted Management Portal (`/flagsmith/api/v1/`)**: Fully functional Django REST Framework management portal with authenticated project overrides, flag administration, and reverse-proxy static asset delivery.
+7. **Developer Profile & Quota Metering (`/profile`)**: Live plan quota consumption monitoring, capability tiers, and secure MCP key generation.
+8. **Community Stewardship & Backing Galaxy (`/support` / `/sponsors`)**: 3D revolving supporter sphere and operational infrastructure disclosures.
 
 ---
 
