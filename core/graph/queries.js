@@ -1,3 +1,13 @@
+const JUNK_FLAG_NAMES = new Set([
+  'forEach', 'length', 'includes', 'sort', 'getValue', 'hasFeature', 'isFeatureEnabled',
+  'getFeatureValue', 'map', 'filter', 'slice', 'push', 'pop', 'shift', 'unshift',
+  'keys', 'values', 'entries', 'toString', 'toLocaleString', 'valueOf', 'apply', 'bind',
+  'call', 'reduce', 'reduceRight', 'find', 'findIndex', 'findLast', 'findLastIndex',
+  'some', 'every', 'concat', 'join', 'flat', 'flatMap', 'fill', 'copyWithin',
+  'status', 'state', 'data', 'result', 'error', 'name', 'type', 'id', 'count', 'items',
+  'enabled', 'disabled', 'value', 'options', 'config', 'append', 'extend', 'insert', 'remove', 'clear'
+]);
+
 /**
  * CAVDAX Core Cypher Queries
  * Implements the 3 mathematically sound queries tested for FalkorDB GraphBLAS.
@@ -432,10 +442,10 @@ export async function computeFlagBlastRadius(graph, flagName) {
     };
   }
 
-  // Filter out null entries
-  const upstream = (row.upstream_prerequisites || []).filter(item => item && item.name);
-  const downstream = (row.downstream_dependents || []).filter(item => item && item.name);
-  const blocked = (row.blocked_features || []).filter(item => item && item.name);
+  // Filter out null entries and built-in JavaScript/Python prototype names
+  const upstream = (row.upstream_prerequisites || []).filter(item => item && item.name && !JUNK_FLAG_NAMES.has(item.name));
+  const downstream = (row.downstream_dependents || []).filter(item => item && item.name && !JUNK_FLAG_NAMES.has(item.name));
+  const blocked = (row.blocked_features || []).filter(item => item && item.name && !JUNK_FLAG_NAMES.has(item.name));
 
   // Active downstream breaking features
   const activeDownstream = downstream.filter(d => Boolean(d.enabled));
@@ -503,7 +513,7 @@ export async function listFlagsmithFeatures(graph) {
   const result = await graph.query(cypher);
   const latencyMs = extractLatencyMs(result, hrtStart);
 
-  const features = (result.data || []).map(r => ({
+  const features = (result.data || []).filter(r => !JUNK_FLAG_NAMES.has(r.name)).map(r => ({
     name: r.name,
     id: r.id,
     enabled: Boolean(r.enabled),

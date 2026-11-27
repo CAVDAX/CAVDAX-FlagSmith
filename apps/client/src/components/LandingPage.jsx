@@ -919,12 +919,15 @@ export default function LandingPage({
               playClick();
               if (onSelectTab) onSelectTab('flags');
             }}
-            className="group inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-300 dark:border-white/10 bg-slate-100/80 dark:bg-white/[0.04] hover:bg-slate-200 dark:hover:bg-white/[0.08] hover:border-slate-400 dark:hover:border-white/20 transition-all text-xs font-mono text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+            className="group inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 transition-all text-xs font-sans font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-2xs hover:shadow-xs"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
-            <span className="font-semibold text-slate-900 dark:text-slate-100">Toggle Wars Track 03:</span>
-            <span>Flagsmith Blast Radius Radar &amp; MCP Gate</span>
-            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-slate-500 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white" />
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+            </span>
+            <span className="font-semibold text-slate-900 dark:text-slate-100 tracking-tight">Toggle Wars Track 03:</span>
+            <span className="text-slate-600 dark:text-slate-300">Flagsmith Blast Radius Radar &amp; MCP Gate</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white" />
           </button>
         </div>
 

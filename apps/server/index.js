@@ -917,6 +917,21 @@ async function initDb() {
     mcpServer = new CavdaxMcpServer(graph, { repoRoot: demoSandboxRoot });
     isFalkorConnected = true;
     console.log('[CAVDAX Server] Successfully connected to FalkorDB.');
+    try {
+      await graph.query([
+        "MATCH (f:FlagsmithFeature)",
+        "WHERE f.name IN [",
+        "  'forEach', 'length', 'includes', 'sort', 'getValue', 'hasFeature',",
+        "  'isFeatureEnabled', 'getFeatureValue', 'map', 'filter', 'slice',",
+        "  'push', 'pop', 'shift', 'unshift', 'keys', 'values', 'entries',",
+        "  'toString', 'apply', 'bind', 'call', 'reduce', 'find', 'findIndex',",
+        "  'some', 'every', 'status', 'state', 'data', 'result', 'error'",
+        "]",
+        "DETACH DELETE f"
+      ].join('\n'));
+    } catch (cleanErr) {
+      // Non-fatal if table empty
+    }
   } catch (err) {
     console.warn('[CAVDAX Server] FalkorDB connection failed on boot. Will retry on request.', err.message);
     isFalkorConnected = false;
@@ -1345,7 +1360,9 @@ app.post('/api/flagsmith/sync', async (req, res) => {
       try {
         const astResult = await astScanner.scanDirectory(repoRoot);
         if (astResult.dependencies.length > 0) {
+          const JUNK_NAMES = new Set(['forEach', 'length', 'includes', 'sort', 'getValue', 'hasFeature', 'isFeatureEnabled', 'getFeatureValue', 'map', 'filter', 'slice', 'push', 'pop', 'shift', 'unshift', 'keys', 'values', 'entries', 'toString', 'status', 'state', 'data', 'result', 'error']);
           for (const dep of astResult.dependencies) {
+            if (JUNK_NAMES.has(dep.sourceFlag) || JUNK_NAMES.has(dep.targetFlag)) continue;
             const relType = dep.relationship || 'DEPENDS_ON';
             const cypher = `
               MERGE (s:FlagsmithFeature {name: $sourceFlag})

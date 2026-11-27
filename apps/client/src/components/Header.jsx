@@ -25,10 +25,23 @@ import ShimmerImage from './ui/ShimmerImage';
  * - Dedicated PreferencesModal trigger with smooth gear spin.
  */
 
+function RadarIcon({ size = 13, className = "" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" />
+      <path d="M4 6h.01" />
+      <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" />
+      <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" />
+      <circle cx="12" cy="12" r="2" />
+      <path d="m13.41 10.59 5.66-5.66" />
+    </svg>
+  );
+}
+
 const NAV_TABS = [
   { id: "landing", label: "Overview", icon: Layers },
   { id: "console", label: "Console", icon: SlidersHorizontal },
-  { id: "flags", label: "Flag Radar", icon: ToggleRight },
+  { id: "flags", label: "Flag Radar", icon: RadarIcon },
   { id: "mcp", label: "MCP", icon: Cable },
   { id: "audit", label: "Audit", icon: ClipboardList },
   { id: "project", label: "Walkthrough", icon: Play },
@@ -259,7 +272,7 @@ export default function Header({
                     playClick();
                     if (onSelectTab) onSelectTab(tab.id, { target: tab.id === "landing" ? "overview" : "top" });
                   }}
-                  className={`relative px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-mono transition-colors duration-200 tactile-btn flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 select-none portfolio-nav-link ${
+                  className={`relative px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-sans font-medium tracking-normal transition-colors duration-200 tactile-btn flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 select-none portfolio-nav-link ${
                     isActive
                       ? "active-pill text-white dark:text-slate-950 font-bold z-10"
                       : "text-slate-600 hover:text-slate-950 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-white/10"
@@ -327,7 +340,7 @@ export default function Header({
                 <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 ring-2 ring-white dark:ring-slate-950 z-20 pointer-events-none" />
               )}
               {tier === 'enterprise' && (
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-slate-950 dark:bg-white ring-2 ring-white dark:ring-slate-950 z-20 pointer-events-none shadow-xs" />
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-950 z-20 pointer-events-none shadow-xs" />
               )}
             </button>
           </Tooltip>

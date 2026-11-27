@@ -38,7 +38,20 @@ const RESERVED_SDK_NAMES = new Set([
   'hasFeature', 'isFeatureEnabled', 'getValue', 'getFeatureValue',
   'init', 'identify', 'logout', 'setTrait', 'getTrait', 'hasTrait',
   'getFlags', 'getAllFlags', 'useFlags', 'is_feature_enabled', 'get_feature_value',
-  'set_trait', 'get_trait', 'flags', 'client', 'flagsmith', 'identity', 'traits'
+  'set_trait', 'get_trait', 'flags', 'client', 'flagsmith', 'identity', 'traits',
+  // JavaScript Array / Object built-in prototypes & common collection methods
+  'length', 'forEach', 'map', 'filter', 'reduce', 'reduceRight',
+  'find', 'findIndex', 'findLast', 'findLastIndex', 'some', 'every',
+  'includes', 'indexOf', 'lastIndexOf', 'sort', 'reverse', 'slice', 'splice',
+  'push', 'pop', 'shift', 'unshift', 'concat', 'join', 'flat', 'flatMap',
+  'fill', 'copyWithin', 'entries', 'keys', 'values', 'toString', 'toLocaleString',
+  'valueOf', 'constructor', 'prototype', 'hasOwnProperty', 'isPrototypeOf',
+  'propertyIsEnumerable', 'apply', 'bind', 'call',
+  // Common object property access false positives
+  'status', 'state', 'data', 'result', 'error', 'name', 'type', 'id',
+  'count', 'items', 'enabled', 'disabled', 'value', 'options', 'config',
+  // Python dictionary & list built-ins
+  'append', 'extend', 'insert', 'remove', 'clear', 'index', 'update'
 ]);
 
 // File extensions eligible for static AST analysis
@@ -49,7 +62,8 @@ const SUPPORTED_EXTENSIONS = new Set([
 
 const IGNORED_DIRECTORIES = new Set([
   'node_modules', '.git', 'dist', 'build', 'coverage',
-  '.next', '.nuxt', '__pycache__', 'target', 'vendor', '.turbo'
+  '.next', '.nuxt', '__pycache__', 'target', 'vendor', '.turbo',
+  'test', 'tests', '__tests__', 'core', 'scripts', 'docs'
 ]);
 
 export class AstScanner {

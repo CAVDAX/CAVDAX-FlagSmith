@@ -29,6 +29,29 @@ import { playClick, playAlert, playApprovalChime, playRejectBuzz } from '../util
  * - Bi-directional Safe Toggle Protection: prevents breaking downstream features and validates upstream prerequisites.
  * - Monochromatic Obsidian aesthetic with strict zero-emoji discipline.
  */
+const JUNK_FLAG_NAMES = new Set([
+  'forEach', 'length', 'includes', 'sort', 'getValue', 'hasFeature', 'isFeatureEnabled',
+  'getFeatureValue', 'map', 'filter', 'slice', 'push', 'pop', 'shift', 'unshift',
+  'keys', 'values', 'entries', 'toString', 'toLocaleString', 'valueOf', 'apply', 'bind',
+  'call', 'reduce', 'reduceRight', 'find', 'findIndex', 'findLast', 'findLastIndex',
+  'some', 'every', 'concat', 'join', 'flat', 'flatMap', 'fill', 'copyWithin',
+  'status', 'state', 'data', 'result', 'error', 'name', 'type', 'id', 'count', 'items',
+  'enabled', 'disabled', 'value', 'options', 'config', 'append', 'extend', 'insert', 'remove', 'clear'
+]);
+
+function RadarIcon({ className = 'w-5 h-5', size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' className={className}>
+      <path d='M19.07 4.93A10 10 0 0 0 6.99 3.34' />
+      <path d='M4 6h.01' />
+      <path d='M2.29 9.62A10 10 0 1 0 21.31 8.35' />
+      <path d='M16.24 7.76A6 6 0 1 0 8.23 16.67' />
+      <circle cx='12' cy='12' r='2' />
+      <path d='m13.41 10.59 5.66-5.66' />
+    </svg>
+  );
+}
+
 export default function FlagBlastRadiusCard({ isDarkTheme = true, onSelectFlag }) {
   const [features, setFeatures] = useState([]);
   const [selectedFlagName, setSelectedFlagName] = useState('dark_mode');
@@ -121,7 +144,8 @@ export function AnalyticsDashboard() {
       const res = await fetch('/api/flagsmith/features');
       const data = await res.json();
       if (data.success && Array.isArray(data.features)) {
-        setFeatures(data.features);
+        const valid = data.features.filter(f => !JUNK_FLAG_NAMES.has(f.name));
+        setFeatures(valid);
         if (data.features.length > 0 && !selectedFlagName) {
           setSelectedFlagName(data.features[0].name);
         }
@@ -239,7 +263,7 @@ export function AnalyticsDashboard() {
         map.set(dep.name, dep);
       }
     }
-    return Array.from(map.values()).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
+    return Array.from(map.values()).filter(d => !JUNK_FLAG_NAMES.has(d.name)).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
   }, [blastRadius?.downstream_dependents]);
 
   const uniqueUpstream = React.useMemo(() => {
@@ -255,7 +279,7 @@ export function AnalyticsDashboard() {
         if (pre.depth && existing.depth && pre.depth < existing.depth) existing.depth = pre.depth;
       }
     }
-    return Array.from(map.values()).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
+    return Array.from(map.values()).filter(d => !JUNK_FLAG_NAMES.has(d.name)).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
   }, [blastRadius?.upstream_prerequisites]);
 
   // Compute Risk Tier styling
@@ -273,31 +297,31 @@ export function AnalyticsDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
-              <Zap className="w-5 h-5 text-amber-500" />
+            <div className="p-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white">
+              <RadarIcon size={18} className="w-4.5 h-4.5 text-current" />
             </div>
             <div>
-              <h2 className="text-lg font-bold tracking-tight">Flagsmith Blast Radius Radar</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 text-balance line-clamp-1">
+              <h2 className="text-base sm:text-lg font-bold tracking-tight">Flagsmith Blast Radius Radar</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl">
                 Real-time GraphBLAS topological dependency traversal across 3 signals.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Action Controls & Tab Switcher */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Action Controls & Tab Switcher (Unified single-line row, immune to wrapping) */}
+        <div className="flex items-center gap-2 shrink-0 flex-nowrap">
           {/* Tab Switcher: Radar vs AST */}
-          <div className="flex items-center p-1 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-medium">
+          <div className="flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-medium">
             <button
               onClick={() => { playClick(); setActiveTab('radar'); }}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all cursor-pointer ${
                 activeTab === 'radar'
-                  ? 'bg-white dark:bg-white/15 text-slate-900 dark:text-white font-bold shadow-sm'
+                  ? 'bg-white dark:bg-white/15 text-slate-900 dark:text-white font-semibold shadow-2xs'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <RadarIcon size={13} className="w-3.5 h-3.5 text-current" />
               <span>Topology Radar</span>
             </button>
             <button
@@ -432,23 +456,10 @@ export function AnalyticsDashboard() {
                     <button
                       onClick={() => handleSafeToggle(false)}
                       disabled={togglePending}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        blastRadius.enabled
-                          ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 hover:bg-rose-500/20'
-                          : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20'
-                      }`}
+                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/15 text-slate-800 dark:text-slate-100 transition-all cursor-pointer shadow-2xs hover:shadow-xs disabled:opacity-50"
                     >
-                      {blastRadius.enabled ? (
-                        <>
-                          <ToggleRight className="w-4 h-4" />
-                          <span>Disable</span>
-                        </>
-                      ) : (
-                        <>
-                          <ToggleLeft className="w-4 h-4" />
-                          <span>Enable</span>
-                        </>
-                      )}
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${blastRadius.enabled ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]' : 'bg-slate-400'}`} />
+                      <span>{blastRadius.enabled ? 'Turn Off' : 'Turn On'}</span>
                     </button>
                   </div>
                   <div className="mt-2 text-[10px] text-slate-400">
