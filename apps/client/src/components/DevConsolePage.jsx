@@ -45,10 +45,10 @@ function TierBadge({ tier }) {
 // ─── Metrics row ────────────────────────────────────────────────────────────
 function TelRow({ label, value, mono = true }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-1.5 border-b border-white/5 last:border-0">
-      <span className="text-[11px] text-slate-400 shrink-0">{label}</span>
-      <span className={`text-[11px] text-slate-200 text-right ${mono ? 'font-mono' : ''}`}>
-        {value ?? <span className="text-slate-600">—</span>}
+    <div className="flex items-baseline justify-between gap-4 py-1.5 border-b border-slate-100 dark:border-white/5 last:border-0">
+      <span className="text-[11px] text-slate-500 dark:text-slate-400 shrink-0">{label}</span>
+      <span className={`text-[11px] text-slate-800 dark:text-slate-200 text-right ${mono ? 'font-mono' : ''}`}>
+        {value ?? <span className="text-slate-400 dark:text-slate-500">—</span>}
       </span>
     </div>
   );
@@ -57,11 +57,11 @@ function TelRow({ label, value, mono = true }) {
 // ─── Section card (double-bezel geometry) ────────────────────────────────────
 function SectionCard({ icon: Icon, title, children, badge }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-[#0B0D11] p-4 flex flex-col gap-1 shadow-sm">
+    <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0B0D11] p-4 flex flex-col gap-1 shadow-xs">
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-slate-400 shrink-0" />
-          <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-widest">{title}</span>
+          <Icon className="h-4 w-4 text-slate-500 dark:text-slate-400 shrink-0" />
+          <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 uppercase tracking-widest">{title}</span>
         </div>
         {badge}
       </div>
@@ -221,14 +221,14 @@ export default function DevConsolePage() {
   const isHackathonActive = Boolean(data?.hackathon_mode);
 
   return (
-    <div className="h-full flex flex-col min-h-0 overflow-hidden bg-[#090A0C] text-slate-200">
+    <div className="h-full flex flex-col min-h-0 overflow-hidden bg-slate-50 dark:bg-[#090A0C] text-slate-800 dark:text-slate-200">
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-white/10 shrink-0 bg-[#0B0D11]">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-white/10 shrink-0 bg-white dark:bg-[#0B0D11]">
         <div className="flex items-center gap-2.5">
-          <Terminal className="h-4 w-4 text-emerald-400" />
-          <span className="text-sm font-semibold tracking-tight text-white font-mono">CAVDAX /dev</span>
-          <span className="text-[10px] font-mono text-slate-500 border border-white/10 px-2 py-0.5 rounded-full">
+          <Terminal className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
+          <span className="text-sm font-semibold tracking-tight text-slate-900 dark:text-white font-mono">CAVDAX /dev</span>
+          <span className="text-[10px] font-mono text-slate-500 border border-slate-200 dark:border-white/10 px-2 py-0.5 rounded-full">
             Toggle Wars Track 03
           </span>
         </div>
@@ -241,11 +241,11 @@ export default function DevConsolePage() {
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10
-                       bg-white/[0.04] hover:bg-white/[0.08] transition-colors duration-100
-                       text-[11px] font-medium text-slate-200 disabled:opacity-40 cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10
+                       bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] transition-colors duration-100
+                       text-[11px] font-medium text-slate-700 dark:text-slate-200 disabled:opacity-40 cursor-pointer"
           >
-            <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin text-emerald-400' : ''}`} />
+            <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin text-emerald-500 dark:text-emerald-400' : ''}`} />
             <span>Refresh</span>
           </button>
         </div>
@@ -255,31 +255,31 @@ export default function DevConsolePage() {
       <div className="flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-4">
 
         {/* ── Hackathon Evaluation Pass Banner ───────────────────────────── */}
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 dark:bg-emerald-500/10 p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
+            <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">
               <Check className="h-4 w-4" strokeWidth={2.5} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
                   {isHackathonActive ? 'Enterprise Hackathon Evaluation Mode Active' : 'Standard Operating Mode'}
                 </span>
-                <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-300 px-2 py-0.2 rounded border border-emerald-500/30">
+                <span className="text-[10px] font-mono bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">
                   Toggle Wars 2026
                 </span>
               </div>
-              <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed text-balance line-clamp-2">
+              <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-2xl leading-relaxed text-balance line-clamp-2">
                 All Enterprise tier boundaries, FalkorDB GraphBLAS traversal, and 6 published Flagsmith MCP tools are unrestricted for hackathon evaluators. Zero paywalls or repository connection caps.
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0 text-xs font-mono">
-            <div className="px-2.5 py-1 rounded bg-[#090A0C] border border-white/10 text-slate-300">
-              API: <span className="text-emerald-400 font-bold">1,200/min</span>
+            <div className="px-2.5 py-1 rounded bg-white dark:bg-[#090A0C] border border-emerald-500/20 dark:border-white/10 text-slate-700 dark:text-slate-300 shadow-xs">
+              API: <span className="text-emerald-600 dark:text-emerald-400 font-bold">1,200/min</span>
             </div>
-            <div className="px-2.5 py-1 rounded bg-[#090A0C] border border-white/10 text-slate-300">
-              MCP: <span className="text-emerald-400 font-bold">600/min</span>
+            <div className="px-2.5 py-1 rounded bg-white dark:bg-[#090A0C] border border-emerald-500/20 dark:border-white/10 text-slate-700 dark:text-slate-300 shadow-xs">
+              MCP: <span className="text-emerald-600 dark:text-emerald-400 font-bold">600/min</span>
             </div>
           </div>
         </div>
@@ -363,16 +363,16 @@ export default function DevConsolePage() {
         )}
 
         {/* ── Interactive Diagnostic Workbench ───────────────────────────── */}
-        <div className="rounded-xl border border-white/10 bg-[#0B0D11] p-4 flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-2 border-b border-white/5 pb-3">
+        <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0B0D11] p-4 flex flex-col gap-3 shadow-xs">
+          <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-white/5 pb-3">
             <div className="flex items-center gap-2">
-              <Play className="h-4 w-4 text-cyan-400" />
-              <span className="text-xs font-semibold text-white uppercase tracking-widest font-mono">
+              <Play className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
+              <span className="text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-widest font-mono">
                 Flagsmith Live Diagnostic Triggers
               </span>
             </div>
             {actionLatency && (
-              <span className="text-[11px] font-mono text-cyan-400">
+              <span className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400">
                 Last execution: {actionLatency} ms
               </span>
             )}
@@ -383,42 +383,46 @@ export default function DevConsolePage() {
             <button
               onClick={() => runDiagnostic('SYNC_FLAGS')}
               disabled={Boolean(activeAction)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-xs font-medium text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <RefreshCw className={`h-3 w-3 ${activeAction === 'SYNC_FLAGS' ? 'animate-spin text-emerald-400' : 'text-slate-400'}`} />
-              <span>1. Sync 3-Signal Mesh</span>
+              <RefreshCw className={`h-3 w-3 ${activeAction === 'SYNC_FLAGS' ? 'animate-spin text-emerald-500 dark:text-emerald-400' : 'text-slate-400'}`} />
+              <span className="font-mono text-slate-400 mr-0.5">1.</span>
+              <span>Sync 3-Signal Mesh</span>
             </button>
 
             <button
               onClick={() => runDiagnostic('AST_SCAN')}
               disabled={Boolean(activeAction)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-xs font-medium text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Code2 className={`h-3 w-3 ${activeAction === 'AST_SCAN' ? 'animate-spin text-cyan-400' : 'text-cyan-400'}`} />
-              <span>2. Scan Sample AST</span>
+              <Code2 className={`h-3 w-3 ${activeAction === 'AST_SCAN' ? 'animate-spin text-cyan-500 dark:text-cyan-400' : 'text-cyan-500 dark:text-cyan-400'}`} />
+              <span className="font-mono text-slate-400 mr-0.5">2.</span>
+              <span>Scan Sample AST</span>
             </button>
 
             <button
               onClick={() => runDiagnostic('AUDIT_STALE')}
               disabled={Boolean(activeAction)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-xs font-medium text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Clock className={`h-3 w-3 ${activeAction === 'AUDIT_STALE' ? 'animate-spin text-amber-400' : 'text-amber-400'}`} />
-              <span>3. Audit Stale Flags (Tool 6)</span>
+              <Clock className={`h-3 w-3 ${activeAction === 'AUDIT_STALE' ? 'animate-spin text-amber-500 dark:text-amber-400' : 'text-amber-500 dark:text-amber-400'}`} />
+              <span className="font-mono text-slate-400 mr-0.5">3.</span>
+              <span>Audit Stale Flags (Tool 6)</span>
             </button>
 
             <button
               onClick={() => runDiagnostic('BLAST_RADIUS')}
               disabled={Boolean(activeAction)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-xs font-medium text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Zap className={`h-3 w-3 ${activeAction === 'BLAST_RADIUS' ? 'animate-spin text-rose-400' : 'text-rose-400'}`} />
-              <span>4. Test Blast Radius Gate</span>
+              <Zap className={`h-3 w-3 ${activeAction === 'BLAST_RADIUS' ? 'animate-spin text-rose-500 dark:text-rose-400' : 'text-rose-500 dark:text-rose-400'}`} />
+              <span className="font-mono text-slate-400 mr-0.5">4.</span>
+              <span>Test Blast Radius Gate</span>
             </button>
           </div>
 
           {/* Execution Terminal Output Well */}
-          <div className="rounded-lg border border-white/5 bg-[#090A0C] p-3 font-mono text-xs overflow-x-auto min-h-[140px] max-h-[260px]">
+          <div className="rounded-lg border border-slate-200 dark:border-white/5 bg-[#090A0C] p-3 font-mono text-xs overflow-x-auto min-h-[140px] max-h-[260px] shadow-inner">
             {terminalLog ? (
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-[11px] text-slate-400 border-b border-white/5 pb-1 mb-2">
@@ -432,7 +436,7 @@ export default function DevConsolePage() {
                 </pre>
               </div>
             ) : (
-              <div className="text-slate-600 flex items-center justify-center h-full py-8">
+              <div className="text-slate-400 dark:text-slate-500 flex items-center justify-center h-full py-8">
                 <span>Select a diagnostic trigger above to inspect real-time FalkorDB and Flagsmith telemetry.</span>
               </div>
             )}
@@ -442,11 +446,11 @@ export default function DevConsolePage() {
       </div>
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
-      <div className="px-5 py-2.5 border-t border-white/10 shrink-0 bg-[#0B0D11] flex items-center justify-between">
+      <div className="px-5 py-2.5 border-t border-slate-200 dark:border-white/10 shrink-0 bg-white dark:bg-[#0B0D11] flex items-center justify-between">
         <span className="text-[10px] font-mono text-slate-500">
-          CAVDAX Developer Console • Track 03 Flagsmith Invariant Mesh
+          CAVDAX Developer Console — Track 03 Flagsmith Invariant Mesh
         </span>
-        <span className="text-[10px] font-mono text-emerald-400/80">
+        <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400/80">
           Evaluation Mode Active
         </span>
       </div>
