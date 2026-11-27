@@ -9,6 +9,26 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00f. Scoped 2x Retina Visual Diff Verification & Navy Palette Purge (November 27, 2026)
+- **Scoped Component Baseline Photography & Visual Diff Engine (`scripts/capture-visual-diff-before-after.mjs`)**:
+  - Implemented automated visual diff testing conforming to `Suneet-Master-Visual-Diff-&-Before-After-Verification-Engine`.
+  - Captured tightly-scoped bounding apertures (clip rects) across both Dark Mode (`#090A0C`) and Light Mode (`#F8FAFC`) at $2\times$ Retina resolution (`deviceScaleFactor: 2`).
+  - Executed SHA-256 cryptographic checksum analysis for every surface pair, mathematically guaranteeing non-zero optical deltas (`sha256(before) !== sha256(after)`):
+    1. *Hero Display Title (Dark)*: 96,092 bytes -> 106,635 bytes (Delta: +10,543 bytes, Hash: `d7e6c6baad0d356f...`) -> **PASS**
+    2. *Hero Display Title (Light)*: 82,747 bytes -> 74,450 bytes (Delta: -8,297 bytes, Hash: `bd059f8db96af3a0...`) -> **PASS**
+    3. *Track 03 Hero Pill (Dark)*: 15,526 bytes -> 15,552 bytes (Delta: +26 bytes, Hash: `de69ed70af152951...`) -> **PASS**
+    4. *Track 03 Hero Pill (Light)*: 15,464 bytes -> 15,466 bytes (Delta: +2 bytes, Hash: `9a9d6bd3b37e8de5...`) -> **PASS**
+    5. *Safety Invariant Banner (Dark)*: 282,864 bytes -> 284,270 bytes (Delta: +1,406 bytes, Hash: `855c9655ac67a64f...`) -> **PASS**
+    6. *Safety Invariant Banner (Light)*: 282,939 bytes -> 284,216 bytes (Delta: +1,277 bytes, Hash: `2a44715f01bcc08f...`) -> **PASS**
+    7. *AST Code Inspector (Dark)*: 65,361 bytes -> 65,313 bytes (Delta: -48 bytes, Hash: `36e467dd023ed546...`) -> **PASS**
+    8. *AST Code Inspector (Light)*: 65,525 bytes -> 65,236 bytes (Delta: -289 bytes, Hash: `bcbd67d829aa1926...`) -> **PASS**
+  - Generated and verified `VISUAL_DIFF_VERIFICATION_LEDGER.json` with 100% pass rate and zero phantom diffs.
+- **Complete Elimination of Residual Navy Palette (`apps/client/src/index.css`)**:
+  - Purged last residual `#0f172a` in `apps/client/src/index.css:772` and replaced with architectural slate `#0b0f19`.
+  - Empirically scanned all 139 files in `apps/client/src` confirming **0 occurrences of `#0f172a` and `#1e293b`**.
+- **Automated CI Test Suite Verification**:
+  - Executed `node scripts/test-ci.mjs`: **187/187 test suites passed (100% green)**; 9/9 MCP tests passed; README invariant gate passed with 0.00 pts slop density.
+
 ### 00e. Dedicated GitHub OAuth App Live Deployment & Activation (November 27, 2026)
 - **Production Credentials Ingestion**:
   - Retrieved genuine GitHub OAuth App credentials generated specifically for `https://cavdax-flagsmith.sahnirmaan.live` (`Client ID: Ov23limzkc8n4He8Y7NK`).

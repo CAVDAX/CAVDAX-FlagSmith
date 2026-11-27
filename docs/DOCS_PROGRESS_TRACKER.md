@@ -19,8 +19,9 @@
 | **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | ISM elimination, secret-guard pre-commit, zero-emoji UI |
 | **Sprint Phases & Milestones** | [`docs/PHASES.md`](./PHASES.md) | Tutorial / Guide | ✅ Up to date | 2026-11-27 | Phase 1–4 completed, Track 03 Flagsmith deployed |
 | **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 2-line max subtexts, Team AWDAX |
-| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00b (Flagsmith Track 03, npm OIDC, 185/185 passing tests) |
+| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00f (Scoped 2x Retina Visual Diff Verification, 187/187 tests) |
 | **Track 03 Hackathon Blueprint** | [`docs/TRACK03_BLUEPRINT.md`](./TRACK03_BLUEPRINT.md) | Strategic Spec | ✅ Up to date | 2026-11-27 | Judging rubric alignment, 3-signal discovery, gap analysis |
+| **AI Slop Forensic Master** | [`docs/AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md`](./AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md) | Audit Ledger | ✅ Up to date | 2026-11-27 | 59 CheckCircle2 purged, ShieldAlert replaced, 0 navy |
 
 ---
 
