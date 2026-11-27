@@ -9,17 +9,20 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
-### 00o. Single-Line Hero Heading, Console-Dimensioned Flag Radar & Tag Border Purge (November 27, 2026)
-- **Single-Line Hero Headline Refactor (`LandingPage.jsx`)**:
+### 00o. Single-Line Hero Heading, Console-Dimensioned Flag Radar & Tag Border Purge (November 27–28, 2026)
+- **Single-Line Hero Headline & Track 03 Banner Unboxing (`LandingPage.jsx`)**:
   - *Elimination of 2-Line Heading Wrap*: Refactored the primary hero headline from multi-line wrapped `Eliminating Blind Feature Flag Toggles` to `Eliminate Blind Flag Toggles`.
   - *Hard Non-Wrapping Constraint*: Enforced `whitespace-nowrap` with responsive font sizing (`text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-[3.75rem] xl:text-[4.25rem] font-black tracking-tight leading-[1.08]`), ensuring the main headline strictly occupies 1 single physical line on screen.
   - *Kinetic Rolling Preservation*: Preserved the secondary kinetic rolling headline below the main title without semantic interference.
+  - *Purge of AI-Slop Button Enclosures*: Removed `border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] hover:border-slate-300` and pill shadow from the Track 03 banner button. Replaced with clean minimalist typography and unboxed `TRACK 03` amber text.
 - **Spacious Console-Dimensioned Flag Radar Layout (`App.jsx`, `FlagBlastRadiusCard.jsx`)**:
   - *Parent Container Alignment (`App.jsx`)*: Replaced constrained `max-w-7xl` container with full-width spacious console dimensions matching `/console` (`max-w-[1600px] w-full mx-auto px-3 sm:px-6 pt-20 sm:pt-22 pb-8 flex-1 min-h-0`).
   - *Unboxed Full-Width Card Shell (`FlagBlastRadiusCard.jsx`)*: Removed constraining `max-w-4xl mx-auto`. Expanded shell to `w-full flex-1 flex flex-col justify-between p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-[#0B0D11]/90 backdrop-blur-2xl shadow-2xl`, eliminating the cramped "toy" card aesthetic entirely.
+  - *Radar Icon Plate Unboxing*: Stripped `bg-slate-100 dark:bg-white/5 border border-slate-200/80 dark:border-white/10` from the header icon container, liberating the radar instrument into pure unboxed geometry.
   - *Spacious 3-Column Telemetry Grid*: Expanded columns with generous `p-6` card padding, responsive typography, and increased vertical list height (`max-h-72 sm:max-h-80`) for downstream dependents and upstream prerequisites.
-- **Ruthless AI Slop Tag Border Purge (`FlagBlastRadiusCard.jsx`)**:
-  - *3-Signal Provenance Bar*: Completely removed badge box rectangles and borders around `[SIG-1]`, `[SIG-2]`, and `[SIG-3]`. Replaced with clean monochromatic typography with colored monospace text (`text-indigo-500`, `text-cyan-500`, `text-amber-500`) and clean dividing rules.
+- **Ruthless AI Slop Tag Border & Bracket Purge (`FlagBlastRadiusCard.jsx`)**:
+  - *Bracket Elimination*: Purged enclosing brackets from `[SIG-1]`, `[SIG-2]`, `[SIG-3]`, rendering them as clean colored monospace identifiers `SIG-1`, `SIG-2`, `SIG-3`.
+  - *3-Signal Provenance Bar*: Completely removed badge box rectangles and borders around signal tags. Replaced with clean monochromatic typography with colored monospace text (`text-indigo-500`, `text-cyan-500`, `text-amber-500`) and clean dividing rules.
   - *Risk Tier Badges*: Stripped heavy pill borders and background rectangles around `HIGH RISK`, `LOW RISK`, `CRITICAL RISK`. Now rendered with clean typographic color indicators.
   - *Upstream Prerequisites*: Stripped `border-emerald-300` and `border-amber-300` rounded-full badge pills from `SATISFIED` / `MISSING`. Now rendered as crisp, unbordered monospace colored text.
   - *Feature Selector Pillbar*: Stripped badge borders from `{feat.incoming_dependents} DEP`, preserving clean monospace text contrast.

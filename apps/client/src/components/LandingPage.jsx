@@ -895,9 +895,9 @@ export default function LandingPage({
               playClick();
               if (onSelectTab) onSelectTab('flags');
             }}
-            className="group inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-md border border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 transition-all text-xs font-sans font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-2xs hover:shadow-xs"
+            className="group inline-flex items-center gap-2.5 px-3 py-1.5 text-xs font-sans font-medium text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer select-none"
           >
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-200/90 dark:bg-white/10 text-slate-800 dark:text-slate-200">TRACK 03</span>
+            <span className="font-mono text-[11px] font-bold text-amber-600 dark:text-amber-400">TRACK 03</span>
             <span className="font-semibold text-slate-900 dark:text-slate-100 tracking-tight">Flagsmith Blast Radius Radar</span>
             <span className="text-slate-400 dark:text-slate-500 font-mono text-[11px]">&amp; MCP Gate</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white" />

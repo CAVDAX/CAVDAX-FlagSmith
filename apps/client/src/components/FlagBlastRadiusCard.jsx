@@ -349,9 +349,7 @@ export function AnalyticsDashboard() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 dark:border-white/10">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-slate-900 dark:text-white shrink-0">
-              <RadarIcon size={22} className="w-5 h-5 text-current" />
-            </div>
+            <RadarIcon size={24} className="w-6 h-6 text-slate-900 dark:text-white shrink-0" />
             <div>
               <h2 className="text-lg sm:text-xl font-bold tracking-tight font-mono text-slate-950 dark:text-white">Flagsmith Blast Radius Radar</h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mt-0.5">
@@ -912,17 +910,17 @@ export function AnalyticsDashboard() {
       <div className="mt-8 pt-5 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-xs font-bold text-indigo-500 dark:text-indigo-400">[SIG-1]</span>
+            <span className="font-mono text-xs font-bold text-indigo-500 dark:text-indigo-400">SIG-1</span>
             <span className="text-slate-600 dark:text-slate-300 font-medium">Tags (c=1.0)</span>
           </div>
           <div className="w-[1px] h-3.5 bg-slate-300 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-xs font-bold text-cyan-500 dark:text-cyan-400">[SIG-2]</span>
+            <span className="font-mono text-xs font-bold text-cyan-500 dark:text-cyan-400">SIG-2</span>
             <span className="text-slate-600 dark:text-slate-300 font-medium">AST Static</span>
           </div>
           <div className="w-[1px] h-3.5 bg-slate-300 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-xs font-bold text-amber-500 dark:text-amber-400">[SIG-3]</span>
+            <span className="font-mono text-xs font-bold text-amber-500 dark:text-amber-400">SIG-3</span>
             <span className="text-slate-600 dark:text-slate-300 font-medium">Git Temporal (Jaccard)</span>
           </div>
         </div>
