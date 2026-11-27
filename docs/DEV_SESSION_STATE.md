@@ -12388,3 +12388,33 @@ A complete visual and architectural transformation has been executed across the 
   - Automated client production build (`npm run build`) passing cleanly in 24.83s with zero bundle regressions.
   - Backend automated test suite passing with 151/151 tests passed, 0 failures.
   - Captured Headless Puppeteer visual audits for both themes: `boundary-card-dark.png`, `boundary-card-light.png`, `boundary-card-dark-diagnostics.png`, `boundary-card-light-diagnostics.png`.
+
+
+### Milestone 2026-11-27: Flagsmith API Reverse Proxy Remediation & Static Asset MIME Routing Fix
+
+- **Root Cause Forensic Diagnosis**:
+  - Investigated user-reported console errors on `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`:
+    - `Refused to apply style from '.../static/main.6679d33b0c46ddc0.css' because its MIME type ('text/html') is not a supported stylesheet MIME type`
+    - `Failed to load resource: the server responded with a status of 404 (main.6679d33b0c46ddc0.js)`
+    - `Refused to execute script from '.../static/main.6679d33b0c46ddc0.js'`
+    - `content.js:18 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'useCache')`
+    - `v1/:1 Unchecked runtime.lastError: Could not establish connection. Receiving end does not exist.`
+  - Forensic audit confirmed:
+    - Real bug: Django REST Framework and Flagsmith built-in frontend request `/static/*`, `/config/*`, and `/version*` at root level. `infra/Caddyfile` lacked explicit handlers for these, causing requests to fall through to `client:5173` (Vite SPA), which served `index.html` (MIME `text/html`) with HTTP 200, triggering strict browser MIME check failures.
+    - Non-bug / false alarm: `content.js` and `runtime.lastError` are third-party browser extension artifacts (e.g., React DevTools, password managers) attempting extension port connections, not codebase errors.
+
+- **Infrastructure & Routing Overhaul (`infra/Caddyfile`)**:
+  - Added `redir /flagsmith /flagsmith/ 308` for trailing slash normalization.
+  - Added `handle /static/* { reverse_proxy flagsmith-api:8000 }` to proxy all Django static assets (CSS, JS, fonts).
+  - Added `handle /config/* { reverse_proxy flagsmith-api:8000 }` to proxy runtime configuration overrides.
+  - Added `handle /version* { reverse_proxy flagsmith-api:8000 }` to proxy version health probes.
+
+- **Production Deployment & Verification**:
+  - Deployed commits `c1a35b4`, `40c2d7f`, and `512269d` to `origin main`.
+  - Pulled on production EC2 gateway (`ubuntu@15.135.78.65`) and restarted `cavdax-caddy`.
+  - Verified public HTTP headers via curl:
+    - `/static/main.6679d33b0c46ddc0.css` -> HTTP 200 `Content-Type: text/css; charset="utf-8"`
+    - `/static/main.6679d33b0c46ddc0.js` -> HTTP 200 `Content-Type: text/javascript; charset="utf-8"`
+    - `/config/project-overrides` -> HTTP 200 `Content-Type: application/javascript`
+  - Executed automated headless Chrome Puppeteer audit on `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`:
+    - Result: `HTTP Status: 200`, `Page Title: Flagsmith`, `Console Errors: []` (zero console errors, zero MIME mismatches).

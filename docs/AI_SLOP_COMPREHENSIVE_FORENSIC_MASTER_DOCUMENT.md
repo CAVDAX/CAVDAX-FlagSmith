@@ -170,3 +170,57 @@ All 6 surfaces captured at $2\times$ Retina across Dark and Light modes using `s
 - **Mechanical Anti-Slop README Harness**: **0 S1 violations, 0 S2 warnings, 0.00 pts slop density**.
 - **Live Production Runtime**: Tested via headless Chrome Puppeteer with **0 console errors** and **0 network failures**.
 - **Git Commits**: Landed in commits `e4430c5`, `b62586c`, `4b279d6`, `482d6ea`, `e73129e`, and `483d685` on branch `main`.
+
+---
+
+## 7. Django REST Framework & Flagsmith Static Asset Routing Remediation (`/flagsmith/api/v1/`)
+
+### Forensic Problem Statement:
+When accessing the Flagsmith API UI directly at `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`, the browser reported:
+1. `Refused to apply style from 'https://cavdax-flagsmith.sahnirmaan.live/static/main.6679d33b0c46ddc0.css' because its MIME type ('text/html') is not a supported stylesheet MIME type, and strict MIME checking is enabled.`
+2. `Failed to load resource: 404 (main.6679d33b0c46ddc0.js)`
+3. `Refused to execute script from '.../static/main.6679d33b0c46ddc0.js' because its MIME type ('') is not executable.`
+4. `content.js:18 Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'useCache')`
+5. `Unchecked runtime.lastError: Could not establish connection. Receiving end does not exist.`
+
+### Forensic Root Cause Breakdown (Devil's Advocate Analysis):
+- **Real Production Gateway Bug (Static Asset Route Leak)**:
+  - Django REST Framework and Flagsmith built-in client request assets from the root path (`/static/*`), runtime project configuration (`/config/project-overrides`), and health probes (`/version*`).
+  - Previously, `infra/Caddyfile` only routed `/api/*` and `/flagsmith/*` to `flagsmith-api:8000`.
+  - All other routes fell through to `client:5173` (the React Vite SPA), which served `index.html` with HTTP 200 for any unrecognized route.
+  - The browser received an HTML document when requesting a stylesheet or script, triggering strict MIME check blocks (`text/html` refused as stylesheet/script).
+- **Client Extension Artifacts (Harmless False Alarms)**:
+  - `content.js:18 TypeError: Cannot read properties of undefined (reading 'useCache')` and `runtime.lastError: Could not establish connection` originate from client-side third-party browser extensions (e.g., React DevTools, password managers, or ad blockers) attempting to establish extension messaging ports. They are not bugs in CAVDAX or Flagsmith code.
+
+### Surgical Infrastructure Remediation:
+In `infra/Caddyfile`, added explicit reverse proxy blocks for Django and Flagsmith root endpoints:
+```caddy
+# Flagsmith Django root static assets (CSS, JS, images)
+handle /static/* {
+    reverse_proxy flagsmith-api:8000
+}
+
+# Flagsmith UI runtime project configuration overrides
+handle /config/* {
+    reverse_proxy flagsmith-api:8000
+}
+
+# Flagsmith version probe endpoint
+handle /version* {
+    reverse_proxy flagsmith-api:8000
+}
+
+# Trailing slash normalization
+redir /flagsmith /flagsmith/ 308
+```
+
+### Verification & Empirical Attestation:
+1. **Public HTTP Curl Validation**:
+   - `GET /static/main.6679d33b0c46ddc0.css`: `HTTP/1.1 200 OK`, `Content-Type: text/css; charset="utf-8"`, `flagsmith-version: 2.295.2`.
+   - `GET /static/main.6679d33b0c46ddc0.js`: `HTTP/1.1 200 OK`, `Content-Type: text/javascript; charset="utf-8"`.
+   - `GET /config/project-overrides`: `HTTP/1.1 200 OK`, `Content-Type: application/javascript`.
+   - `GET /version`: `HTTP/1.1 200 OK`, `Content-Type: application/json`.
+2. **Headless Chrome Puppeteer Audit**:
+   - URL: `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`
+   - Result: `HTTP Status: 200`, `Page Title: Flagsmith`, `Console Errors: []` (100% clean).
+3. **Git Commits**: Landed in `c1a35b4`, `40c2d7f`, and `512269d` on branch `main`.
