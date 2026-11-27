@@ -73,10 +73,9 @@ export default class SubsystemErrorBoundary extends React.Component {
       <div className="flex-1 min-h-[460px] flex items-center justify-center p-4 sm:p-6 select-none bg-transparent">
         <div className="relative w-full max-w-md rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white/95 dark:bg-[#0B0D11] p-6 sm:p-8 shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] backdrop-blur-md overflow-hidden text-center flex flex-col items-center">
           
-          {/* Subtle blueprint matrix & specular glow */}
+          {/* Subtle blueprint matrix */}
           <div className="pointer-events-none absolute inset-0 overflow-hidden z-0" aria-hidden="true">
             <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] dark:bg-[radial-gradient(#64748b_1px,transparent_1px)] [background-size:16px_16px] opacity-15 dark:opacity-25" />
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-24 bg-amber-500/10 dark:bg-amber-400/[0.06] blur-2xl rounded-full" />
           </div>
 
           <div className="relative z-10 flex flex-col items-center w-full">

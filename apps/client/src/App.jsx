@@ -153,16 +153,21 @@ const TAB_TO_PATH = {
 
 const BASELINE_ACT1_GRAPH = {
   nodes: [
-    { id: 'ADR-001', label: 'Source', title: 'Adopt TokenAuth v1 for Payment Gateway', status: 'ACTIVE', type: 'ADR' },
-    { id: 'F-Auth-v1', label: 'Fact', claim: 'Payment services require TokenAuth v1', is_stale: false, verified: true },
-    { id: 'DEC-102', label: 'Decision', title: 'Generate Checkout Service with TokenAuth v1', status: 'VALID' },
-    { id: 'ADR-002', label: 'Source', title: 'Mandatory Migration to OAuth2; TokenAuth v1 Decommissioned', status: 'ACTIVE', type: 'ADR' },
-    { id: 'F-OAuth2', label: 'Fact', claim: 'OAuth2 is strictly enforced; TokenAuth v1 prohibited', is_stale: false, verified: true }
+    { id: 'theme_system', name: 'theme_system', label: 'FlagsmithFeature', title: 'theme_system', status: 'ENABLED', type: 'Prerequisite' },
+    { id: 'auth_v2', name: 'auth_v2', label: 'FlagsmithFeature', title: 'auth_v2', status: 'ENABLED', type: 'Prerequisite' },
+    { id: 'dark_mode', name: 'dark_mode', label: 'FlagsmithFeature', title: 'dark_mode', status: 'ENABLED', type: 'Feature' },
+    { id: 'premium_analytics', name: 'premium_analytics', label: 'FlagsmithFeature', title: 'premium_analytics', status: 'ENABLED', type: 'Feature' },
+    { id: 'analytics_dashboard', name: 'analytics_dashboard', label: 'FlagsmithFeature', title: 'analytics_dashboard', status: 'ENABLED', type: 'Dependent' },
+    { id: 'ref_theme_provider', name: 'src/theme/provider.tsx', label: 'CodeReference', title: 'ThemeContext', status: 'ACTIVE', type: 'CodeReference' },
+    { id: 'ref_analytics_panel', name: 'src/components/AnalyticsPanel.tsx', label: 'CodeReference', title: 'AnalyticsTracker', status: 'ACTIVE', type: 'CodeReference' }
   ],
   edges: [
-    { source: 'F-Auth-v1', target: 'ADR-001', type: 'EXTRACTED_FROM' },
-    { source: 'DEC-102', target: 'F-Auth-v1', type: 'DEPENDS_ON' },
-    { source: 'F-OAuth2', target: 'ADR-002', type: 'EXTRACTED_FROM' }
+    { source: 'dark_mode', target: 'theme_system', type: 'DEPENDS_ON' },
+    { source: 'premium_analytics', target: 'dark_mode', type: 'DEPENDS_ON' },
+    { source: 'premium_analytics', target: 'auth_v2', type: 'DEPENDS_ON' },
+    { source: 'analytics_dashboard', target: 'premium_analytics', type: 'DEPENDS_ON' },
+    { source: 'ref_theme_provider', target: 'dark_mode', type: 'GUARDS' },
+    { source: 'ref_analytics_panel', target: 'premium_analytics', type: 'GUARDS' }
   ]
 };
 
@@ -1191,13 +1196,12 @@ export default function App() {
   function _simulateAct2() {
     setGraphData(prev => {
       const nodes = prev.nodes.map(n => {
-        if (n.id === 'ADR-001') return { ...n, status: 'SUPERSEDED' };
-        if (n.id === 'F-Auth-v1') return { ...n, is_stale: true };
-        if (n.id === 'DEC-102') return { ...n, status: 'INVALIDATED_NEEDS_REVALIDATION' };
+        if (n.id === 'dark_mode') return { ...n, status: 'TOGGLE_TARGET' };
+        if (n.id === 'premium_analytics') return { ...n, status: 'IMPACTED_HOP1' };
+        if (n.id === 'analytics_dashboard') return { ...n, status: 'IMPACTED_HOP2' };
         return n;
       });
-      const edges = [...prev.edges, { source: 'ADR-002', target: 'ADR-001', type: 'SUPERSEDES' }];
-      return { nodes, edges };
+      return { nodes, edges: prev.edges };
     });
     return { simulated: true };
   }
@@ -1205,50 +1209,61 @@ export default function App() {
   function _simulateAct3Block() {
     const actionId = `act-${Date.now()}`;
     setGraphData(prev => {
-      // Clean up DEC-103 and prior actions so Act 3 is cleanly focused on the blocked DEC-102 attempt
-      const cleanNodes = prev.nodes
-        .filter(n => n.id !== 'DEC-103' && !n.id.startsWith('act-'))
-        .map(n => n.id === 'DEC-102' ? { ...n, status: 'INVALIDATED_NEEDS_REVALIDATION' } : n);
-      const cleanEdges = prev.edges.filter(e =>
-        e.source !== 'DEC-103' && e.target !== 'DEC-103' && !e.source.startsWith('act-')
-      );
+      const cleanNodes = prev.nodes.filter(n => !n.id.startsWith('act-'));
+      const cleanEdges = prev.edges.filter(e => !e.source.startsWith('act-'));
       return {
-        nodes: [...cleanNodes, { id: actionId, label: 'AgentAction', target_file: 'demo-repo/src/services/payment.js', status: 'BLOCKED_SUPERSEDED_SOURCE', timestamp: Date.now() }],
-        edges: [...cleanEdges, { source: actionId, target: 'DEC-102', type: 'GROUNDED_IN' }]
+        nodes: [
+          ...cleanNodes,
+          {
+            id: actionId,
+            label: 'AgentAction',
+            name: 'safe_toggle_flag',
+            flag_name: 'dark_mode',
+            target_file: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+            status: 'BLOCKED_HIGH_BLAST_RADIUS',
+            timestamp: Date.now()
+          }
+        ],
+        edges: [
+          ...cleanEdges,
+          { source: actionId, target: 'dark_mode', type: 'GROUNDED_IN' }
+        ]
       };
     });
     return {
-      gate_verdict: 'BLOCKED_SUPERSEDED_SOURCE',
+      gate_verdict: 'BLOCKED_HIGH_BLAST_RADIUS',
       simulated: true,
-      violation_paths: [['Source:ADR-001 (SUPERSEDED)', 'Fact:F-Auth-v1 (STALE)', 'Decision:DEC-102']]
+      violation_paths: [
+        ['FlagsmithFeature:dark_mode', 'Downstream:premium_analytics (Hop 1)', 'Downstream:analytics_dashboard (Hop 2)']
+      ]
     };
   }
 
-  function _simulateAct4Approve(oauthCode) {
+  function _simulateAct4Approve() {
+    const actionId = `act-${Date.now()}`;
     setGraphData(prev => {
-      const nodesWithoutPrevExec = prev.nodes.filter(n => !(n.label === 'AgentAction' && (n.decision_id === 'DEC-103' || n.status === 'EXECUTED')));
-      const nodes = nodesWithoutPrevExec.map(n => n.id === 'DEC-102' ? { ...n, status: 'REPLACED_ARCHIVED' } : n);
-      const hasD103 = nodes.some(n => n.id === 'DEC-103');
-      const actionId = `act-${Date.now()}`;
-      const newNodes = hasD103
-        ? [...nodes, { id: actionId, label: 'AgentAction', target_file: 'demo-repo/src/services/payment.js', status: 'EXECUTED', timestamp: Date.now() }]
-        : [
-            ...nodes,
-            { id: 'DEC-103', label: 'Decision', title: 'Scaffold Payment Gateway with OAuth2 (JWT/RS256)', status: 'VALID' },
-            { id: actionId, label: 'AgentAction', target_file: 'demo-repo/src/services/payment.js', status: 'EXECUTED', timestamp: Date.now() }
-          ];
-      const hasD103Edge = prev.edges.some(e => e.source === 'DEC-103' && e.target === 'F-OAuth2' && e.type === 'DEPENDS_ON');
-      const newEdges = [
-        ...prev.edges.filter(e => !(e.source.startsWith('act-') && e.target === 'DEC-103')),
-        ...(hasD103Edge ? [] : [
-          { source: 'DEC-103', target: 'F-OAuth2', type: 'DEPENDS_ON' },
-          { source: 'DEC-103', target: 'DEC-102', type: 'REPLACES' }
-        ]),
-        { source: actionId, target: 'DEC-103', type: 'GROUNDED_IN' }
-      ];
-      return { nodes: newNodes, edges: newEdges };
+      const cleanNodes = prev.nodes.filter(n => !n.id.startsWith('act-'));
+      const cleanEdges = prev.edges.filter(e => !e.source.startsWith('act-'));
+      return {
+        nodes: [
+          ...cleanNodes,
+          {
+            id: actionId,
+            label: 'AgentAction',
+            name: 'safe_toggle_flag',
+            flag_name: 'dark_mode',
+            target_file: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+            status: 'EXECUTED',
+            timestamp: Date.now()
+          }
+        ],
+        edges: [
+          ...cleanEdges,
+          { source: actionId, target: 'dark_mode', type: 'GROUNDED_IN' }
+        ]
+      };
     });
-    return { gate_verdict: 'APPROVED', simulated: true };
+    return { gate_verdict: 'APPROVED', simulated: true, latency_ms: 3.2 };
   }
 
   // Core act executor — contains the actual API calls and state mutations for
@@ -1359,20 +1374,10 @@ export default function App() {
         // Simulate revalidation in-browser
         isRevalSimulated = true;
         setGraphData(prev => {
-          const nodes = prev.nodes.map(n => n.id === 'DEC-102' ? { ...n, status: 'REPLACED_ARCHIVED' } : n);
-          const hasD103 = nodes.some(n => n.id === 'DEC-103');
-          const hasD103Edge = prev.edges.some(e => e.source === 'DEC-103' && e.target === 'F-OAuth2' && e.type === 'DEPENDS_ON');
-          const newEdges = hasD103Edge ? prev.edges : [
-            ...prev.edges,
-            { source: 'DEC-103', target: 'F-OAuth2', type: 'DEPENDS_ON' },
-            { source: 'DEC-103', target: 'DEC-102', type: 'REPLACES' }
-          ];
-          return {
-            nodes: hasD103 ? nodes : [...nodes, { id: 'DEC-103', label: 'Decision', title: 'Topological Safe Cutover with Dynamic Theme Fallback', status: 'VALID' }],
-            edges: newEdges
-          };
+          const nodes = prev.nodes.map(n => n.id === 'dark_mode' ? { ...n, status: 'CUTOVER_SAFE' } : n);
+          return { nodes, edges: prev.edges };
         });
-        addLog('SYSTEM', 'Notice: Backend offline — simulating revalidation in-browser.', 'INFO');
+        addLog('SYSTEM', 'Notice: Backend offline — simulating safe cutover in-browser.', 'INFO');
       }
       setLatestAction({
         filePath: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
@@ -1380,9 +1385,9 @@ export default function App() {
         codeSnippet: `// REVALIDATED SAFE TOGGLE WITH TOPOLOGICAL FALLBACK:\nawait flagsmith.setFeatureState('dark_mode', false, {\n  fallback: 'light_mode_v2',\n  downstreamSafe: true\n});\n// FalkorDB verified: zero runtime breaks across 2 downstream dependents.`
       });
       if (isRevalSimulated) {
-        addLog('SIMULATION', 'In-memory revalidation simulated: DEC-103 created; DEC-102 archived. [SIMULATION FALLBACK]', 'REVALIDATION');
+        addLog('SIMULATION', 'In-memory safe cutover simulated: dark_mode cutover approved with dynamic fallback. [SIMULATION FALLBACK]', 'REVALIDATION');
       } else {
-        addLog('FALKORDB', 'Query 3 Revalidation complete: DEC-103 created; DEC-102 archived.', 'REVALIDATION');
+        addLog('FALKORDB', 'Query 3 Safe cutover complete: dark_mode cutover approved with dynamic fallback.', 'REVALIDATION');
       }
 
       setAgentState('executing');
@@ -1416,9 +1421,9 @@ export default function App() {
       setAgentState('verified');
       playApprovalChime();
       if (isExecSimulated) {
-        addLog('MCP_GATE', `GATE APPROVED [SIMULATION FALLBACK]. Full causal provenance chain simulated. File 'payment.js' simulated in-memory.`, 'GATE_APPROVE');
+        addLog('MCP_GATE', `GATE APPROVED [SIMULATION FALLBACK]. Full causal provenance chain verified. Feature flag 'dark_mode' safely cut over in Flagsmith.`, 'GATE_APPROVE');
       } else {
-        addLog('MCP_GATE', `GATE APPROVED in ${execData.latency_ms}ms! Full causal provenance chain verified. File 'payment.js' safely written to disk.`, 'GATE_APPROVE');
+        addLog('MCP_GATE', `GATE APPROVED in ${execData.latency_ms}ms! Full causal provenance chain verified. Feature flag 'dark_mode' safely cut over in Flagsmith.`, 'GATE_APPROVE');
       }
     }
   }
@@ -1482,7 +1487,7 @@ export default function App() {
 
       const resetMsg = data.simulated
         ? 'Demo repository reset to Act I baseline [SIMULATION FALLBACK].'
-        : 'Demo repository and FalkorDB causal graph reset to Act I baseline.';
+        : 'Demo repository and FalkorDB causal feature mesh reset to Act I baseline.';
 
       setTerminalLogs([
         {
@@ -1494,9 +1499,9 @@ export default function App() {
       ]);
 
       setLatestAction({
-        filePath: 'demo-repo/src/services/payment.js',
-        decisionId: 'DEC-102',
-        codeSnippet: `// Baseline: Unimplemented checkout route awaiting agent implementation\napp.post('/api/checkout', (req, res) => {\n  res.status(501).json({ error: 'Checkout route not implemented yet.' });\n});`
+        filePath: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+        decisionId: 'FLAG:dark_mode',
+        codeSnippet: `// Flagsmith Client initialization & feature evaluation:\nconst flags = await flagsmith.getFlags(['dark_mode', 'premium_analytics']);\nif (flags.isFeatureEnabled('dark_mode')) {\n  mountObsidianTheme();\n  // Downstream analytics initialized...\n}`
       });
     } catch (err) {
       console.error('Reset error:', err);

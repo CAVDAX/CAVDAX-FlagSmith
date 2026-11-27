@@ -1177,7 +1177,7 @@ export default function ConnectedRepoWorkspace({
       {noAdrs && pr && (
         <StateCard icon={<GitPullRequest className="w-6 h-6 text-slate-700 dark:text-slate-300" />}
           title={`Pull request #${pr.number} is waiting for review`}
-          body={<>Review the starter ADR on GitHub and merge it into <strong className="font-mono text-slate-950 dark:text-white">{scan?.branch || selectedBranch}</strong>. Then rescan and CAVDAX will build the decision graph from it.</>}
+          body={<>Review the starter Flagsmith configuration on GitHub and merge it into <strong className="font-mono text-slate-950 dark:text-white">{scan?.branch || selectedBranch}</strong>. Then rescan and CAVDAX will build the feature flag blast radius graph from it.</>}
           actions={
             <div className="grid grid-cols-2 gap-2">
               <a href={pr.url} target="_blank" rel="noopener noreferrer" className={`${btnPrimary} no-underline`}>
@@ -1217,12 +1217,12 @@ export default function ConnectedRepoWorkspace({
             <div className="w-full h-full min-w-[320px] flex flex-col overflow-hidden">
             <div className="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 text-xs font-mono bg-slate-50/80 dark:bg-white/[0.02]">
               <div className="flex items-center gap-2 min-w-0">
-                <Tooltip content={isAdrSectionCollapsed ? "Expand ADR list" : "Collapse ADR list"} position="bottom">
+                <Tooltip content={isAdrSectionCollapsed ? "Expand Flag list" : "Collapse Flag list"} position="bottom">
                   <button
                     type="button"
                     onClick={() => { playClick(); setIsAdrSectionCollapsed(prev => !prev); }}
                     className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-white/10 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer flex items-center justify-center shrink-0"
-                    aria-label={isAdrSectionCollapsed ? "Expand ADR list" : "Collapse ADR list"}
+                    aria-label={isAdrSectionCollapsed ? "Expand Flag list" : "Collapse Flag list"}
                     aria-expanded={!isAdrSectionCollapsed}
                   >
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ease-out ${isAdrSectionCollapsed ? '-rotate-90' : 'rotate-0'}`} />
@@ -1253,7 +1253,7 @@ export default function ConnectedRepoWorkspace({
                     type="button"
                     onClick={() => setIsLeftCollapsed(true)}
                     className="p-1 rounded-md text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-white/10 transition-colors cursor-pointer shrink-0 hidden lg:flex items-center justify-center"
-                    aria-label="Collapse ADR Panel"
+                    aria-label="Collapse Flags Panel"
                   >
                     <PanelLeftClose className="w-3.5 h-3.5 stroke-[1.75]" />
                   </button>

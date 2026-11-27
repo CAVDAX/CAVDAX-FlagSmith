@@ -241,83 +241,172 @@ export async function fetchGraphState(graph, { repo = null } = {}) {
  * Initializes the demo state with ADR-001 (Active), Fact (Auth v1, Fresh), and Decision #102 (Valid).
  */
 export async function seedDemoGraph(graph) {
-  console.log('[FalkorDB] Clearing and seeding demo graph...');
-  // Scoped deletion: only delete demo nodes to prevent tenant data wiping (Fix H11)
+  console.log('[FalkorDB] Clearing and seeding Flagsmith demo graph...');
+  // Scoped deletion: delete demo nodes
   await graph.query(`
     MATCH (n)
-    WHERE n.is_demo = true OR n.id IN ['ADR-001', 'ADR-002', 'DEC-101', 'DEC-102', 'DEC-103', 'F-Auth-v1', 'F-OAuth2']
+    WHERE n.is_demo = true OR n.id IN ['ADR-001', 'ADR-002', 'DEC-101', 'DEC-102', 'DEC-103', 'F-Auth-v1', 'F-OAuth2', 'theme_system', 'auth_v2', 'dark_mode', 'premium_analytics', 'analytics_dashboard', 'beta_streaming', 'video_player_v2']
     DETACH DELETE n
   `);
 
   const cypher = `
-    // 1. Initial Source (ADR-001)
-    CREATE (s1:Source {
-      id: 'ADR-001',
-      ref: 'docs/adrs/ADR-001.md',
-      type: 'ADR',
-      status: 'ACTIVE',
-      title: 'Adopt TokenAuth v1 for Payment Gateway',
-      created_at: timestamp()
-    })
-
-    // 2. Fact extracted from ADR-001
-    CREATE (f1:Fact {
-      id: 'F-Auth-v1',
-      claim: 'Payment gateway services require TokenAuth v1 for all checkout endpoints',
-      is_stale: false,
-      verified: true
-    })
-    CREATE (f1)-[:EXTRACTED_FROM]->(s1)
-
-    // 3. Architecture Decision dependent on Fact 1
-    CREATE (d1:Decision {
-      id: 'DEC-102',
-      title: 'Generate Checkout Service with TokenAuth v1',
-      status: 'VALID',
+    // 1. Initial Core Feature Flags
+    CREATE (f_theme:FlagsmithFeature {
+      name: 'theme_system',
+      id: 'theme_system',
+      title: 'theme_system',
+      status: 'ENABLED',
+      enabled: true,
+      description: 'Core CSS variables and design token engine',
+      tags: ['core', 'foundation'],
       is_demo: true,
       created_at: timestamp()
     })
-    CREATE (d1)-[:DEPENDS_ON]->(f1)
 
-    // 4. Staged Superseding Source (ADR-002) - Initially unlinked
-    CREATE (s2:Source {
-      id: 'ADR-002',
-      ref: 'docs/adrs/ADR-002.md',
-      type: 'ADR',
-      status: 'ACTIVE',
-      title: 'Mandatory Migration to OAuth2; TokenAuth v1 Decommissioned',
+    CREATE (f_auth:FlagsmithFeature {
+      name: 'auth_v2',
+      id: 'auth_v2',
+      title: 'auth_v2',
+      status: 'ENABLED',
+      enabled: true,
+      description: 'OAuth2 and WebAuthn hardware key authentication',
+      tags: ['security', 'core'],
+      is_demo: true,
       created_at: timestamp()
     })
-    CREATE (f2:Fact {
-      id: 'F-OAuth2',
-      claim: 'OAuth2 is strictly enforced across all payment endpoints; TokenAuth v1 prohibited',
-      is_stale: false,
-      verified: true
-    })
-    CREATE (f2)-[:EXTRACTED_FROM]->(s2)
 
-    // 5. Historical Demo Agent Actions for Audit Ledger
+    CREATE (f_dark:FlagsmithFeature {
+      name: 'dark_mode',
+      id: 'dark_mode',
+      title: 'dark_mode',
+      status: 'ENABLED',
+      enabled: true,
+      description: 'Enables dark mode theme across entire web application',
+      tags: ['depends:theme_system', 'core'],
+      is_demo: true,
+      created_at: timestamp()
+    })
+
+    CREATE (f_analytics:FlagsmithFeature {
+      name: 'premium_analytics',
+      id: 'premium_analytics',
+      title: 'premium_analytics',
+      status: 'ENABLED',
+      enabled: true,
+      description: 'High-frequency telemetry and export for Pro users',
+      tags: ['depends:dark_mode', 'depends:auth_v2'],
+      is_demo: true,
+      created_at: timestamp()
+    })
+
+    CREATE (f_dashboard:FlagsmithFeature {
+      name: 'analytics_dashboard',
+      id: 'analytics_dashboard',
+      title: 'analytics_dashboard',
+      status: 'ENABLED',
+      enabled: true,
+      description: 'Real-time charts and Bayesian conversion graphs',
+      tags: ['depends:premium_analytics'],
+      is_demo: true,
+      created_at: timestamp()
+    })
+
+    CREATE (f_beta:FlagsmithFeature {
+      name: 'beta_streaming',
+      id: 'beta_streaming',
+      title: 'beta_streaming',
+      status: 'DISABLED',
+      enabled: false,
+      description: 'Ultra-low-latency WebRTC live stream engine',
+      tags: ['media', 'experimental'],
+      is_demo: true,
+      created_at: timestamp()
+    })
+
+    CREATE (f_video:FlagsmithFeature {
+      name: 'video_player_v2',
+      id: 'video_player_v2',
+      title: 'video_player_v2',
+      status: 'DISABLED',
+      enabled: false,
+      description: 'Hardware-accelerated AV1 player component',
+      tags: ['depends:beta_streaming'],
+      is_demo: true,
+      created_at: timestamp()
+    })
+
+    // 2. Topological Dependencies
+    CREATE (f_dark)-[:DEPENDS_ON {signal: 'TAG', confidence: 1.0}]->(f_theme)
+    CREATE (f_analytics)-[:DEPENDS_ON {signal: 'TAG', confidence: 1.0}]->(f_dark)
+    CREATE (f_analytics)-[:DEPENDS_ON {signal: 'TAG', confidence: 1.0}]->(f_auth)
+    CREATE (f_dashboard)-[:DEPENDS_ON {signal: 'TAG', confidence: 1.0}]->(f_analytics)
+    CREATE (f_video)-[:DEPENDS_ON {signal: 'TAG', confidence: 1.0}]->(f_beta)
+
+    // 3. AST Code References (Guarding relations)
+    CREATE (c1:CodeReference {
+      name: 'src/theme/provider.tsx',
+      id: 'src/theme/provider.tsx',
+      title: 'ThemeContext',
+      file_path: 'src/theme/provider.tsx',
+      symbol: 'useTheme',
+      is_demo: true,
+      created_at: timestamp()
+    })
+    CREATE (c1)-[:GUARDS]->(f_dark)
+
+    CREATE (c2:CodeReference {
+      name: 'src/components/AnalyticsPanel.tsx',
+      id: 'src/components/AnalyticsPanel.tsx',
+      title: 'AnalyticsTracker',
+      file_path: 'src/components/AnalyticsPanel.tsx',
+      symbol: 'trackTelemetry',
+      is_demo: true,
+      created_at: timestamp()
+    })
+    CREATE (c2)-[:GUARDS]->(f_analytics)
+
+    // 4. Historical Demo Agent Actions for Audit Ledger
     CREATE (a1:AgentAction {
       id: "act-hist-001",
-      target_file: "src/services/payment.js",
+      flag_name: "beta_streaming",
+      target_file: "src/components/VideoPlayer.tsx",
       status: "EXECUTED",
+      tool_name: "safe_toggle_flag",
+      repo: "demo",
+      branch: "main",
       timestamp: timestamp() - 3600000
     })
-    CREATE (a1)-[:GROUNDED_IN]->(d1)
+    CREATE (a1)-[:TARGETS_FLAG]->(f_beta)
 
     CREATE (a2:AgentAction {
       id: "act-hist-002",
-      target_file: "src/services/billing.js",
-      status: "BLOCKED_SUPERSEDED_SOURCE",
+      flag_name: "dark_mode",
+      target_file: "apps/client-pwa/src/components/ThemeWrapper.jsx",
+      status: "BLOCKED_HIGH_BLAST_RADIUS",
+      tool_name: "safe_toggle_flag",
+      repo: "demo",
+      branch: "main",
       timestamp: timestamp() - 1800000
     })
-    CREATE (a2)-[:GROUNDED_IN]->(d1)
+    CREATE (a2)-[:TARGETS_FLAG]->(f_dark)
 
-    RETURN s1.id AS seeded_source, d1.id AS seeded_decision
+    CREATE (a3:AgentAction {
+      id: "act-hist-003",
+      flag_name: "theme_system",
+      target_file: "src/styles/tokens.css",
+      status: "BLOCKED_CRITICAL_PREREQUISITE",
+      tool_name: "safe_toggle_flag",
+      repo: "demo",
+      branch: "main",
+      timestamp: timestamp() - 900000
+    })
+    CREATE (a3)-[:TARGETS_FLAG]->(f_theme)
+
+    RETURN f_dark.id AS seeded_feature, f_theme.id AS seeded_prereq
   `;
 
   const result = await graph.query(cypher);
-  console.log('[FalkorDB] Seed complete:', result.data);
+  console.log('[FalkorDB] Flagsmith seed complete:', result.data);
   return result.data;
 }
 
@@ -347,6 +436,7 @@ export async function fetchAuditLog(graph, limit = 100, { repo = null } = {}) {
     MATCH (a:AgentAction)
     ${repoFilter}
     OPTIONAL MATCH (a)-[:GROUNDED_IN]->(d:Decision)
+    OPTIONAL MATCH (a)-[:TARGETS_FLAG]->(f:FlagsmithFeature)
     RETURN
       a.id           AS action_id,
       a.target_file  AS target_file,
@@ -354,9 +444,9 @@ export async function fetchAuditLog(graph, limit = 100, { repo = null } = {}) {
       coalesce(a.repo, 'demo') AS repo,
       coalesce(a.branch, 'main') AS branch,
       a.timestamp    AS executed_at,
-      d.id           AS decision_id,
-      d.status       AS decision_status,
-      d.title        AS decision_title
+      coalesce(f.name, a.flag_name, d.id, 'dark_mode') AS decision_id,
+      coalesce(d.status, a.status, 'VALID') AS decision_status,
+      coalesce(f.description, d.title, a.tool_name, 'Feature Flag Toggle Gating') AS decision_title
     ORDER BY a.timestamp DESC
     LIMIT $limit
   `;

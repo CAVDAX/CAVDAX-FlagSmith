@@ -1350,14 +1350,6 @@ export default function CausalSolutionScroller() {
 
         {/* ── Center Stage: 3D Rolling Cylindrical Sliding Window (Tilted Grid Hero Model) ── */}
         <div className="w-full flex-1 flex flex-col items-center justify-center my-4 relative">
-          
-          {/* Subtle Ambient Specular Glow Behind Center Stage (Theme Calibrated) */}
-          <div 
-            className="absolute inset-0 pointer-events-none opacity-10 dark:opacity-20 transition-all duration-700 blur-3xl -z-10"
-            style={{
-              background: `radial-gradient(circle at 50% 50%, var(--tw-prose-accent, ${currentStep?.accentDark || '#38bdf8'}) 0%, transparent 65%)`
-            }}
-          />
 
           {/* Desktop 3D Perspective Rolling Stage Container (Hidden on < md screens) */}
           <div 

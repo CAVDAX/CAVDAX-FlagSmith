@@ -66,19 +66,12 @@ export default function TeamPage({ onLaunchConsole }) {
       {/* Main Container */}
       <div className="max-w-6xl mx-auto w-full relative z-10 flex flex-col items-center">
         
-        {/* 1. Hero Section with Soft Golden Amber Glow & CurvyArrow */}
+        {/* 1. Hero Section */}
         <div id="team-intro" className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 relative flex flex-col items-center">
-          
-          {/* Premium golden-amber aura halo behind hero (luminous on dark, subtle on light) */}
-          <div
-            aria-hidden="true"
-            className="absolute -top-12 left-1/2 -translate-x-1/2 w-[380px] sm:w-[580px] h-[240px] sm:h-[320px] bg-[radial-gradient(ellipse_at_center,_rgba(217,163,83,0.22),_rgba(217,119,6,0.08),_transparent_65%)] dark:bg-[radial-gradient(ellipse_at_center,_rgba(217,163,83,0.28),_rgba(217,119,6,0.12),_transparent_70%)] rounded-full blur-2xl sm:blur-3xl pointer-events-none -z-0"
-          />
-
           {/* Curvy Arrow pointing to Team Name with seamless infinite dash */}
           <CurvyArrow direction="top-right" className="-right-10 top-2 sm:top-4 hidden sm:inline-flex" label={TEAM_DETAILS.name} />
 
-          {/* Team Logo Emblem - Luminous Spherical Orb Circle (Interactive 3D Lightbox Viewer) */}
+          {/* Team Logo Emblem - Crisp Architectural Frame */}
           <button
             type="button"
             onClick={() => {
@@ -91,27 +84,16 @@ export default function TeamPage({ onLaunchConsole }) {
                 isEmblem: true,
               });
             }}
-            className="w-20 h-20 sm:w-24 sm:h-24 mb-5 relative flex items-center justify-center rounded-full p-1.5 group/orb cursor-zoom-in select-none focus:outline-none"
+            className="w-20 h-20 sm:w-24 sm:h-24 mb-5 relative flex items-center justify-center rounded-2xl p-1.5 group cursor-zoom-in select-none focus:outline-none border border-slate-300 dark:border-white/15 bg-white dark:bg-[#0B0D11] shadow-md hover:border-slate-400 dark:hover:border-white/30 transition-all duration-250"
             title={`View Team ${TEAM_DETAILS.name} Emblem`}
             aria-label={`View Team ${TEAM_DETAILS.name} Emblem`}
           >
-            {/* Ambient Halo Glow */}
-            <div 
-              aria-hidden="true" 
-              className="absolute inset-0 rounded-full bg-slate-900/10 dark:bg-amber-400/20 blur-md pointer-events-none transition-all duration-500 group-hover/orb:scale-110" 
-            />
-            {/* Spherical Orb Vessel */}
-            <div className="relative w-full h-full rounded-full overflow-hidden border border-slate-300/80 dark:border-amber-400/40 bg-gradient-to-b from-white via-slate-50 to-slate-200/90 dark:from-white/10 dark:via-black/50 dark:to-black/90 shadow-[0_8px_24px_rgba(15,23,42,0.10)] dark:shadow-[0_0_35px_rgba(245,158,11,0.22)] ring-1 ring-slate-900/10 dark:ring-amber-400/30 flex items-center justify-center">
-              {/* Glass Specular Curved Highlight */}
-              <div 
-                aria-hidden="true" 
-                className="absolute inset-x-2 top-0.5 h-1/3 rounded-t-full bg-gradient-to-b from-white/40 dark:from-white/20 to-transparent pointer-events-none z-10" 
-              />
+            <div className="relative w-full h-full rounded-xl overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#11141B] flex items-center justify-center">
               <ShimmerImage 
                 src={TEAM_DETAILS.logo} 
                 alt={TEAM_DETAILS.name} 
-                containerClassName="h-full w-full rounded-full"
-                className="h-full w-full object-cover rounded-full filter dark:brightness-105 select-none pointer-events-none transition-transform duration-500 group-hover/orb:scale-105"
+                containerClassName="h-full w-full rounded-xl"
+                className="h-full w-full object-cover rounded-xl filter dark:brightness-105 select-none pointer-events-none transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
                   e.target.style.display = 'none';
                 }}

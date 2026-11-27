@@ -99,8 +99,8 @@ export default function McpActionPlayground({ onRunCustomAction, repo = null, de
   };
 
   const isClearanceMode = activeTool === 'safe_toggle_flag';
-  const isApprovedResult = result && (result.success || result.is_approved || result.gate_verdict === 'APPROVED');
-    ? Boolean(result.clearance_granted || result.is_approved || result.gate_verdict === 'APPROVED')
+  const isApprovedResult = result
+    ? Boolean(result.clearance_granted || result.is_approved || result.gate_verdict === 'APPROVED' || result.success)
     : false;
 
   return (
