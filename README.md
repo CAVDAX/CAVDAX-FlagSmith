@@ -37,8 +37,8 @@
 
 <div align="center">
 
-[![CI](https://img.shields.io/github/actions/workflow/status/CAVDAX/CAVDAX/ci.yml?style=for-the-badge&logo=github&label=CI)](https://github.com/CAVDAX/CAVDAX/actions)
-[![GitHub Release](https://img.shields.io/github/v/release/CAVDAX/CAVDAX?style=for-the-badge&logo=github&color=blue)](https://github.com/CAVDAX/CAVDAX/releases/tag/v1.3.3)
+[![CI](https://img.shields.io/github/actions/workflow/status/CAVDAX/CAVDAX-FlagSmith/ci.yml?style=for-the-badge&logo=github&label=CI)](https://github.com/CAVDAX/CAVDAX-FlagSmith/actions)
+[![GitHub Release](https://img.shields.io/github/v/release/CAVDAX/CAVDAX-FlagSmith?style=for-the-badge&logo=github&color=blue)](https://github.com/CAVDAX/CAVDAX-FlagSmith/releases/latest)
 [![npm version](https://img.shields.io/npm/v/@cavdax/flagsmith-mcp?style=for-the-badge&logo=npm&logoColor=white&color=CB3837)](https://www.npmjs.com/package/@cavdax/flagsmith-mcp)
 [![npm provenance](https://img.shields.io/badge/provenance-sigstore-informational?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/@cavdax/flagsmith-mcp)
 [![FalkorDB](https://img.shields.io/badge/FalkorDB-GraphBLAS-FF2D55?style=for-the-badge&logo=redis&logoColor=white)](https://falkordb.com/)
@@ -56,7 +56,12 @@
 > **Live Production Gateway:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)  
 > **Self-Hosted Flagsmith API:** [`https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/`](https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/)  
 > **Official npm Package:** [`@cavdax/flagsmith-mcp`](https://www.npmjs.com/package/@cavdax/flagsmith-mcp) (`v1.0.3`)  
-> **Interactive Blast Radius Radar:** [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live) $\to$ *Flag Radar*
+> **Interactive Blast Radius Radar:** [`https://cavdax-flagsmith.sahnirmaan.live/flags`](https://cavdax-flagsmith.sahnirmaan.live/flags)  
+> **Developer Diagnostics Console:** [`https://cavdax-flagsmith.sahnirmaan.live/dev`](https://cavdax-flagsmith.sahnirmaan.live/dev)
+
+> [!NOTE]
+> **Hackathon Mode (Active for Judges & Evaluators):**  
+> We have enabled **Hackathon Mode** by default on our live deployment. This grants evaluators and judges unrestricted access to all Enterprise-tier capabilities (unlimited flag blast-radius queries, deep AST syntactic code inspection, high-frequency synchronization, and zero-key local MCP testing) without requiring license keys or subscription paywalls. Can be toggled live via the Developer Console at [`/dev`](https://cavdax-flagsmith.sahnirmaan.live/dev).
 
 Autonomous coding agents (Cursor, Claude Code, Windsurf) edit code and toggle feature flags blindly—without understanding the hidden multi-hop ripple effects across downstream services and users. Toggling or deleting a flag like `dark_mode` can silently crash downstream systems (`premium_analytics`, `analytics_dashboard`) or violate mandatory upstream prerequisites (`theme_system`, `auth_v2`).
 
@@ -591,43 +596,57 @@ sequenceDiagram
 
 ## Production Interface Showcase
 
-Captured directly from our live production deployment at [https://cavdax.sahnirmaan.live/](https://cavdax.sahnirmaan.live/):
+Captured directly from our live production deployment at [`https://cavdax-flagsmith.sahnirmaan.live/`](https://cavdax-flagsmith.sahnirmaan.live/):
 
-### 1. Causal Graph & Temporal DAG Canvas (`/overview`)
-> Visualizes live FalkorDB Directed Acyclic Graph (DAG) state, active vs. superseded architectural sources, real-time graph invalidation, Linear-style command search pseudo-input ribbon (`Cmd+K` / `Ctrl+K`), and 1-click kinetic sidebar collapse for 100% full-viewport graph exploration.
+### 1. Flagsmith Blast Radius Radar & Safe Toggle Surface (`/flags`)
+> Real-time 3-Signal blast radius telemetry featuring multi-hop transitive ripple detection, upstream prerequisite guards, AST live code scanner, and Safe Toggle Switch with 409 Conflict barrier.
 
 <div align="center">
-  <img src="./assets/screenshots/01_causal_graph_overview.png" alt="CAVDAX Causal Graph Overview" width="950" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/flagsmith_radar_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/flagsmith_radar_light.png" />
+  <img src="./assets/screenshots/flagsmith_radar_dark.png" alt="Flagsmith Blast Radius Radar" width="100%" />
+</picture>
+
+<p><em>Figure 1: Real-time 3-Signal Flagsmith Blast Radius Radar featuring multi-hop transitive ripple detection, upstream prerequisite guards, and 409 Conflict safety barrier.</em></p>
 </div>
 
-### 2. Connected Repository Developer Workspace (`/console`)
+### 2. Developer Diagnostics Console & Hackathon Mode Enclave (`/dev`)
+> Monochromatic hardware bench instrument displaying real-time FalkorDB/Redis connectivity, Hackathon Mode zero-paywall switch, live system state telemetry, and diagnostic triggers.
+
+<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/screenshots/dev_console_dark.png" />
+  <source media="(prefers-color-scheme: light)" srcset="./assets/screenshots/dev_console_light.png" />
+  <img src="./assets/screenshots/dev_console_dark.png" alt="Developer Diagnostics Console" width="100%" />
+</picture>
+
+<p><em>Figure 2: Monochromatic hardware bench instrument displaying real-time FalkorDB/Redis connectivity, Hackathon Mode zero-paywall switch, and diagnostic telemetry.</em></p>
+</div>
+
+### 3. Static AST Code Inspector & SDK Call Trace (Signal 2)
+> Deep AST syntactic inspection capturing conditional guards, boolean conjunctions, and SDK call sites across client and server source trees.
+
+<div align="center">
+  <img src="./assets/screenshots/ast_inspector.png" alt="Flagsmith AST Code Inspector" width="950" />
+  <p><em>Figure 3: Deep AST syntactic inspection capturing conditional guards, boolean conjunctions, and SDK call sites across client and server source trees.</em></p>
+</div>
+
+### 4. Connected Repository Developer Workspace (`/console`)
 > Real-time developer workspace and **Interactive Causal Verification Console** featuring our dynamic hierarchical DAG layout engine, **bespoke SVG Diamond Rhombus geometries for `:Decision` nodes**, zero-crossing right-corridor intra-column replacement arcs, live Cypher query inspector, branch tracking, and universal spring-loaded modal physics.
 
 <div align="center">
   <img src="./assets/screenshots/02_developer_console.png" alt="CAVDAX Developer Console" width="950" />
+  <p><em>Figure 4: Real-time developer workspace and interactive causal verification console featuring dynamic hierarchical DAG layouts and Cypher inspector.</em></p>
 </div>
 
-### 3. Interactive MCP Action Playground (`/mcp`)
-> Pre-flight causal verification simulator featuring live Cypher query generation, traversal depth controls (`1..4` hops), and sub-millisecond GraphBLAS latency display.
-
-<div align="center">
-  <img src="./assets/screenshots/03_mcp_action_playground.png" alt="CAVDAX MCP Action Playground" width="950" />
-</div>
-
-### 4. Compliance Audit Ledger (`/audit`)
+### 5. Compliance Audit Ledger (`/audit`)
 > Tamper-evident operational ledger recording every tool execution, verdict, target file path, and grounding decision ID.
 
 <div align="center">
   <img src="./assets/screenshots/04_compliance_audit_ledger.png" alt="CAVDAX Compliance Audit Ledger" width="950" />
+  <p><em>Figure 5: Tamper-evident operational ledger recording every tool execution, verdict, target file path, and grounding decision ID.</em></p>
 </div>
-
-### 5. Developer Profile, Plan Quotas & Active MCP Keys (`/profile`)
-> Real-time subscription tier management, plan quota consumption metrics, and secure MCP API key provisioning.
-
-<div align="center">
-  <img src="./assets/screenshots/05_developer_profile_quota.png" alt="CAVDAX Developer Profile and Quotas" width="950" />
-</div>
-
 
 ---
 
@@ -821,29 +840,31 @@ The Web HUD features an interactive 4-Act stepper designed for video demonstrati
 ## Live Production Deployment
 
 CAVDAX is deployed and running live in production:
-**Live Console**: [https://cavdax.sahnirmaan.live/](https://cavdax.sahnirmaan.live/)
+**Live Console**: [https://cavdax-flagsmith.sahnirmaan.live/](https://cavdax-flagsmith.sahnirmaan.live/)
 
 ### Production Architecture & Cloud Infrastructure:
 * **Edge Reverse Proxy & Automated SSL:** Caddy 2 reverse proxy with dynamic TLS/SSL certificates terminates production traffic over port 443 with HSTS and security headers.
 * **Low-Latency Streaming:** Dedicated `/api/events` Server-Sent Events (SSE) pipeline with reverse-proxy buffering disabled (`proxy_buffering off`) for instant UI graph invalidation pulses.
-* **Remote Model Context Protocol (MCP) Endpoint:** Accessible at `https://cavdax.sahnirmaan.live/api/mcp/sse` for remote coding agents, IDEs, and CI/CD pipelines.
+* **Remote Model Context Protocol (MCP) Endpoint:** Accessible at `https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse` for remote coding agents, IDEs, and CI/CD pipelines.
 * **GraphBLAS Backend Mesh:** Low-overhead Docker Compose mesh linking the Node.js Express gateway and FalkorDB GraphBLAS on an isolated internal network.
 
 ---
 
-## Web HUD Multi-Route Topology (9 Operational Views)
+## Web HUD Multi-Route Topology (11 Operational Views)
 
-The CAVDAX Web HUD provides an industrial-brutalist / porcelain operational interface spanning 9 specialized views:
+The CAVDAX for Flagsmith Web HUD provides an industrial-brutalist / porcelain operational interface spanning 11 specialized views:
 
-1. **Architectural Overview (`/overview` or `/`)**: Value proposition, Causal Invalidation Radar, interactive Cytoscape.js Directed Acyclic Graph canvas with Linear-grade command search ribbon (`Cmd+K` / `Ctrl+K`), and 1-click kinetic sidebar collapse for 100% full-viewport exploration.
-2. **Connected Repository Developer Workspace (`/console`)**: Multi-tenant workspace for linking GitHub repositories with context-preserving OAuth reconnection, universal plan quota metering (enforcing strict repository limits across public and private codebases), bi-directional ADR-to-Graph selection synchronization (clicking an ADR card isolates its corresponding `:Decision` diamond on the live canvas), multi-panel dynamic flex height absorption, and universal spring-loaded dialog physics.
-3. **MCP Action Playground (`/mcp`)**: Interactive pre-flight verification console with dynamic traversal depth sliders (`1..4` hops), live Cypher inspection, and sub-millisecond execution timing metrics.
-4. **4-Act Storyline Stepper (`/walkthrough`)**: Interactive demonstration stepper guiding evaluators through baseline validity, upstream commit mutation, enclosed MCP gate rejection, and Act IV revalidation.
-5. **Compliance Audit Ledger (`/audit`)**: Signed audit trail providing full provenance and execution verification history across all agent actions.
-6. **Core Maintainers & Attribution (`/team`)**: Project research attribution, engineering background, and architecture credits.
-7. **Developer Profile & Multi-Display Viewport Engine (`/profile`)**: Live plan quota consumption monitoring, capability tiers, secure MCP key generation, and an adaptive multi-display responsive engine calibrated for both **laptop single-screen viewports (HP Victus 15.6" at 1536×750 and MacBook at 1440×800, zero vertical scrolling)** and **27-inch desktop monitors (1080p/1440p windowed and fullscreen)** via the calibrated `pro-27` breakpoint with downstream section isolation buffers to prevent fold-peeking.
-8. **Community Stewardship & Operational Backing (`/support`)**: Transparent operational resource breakdown and community sponsorship integration.
-9. **Zero-Trust Administrative Enclave**: Protected diagnostic console, developer IP whitelisting gate, and system status roster.
+1. **Flagsmith Blast Radius Radar (`/flags`) [PRIMARY TRACK 03 HUD]**: Real-time 3-Signal blast radius radar, multi-hop transitive ripple detection, upstream prerequisite guards, AST live code scanner, and Safe Toggle Switch with 409 Conflict barrier.
+2. **Developer Diagnostics Console & Hackathon Mode Enclave (`/dev`)**: Monochromatic hardware bench instrument displaying real-time FalkorDB/Redis connectivity, Hackathon Mode zero-paywall switch, live system state telemetry, and diagnostic triggers.
+3. **Architectural Overview (`/overview` or `/`)**: Value proposition, Causal Invalidation Radar, interactive Cytoscape.js Directed Acyclic Graph canvas with Linear-grade command search ribbon (`Cmd+K` / `Ctrl+K`), and 1-click kinetic sidebar collapse for 100% full-viewport exploration.
+4. **Connected Repository Developer Workspace (`/console`)**: Multi-tenant workspace for linking GitHub repositories with context-preserving OAuth reconnection, universal plan quota metering, and bi-directional ADR-to-Graph selection synchronization.
+5. **MCP Action Playground (`/mcp`)**: Interactive pre-flight verification console with dynamic traversal depth sliders (`1..4` hops), live Cypher inspection, and sub-millisecond execution timing metrics.
+6. **4-Act Storyline Stepper (`/walkthrough`)**: Interactive demonstration stepper guiding evaluators through baseline validity, upstream commit mutation, enclosed MCP gate rejection, and Act IV revalidation.
+7. **Compliance Audit Ledger (`/audit`)**: Signed audit trail providing full provenance and execution verification history across all agent actions.
+8. **Core Maintainers & Attribution (`/team`)**: Project research attribution, engineering background, and architecture credits.
+9. **Developer Profile & Multi-Display Viewport Engine (`/profile`)**: Live plan quota consumption monitoring, capability tiers, secure MCP key generation, and an adaptive multi-display responsive engine calibrated for both laptop and desktop displays.
+10. **Community Stewardship & Operational Backing (`/support`)**: Transparent operational resource breakdown and community sponsorship integration.
+11. **Flagsmith Self-Hosted Management Portal (`/flagsmith/api/v1/`)**: Fully functional Django REST Framework management portal with authenticated project overrides, flag administration, and reverse-proxy static asset delivery.
 
 ---
 
@@ -902,14 +923,25 @@ The client application includes an enterprise-grade SEO and search discovery inf
 ## Quickstart Guide
 
 ### Option 1: Docker Compose (Recommended)
-Launch the entire mesh (FalkorDB + Server + Web HUD) with one command:
+Launch the entire mesh (FalkorDB + Server + Web HUD + Self-Hosted Flagsmith + Postgres) with one command:
 
 ```bash
 docker-compose up --build
 ```
 
-- **Porcelain Dark Web HUD:** `http://localhost:5173`
-- **CAVDAX Backend Gateway & MCP:** `http://localhost:3001` (internal container port 3000)
+#### Mesh Service Ports & Endpoints:
+
+| Service | Host Port | Internal Port | Protocol | Purpose |
+|---|---|---|---|---|
+| **Web HUD** | `5173` | `5173` | HTTP | Monochromatic Porcelain / Obsidian Operational HUD |
+| **CAVDAX Gateway & MCP** | `3001` | `3000` | HTTP/SSE | Causal Invariant Gate, REST API & Remote SSE |
+| **Flagsmith API Engine** | `8000` | `8000` | HTTP | Self-Hosted Open-Source Flagsmith Django Engine |
+| **FalkorDB Graph Engine** | `6379` | `6379` | Redis/Bolt | GraphBLAS Sparse Matrix Causal Core |
+| **Flagsmith Database** | `5432` | `5432` | PostgreSQL | Flagsmith Environments, Identities & Audit Store |
+
+- **Web HUD Portal:** `http://localhost:5173`
+- **CAVDAX Backend Gateway & MCP:** `http://localhost:3001`
+- **Self-Hosted Flagsmith Django UI:** `http://localhost:8000` (or `https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/` on production)
 - **FalkorDB Redis Endpoint:** `localhost:6379`
 
 ### Option 2: Local Development
@@ -938,7 +970,7 @@ CAVDAX implements the Anthropic Model Context Protocol (MCP) specification `2024
 
 ### Supported Transports & Connectors
 - **Local Stdio (`stdio`):** `npx -y @cavdax/mcp-server` (zero-latency, runs the MCP gate locally against your own FalkorDB instance).
-- **Remote Cloud SSE (`SSE`):** Connect to `https://cavdax.sahnirmaan.live/api/mcp/sse` (for centralized team graphs and remote CI/CD pipelines).
+- **Remote Cloud SSE (`SSE`):** Connect to `https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse` (for centralized team graphs and remote CI/CD pipelines).
 
 ### Transport Authentication Matrix & Security Boundaries
 
@@ -954,7 +986,7 @@ CAVDAX enforces a tailored security model based on the execution boundary:
 
 You can connect your coding agents via **Mode A: Local Stdio (Zero configuration, no API key required)** or **Mode B: Remote Cloud SSE (Centralized team graph & remote CI/CD)**.
 
-> **API Key for Remote Cloud SSE**: If using Remote Cloud SSE, generate your API key in one click at [cavdax.sahnirmaan.live/mcp](https://cavdax.sahnirmaan.live/mcp).
+> **API Key for Remote Cloud SSE**: If using Remote Cloud SSE, generate your API key in one click at [cavdax-flagsmith.sahnirmaan.live/mcp](https://cavdax-flagsmith.sahnirmaan.live/mcp).
 
 ---
 
@@ -1003,14 +1035,14 @@ claude mcp add cavdax -- npx -y @cavdax/mcp-server
 
 ---
 
-#### Mode B: Remote Cloud SSE (`https://cavdax.sahnirmaan.live/api/mcp/sse`)
+#### Mode B: Remote Cloud SSE (`https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse`)
 
 ##### 1. Cursor IDE (`.cursor/mcp.json`)
 ```json
 {
   "mcpServers": {
     "cavdax": {
-      "url": "https://cavdax.sahnirmaan.live/api/mcp/sse",
+      "url": "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
       "headers": {
         "Authorization": "Bearer YOUR_CAVDAX_API_KEY"
       }
@@ -1029,7 +1061,7 @@ claude mcp add cavdax -- npx -y @cavdax/mcp-server
       "args": [
         "-y",
         "mcp-proxy",
-        "https://cavdax.sahnirmaan.live/api/mcp/sse",
+        "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
         "--headers",
         "Authorization=Bearer YOUR_CAVDAX_API_KEY"
       ]
@@ -1040,7 +1072,7 @@ claude mcp add cavdax -- npx -y @cavdax/mcp-server
 
 ##### 3. Claude Code CLI
 ```bash
-claude mcp add cavdax https://cavdax.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer YOUR_CAVDAX_API_KEY"
+claude mcp add cavdax https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer YOUR_CAVDAX_API_KEY"
 ```
 
 ### Registered Model Context Protocol (MCP) Tools
