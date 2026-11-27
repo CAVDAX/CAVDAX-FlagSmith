@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ToggleLeft,
@@ -14,7 +14,10 @@ import {
   Code2,
   GitCommit,
   Play,
-  FileCode2
+  FileCode2,
+  ChevronDown,
+  SlidersHorizontal,
+  Plus
 } from 'lucide-react';
 import Tooltip from './Tooltip';
 import { playClick, playAlert, playApprovalChime, playRejectBuzz } from '../utils/soundFx';
@@ -52,7 +55,16 @@ function RadarIcon({ className = 'w-5 h-5', size = 20 }) {
   );
 }
 
-export default function FlagBlastRadiusCard({ isDarkTheme = true, onSelectFlag }) {
+export default function FlagBlastRadiusCard({
+  isDarkTheme = true,
+  onSelectFlag,
+  connectedRepos = [],
+  activeWorkspace = 'demo',
+  selectedConnectedRepo = null,
+  onSelectWorkspace,
+  onConnectRepo,
+  githubUser = null,
+}) {
   const [features, setFeatures] = useState([]);
   const [selectedFlagName, setSelectedFlagName] = useState('dark_mode');
   const [blastRadius, setBlastRadius] = useState(null);
@@ -61,6 +73,45 @@ export default function FlagBlastRadiusCard({ isDarkTheme = true, onSelectFlag }
   const [togglePending, setTogglePending] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [isWsDropdownOpen, setIsWsDropdownOpen] = useState(false);
+
+  // Custom Sliding Pillbar state (Container-Relative, Immune to Flying Bugs)
+  const tabRefs = useRef({});
+  const [pillPosition, setPillPosition] = useState({ x: 0, width: 0, ready: false, visible: false });
+
+  useLayoutEffect(() => {
+    const updatePill = () => {
+      const activeEl = tabRefs.current[selectedFlagName];
+      if (activeEl) {
+        setPillPosition({
+          x: activeEl.offsetLeft,
+          width: activeEl.offsetWidth,
+          ready: true,
+          visible: true,
+        });
+      } else {
+        setPillPosition(prev => ({ ...prev, visible: false }));
+      }
+    };
+    updatePill();
+    const rafId = requestAnimationFrame(updatePill);
+    window.addEventListener('resize', updatePill);
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', updatePill);
+    };
+  }, [selectedFlagName, features]);
+
+  useEffect(() => {
+    if (!isWsDropdownOpen) return;
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('#flag-radar-ws-selector')) {
+        setIsWsDropdownOpen(false);
+      }
+    };
+    window.addEventListener('mousedown', handleClickOutside);
+    return () => window.removeEventListener('mousedown', handleClickOutside);
+  }, [isWsDropdownOpen]);
 
   // AST Live Code Inspector State (Signal 2 Static Inspector)
   const [activeTab, setActiveTab] = useState('radar'); // 'radar' | 'ast'
@@ -141,19 +192,20 @@ export function AnalyticsDashboard() {
   // Fetch all features from Flagsmith & FalkorDB
   const fetchFeatures = useCallback(async () => {
     try {
-      const res = await fetch('/api/flagsmith/features');
+      const repoParam = selectedConnectedRepo?.full_name ? `?repo=${encodeURIComponent(selectedConnectedRepo.full_name)}` : '';
+      const res = await fetch(`/api/flagsmith/features${repoParam}`);
       const data = await res.json();
       if (data.success && Array.isArray(data.features)) {
         const valid = data.features.filter(f => !JUNK_FLAG_NAMES.has(f.name));
         setFeatures(valid);
-        if (data.features.length > 0 && !selectedFlagName) {
+        if (data.features.length > 0 && (!selectedFlagName || !valid.some(v => v.name === selectedFlagName))) {
           setSelectedFlagName(data.features[0].name);
         }
       }
     } catch (err) {
       console.error('[FlagBlastRadius] Failed to fetch features:', err);
     }
-  }, [selectedFlagName]);
+  }, [selectedFlagName, selectedConnectedRepo]);
 
   // Fetch blast radius for the selected flag
   const fetchBlastRadius = useCallback(async (flagName) => {
@@ -308,7 +360,115 @@ export function AnalyticsDashboard() {
         </div>
 
         {/* Action Controls & Tab Switcher (Unified single-line row, immune to wrapping) */}
-        <div className="flex items-center gap-2 shrink-0 flex-nowrap">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+          {/* Target Workspace / Repository Switcher */}
+          <div id="flag-radar-ws-selector" className="relative">
+            <button
+              onClick={() => {
+                playClick();
+                setIsWsDropdownOpen(prev => !prev);
+              }}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono border border-slate-300/80 dark:border-white/10 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-800 dark:text-slate-200 transition-colors cursor-pointer select-none"
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
+              <span className="font-semibold truncate max-w-[130px] sm:max-w-[190px]">
+                {selectedConnectedRepo ? (selectedConnectedRepo.full_name || selectedConnectedRepo.name) : 'Demo: Flagsmith Sandbox'}
+              </span>
+              <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${isWsDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            <AnimatePresence>
+              {isWsDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.96, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: -4 }}
+                  transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute right-0 top-full mt-1.5 w-72 rounded-xl bg-white dark:bg-[#111113] border border-slate-200 dark:border-white/15 shadow-2xl p-1.5 z-50 font-mono text-xs"
+                >
+                  <div className="px-2 py-1.5 text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-white/10 mb-1">
+                    Select Target Repository
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      playClick();
+                      if (onSelectWorkspace) onSelectWorkspace('demo', null);
+                      setIsWsDropdownOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-2 rounded-lg text-left transition-all cursor-pointer ${
+                      activeWorkspace === 'demo' && !selectedConnectedRepo
+                        ? 'bg-slate-100 dark:bg-white/10 text-slate-950 dark:text-white font-bold border border-slate-300 dark:border-white/20'
+                        : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <SlidersHorizontal className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
+                      <div className="truncate">
+                        <div className="text-xs truncate">Demo: Flagsmith Sandbox</div>
+                        <div className="text-[10px] font-normal text-slate-500 dark:text-slate-400">Canonical 3-Signal Mesh</div>
+                      </div>
+                    </div>
+                    {activeWorkspace === 'demo' && !selectedConnectedRepo && <Check className="w-3.5 h-3.5 text-slate-950 dark:text-white shrink-0 ml-2" />}
+                  </button>
+
+                  {connectedRepos && connectedRepos.length > 0 && (
+                    <div className="my-1 border-t border-slate-100 dark:border-white/10 pt-1">
+                      <div className="px-2 py-1 text-[9px] uppercase tracking-wider text-slate-400">
+                        Connected Repositories ({connectedRepos.length})
+                      </div>
+                      {connectedRepos.map((repo) => {
+                        const isCurrent = String(activeWorkspace) === String(repo.id) || selectedConnectedRepo?.full_name?.toLowerCase() === repo.full_name?.toLowerCase();
+                        return (
+                          <button
+                            key={repo.id}
+                            onClick={() => {
+                              playClick();
+                              if (onSelectWorkspace) onSelectWorkspace(repo.id, repo);
+                              setIsWsDropdownOpen(false);
+                            }}
+                            className={`w-full flex items-center justify-between p-2 rounded-lg text-left transition-all cursor-pointer ${
+                              isCurrent
+                                ? 'bg-slate-100 dark:bg-white/10 text-slate-950 dark:text-white font-bold border border-slate-300 dark:border-white/20'
+                                : 'hover:bg-slate-100 dark:hover:bg-white/5 text-slate-800 dark:text-slate-200'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
+                              <GitBranch className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 shrink-0" />
+                              <div className="truncate">
+                                <div className="text-xs truncate">{repo.full_name || repo.name}</div>
+                                <div className="text-[10px] font-normal text-slate-500 dark:text-slate-400">
+                                  {repo.default_branch || 'main'}
+                                </div>
+                              </div>
+                            </div>
+                            {isCurrent && <Check className="w-3.5 h-3.5 text-slate-950 dark:text-white shrink-0 ml-2" />}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {onConnectRepo && (
+                    <div className="my-1 border-t border-slate-100 dark:border-white/10 pt-1">
+                      <button
+                        onClick={() => {
+                          playClick();
+                          setIsWsDropdownOpen(false);
+                          onConnectRepo();
+                        }}
+                        className="w-full flex items-center gap-2 p-2 rounded-lg text-left hover:bg-slate-100 dark:hover:bg-white/5 text-slate-700 dark:text-slate-300 transition-colors cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5 text-slate-500" />
+                        <span className="text-xs">Connect Another Repository</span>
+                      </button>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           {/* Tab Switcher: Radar vs AST */}
           <div className="flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-medium">
             <button
@@ -351,33 +511,52 @@ export function AnalyticsDashboard() {
       {/* Tab 1: Topology Blast Radar */}
       {activeTab === 'radar' && (
         <>
-          {/* Feature Selector Tabs */}
+          {/* Feature Selector Sliding Pillbar */}
           <div className="py-4">
             <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">
               Select Feature Flag
             </label>
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="relative inline-flex items-center p-1 rounded-xl bg-slate-200/60 dark:bg-white/[0.06] border border-slate-300/80 dark:border-white/10 backdrop-blur-md overflow-x-auto max-w-full scrollbar-none gap-1">
+              {pillPosition.ready && pillPosition.visible && (
+                <motion.div
+                  className="absolute top-1 bottom-1 rounded-lg bg-slate-950 dark:bg-white shadow-xs pointer-events-none"
+                  initial={false}
+                  animate={{
+                    x: pillPosition.x,
+                    width: pillPosition.width,
+                    opacity: 1,
+                  }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 450,
+                    damping: 35,
+                  }}
+                />
+              )}
               {features.map((feat) => {
                 const isSelected = feat.name === selectedFlagName;
                 return (
                   <button
                     key={feat.name}
+                    ref={(el) => {
+                      if (el) tabRefs.current[feat.name] = el;
+                    }}
                     onClick={() => {
                       playClick();
                       setSelectedFlagName(feat.name);
                     }}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                    className={`relative z-10 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer select-none ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold shadow-xs'
-                        : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 border border-transparent dark:border-white/5'
+                        ? 'text-white dark:text-slate-950 font-bold'
+                        : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
                     }`}
                   >
-                    <span className="truncate">{feat.name}</span>
+                    <span>{feat.name}</span>
                     {feat.incoming_dependents > 0 && (
                       <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold shrink-0 tracking-tight transition-colors ${
                         isSelected
                           ? 'bg-white/20 text-white dark:bg-slate-900/15 dark:text-slate-900'
-                          : 'bg-slate-200/80 text-slate-700 dark:bg-white/10 dark:text-slate-300'
+                          : 'bg-slate-300/80 text-slate-700 dark:bg-white/10 dark:text-slate-300'
                       }`}>
                         {feat.incoming_dependents} DEP
                       </span>

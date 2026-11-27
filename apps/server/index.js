@@ -764,11 +764,19 @@ function requireAuthOrDemo(req, res, next) {
   const isDemoIngest = req.path === '/api/ingest' && (!req.body?.filePath || req.body.filePath.includes('demo-repo'));
   const isDemoAct4 = req.path === '/api/act-iv-revalidate';
   // Fix C4: Whitelist canonical demo IDs strictly for anonymous revalidation
+  // Flagsmith MCP Tools & Demo Revalidation Gate
+  const isFlagsmithMcp = req.path === '/api/mcp/call' && [
+    'safe_toggle_flag', 'get_flag_blast_radius', 'list_flagsmith_features',
+    'scan_code_for_flags', 'sync_flagsmith_graph', 'list_stale_flags', 'simulate_flag_state'
+  ].includes(req.body?.toolName);
+
   const isDemoMcp = req.path === '/api/mcp/call' && (
-    !req.body?.args?.file_path || req.body.args.file_path.includes('demo-repo') || req.body.args.file_path === 'src/services/payment.js'
-  ) && (
-    ['DEC-102', 'DEC-103'].includes(req.body?.args?.decision_id) ||
-    (req.body?.toolName === 'revalidate_decision' && ['DEC-102', 'DEC-103'].includes(req.body?.args?.old_decision_id || req.body?.args?.decision_id))
+    isFlagsmithMcp || (
+      (!req.body?.args?.file_path || req.body.args.file_path.includes('demo-repo') || req.body.args.file_path === 'src/services/payment.js') && (
+        ['DEC-102', 'DEC-103'].includes(req.body?.args?.decision_id) ||
+        (req.body?.toolName === 'revalidate_decision' && ['DEC-102', 'DEC-103'].includes(req.body?.args?.old_decision_id || req.body?.args?.decision_id))
+      )
+    )
   );
 
   if (isDemoIngest || isDemoAct4 || isDemoMcp) {
@@ -2103,10 +2111,22 @@ app.post('/api/mcp/call', requireAuthOrDemo, async (req, res) => {
     }
   } else if (toolName === 'export_graph_image') {
     // optional parameters, no mandatory fields required
+  } else if (toolName === 'safe_toggle_flag') {
+    if (!args.flag_name || typeof args.flag_name !== 'string') {
+      return res.status(400).json({
+        isError: true,
+        error: "Missing required parameter 'args.flag_name' for tool 'safe_toggle_flag'."
+      });
+    }
+  } else if ([
+    'get_flag_blast_radius', 'list_flagsmith_features', 'scan_code_for_flags',
+    'sync_flagsmith_graph', 'list_stale_flags', 'simulate_flag_state'
+  ].includes(toolName)) {
+    // Valid Flagsmith MCP tools
   } else {
     return res.status(400).json({
       isError: true,
-      error: `Unsupported MCP tool: '${toolName}'. Supported tools: 'apply_code_change', 'revalidate_decision', 'check_intent_clearance', 'acquire_decision_lock', 'release_decision_lock', 'export_graph_image'.`
+      error: `Unsupported MCP tool: '${toolName}'. Supported tools: 'safe_toggle_flag', 'get_flag_blast_radius', 'list_flagsmith_features', 'scan_code_for_flags', 'sync_flagsmith_graph', 'list_stale_flags', 'apply_code_change', 'revalidate_decision', 'check_intent_clearance', 'acquire_decision_lock', 'release_decision_lock', 'export_graph_image'.`
     });
   }
   // --- End validation ---
@@ -2463,6 +2483,57 @@ app.post('/api/mcp/call', requireAuthOrDemo, async (req, res) => {
         broadcastEvent('MCP_TOOL_EXECUTED', { toolName, args, result: revalResponse });
         broadcastEvent('GRAPH_UPDATED', fallbackGraphState);
         return res.json(revalResponse);
+      } else if (toolName === 'safe_toggle_flag') {
+        const flagName = args.flag_name || 'dark_mode';
+        const targetState = Boolean(args.enabled);
+        const hasFallback = Boolean(args.fallback);
+        const isForce = Boolean(args.force);
+
+        if (!targetState && !hasFallback && !isForce && ['dark_mode', 'auth_v2', 'theme_system'].includes(flagName)) {
+          const blastResp = {
+            isError: true,
+            simulated: true,
+            gate_verdict: 'BLOCKED_BLAST_RADIUS_VIOLATION',
+            flag_name: flagName,
+            breaking_dependents: [
+              { name: 'premium_analytics', hop: 1, signal: 'AST_STATIC' },
+              { name: 'analytics_dashboard', hop: 2, signal: 'GIT_TEMPORAL' }
+            ],
+            message: `⛔ SAFETY GATE: Cannot disable '${flagName}'. 2 active downstream feature(s) depend on it.`,
+            instructions_for_agent: 'Either provide a dynamic fallback, disable downstream dependent flags first, or pass force: true to override.'
+          };
+          broadcastEvent('MCP_TOOL_EXECUTED', { toolName, args, result: blastResp });
+          return res.status(409).json(blastResp);
+        }
+
+        const cutoverResp = {
+          status: 'SUCCESS',
+          simulated: true,
+          gate_verdict: 'APPROVED_SAFE_CUTOVER',
+          flag_name: flagName,
+          enabled: targetState,
+          fallback: args.fallback || null,
+          latency_ms: 0.84,
+          message: `✅ SAFE CUTOVER APPROVED: Feature flag '${flagName}' toggled to ${targetState ? 'ENABLED' : 'DISABLED'}${hasFallback ? ` with fallback '${args.fallback}'` : ''}. Causal dependencies satisfied.`
+        };
+        broadcastEvent('MCP_TOOL_EXECUTED', { toolName, args, result: cutoverResp });
+        return res.json(cutoverResp);
+      } else if (toolName === 'get_flag_blast_radius') {
+        const flagName = args.flag_name || 'dark_mode';
+        const blastResp = {
+          status: 'SUCCESS',
+          simulated: true,
+          flag_name: flagName,
+          downstream_impact_count: 2,
+          downstream_dependents: [
+            { name: 'premium_analytics', hop: 1, signal: 'AST_STATIC' },
+            { name: 'analytics_dashboard', hop: 2, signal: 'GIT_TEMPORAL' }
+          ],
+          missing_prerequisites: [],
+          latency_ms: 0.62
+        };
+        broadcastEvent('MCP_TOOL_EXECUTED', { toolName, args, result: blastResp });
+        return res.json(blastResp);
       }
     }
   } catch (err) {

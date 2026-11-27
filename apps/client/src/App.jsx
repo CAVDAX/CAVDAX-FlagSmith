@@ -1239,7 +1239,7 @@ export default function App() {
     };
   }
 
-  function _simulateAct4Approve() {
+  function _simulateAct4Approve(codeSnippet = '') {
     const actionId = `act-${Date.now()}`;
     setGraphData(prev => {
       const cleanNodes = prev.nodes.filter(n => !n.id.startsWith('act-'));
@@ -1411,7 +1411,7 @@ export default function App() {
         if (execData.graph) setGraphData(execData.graph);
         if (execData.simulated) isExecSimulated = true;
       } catch {
-        execData = _simulateAct4Approve(oauthCode);
+        execData = _simulateAct4Approve(flagsmithToggleCode);
         isExecSimulated = true;
         addLog('SYSTEM', 'Notice: Backend offline — gate approval simulated in-browser.', 'INFO');
       }
@@ -1609,6 +1609,15 @@ export default function App() {
           <div className="pt-24 pb-16 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
             <FlagBlastRadiusCard
               isDarkTheme={isDarkTheme}
+              connectedRepos={connectedRepos}
+              activeWorkspace={activeWorkspace}
+              selectedConnectedRepo={selectedConnectedRepo}
+              onSelectWorkspace={(wsId, repo) => {
+                setActiveWorkspace(wsId);
+                setSelectedConnectedRepo(repo || null);
+              }}
+              onConnectRepo={() => setIsConnectModalOpen(true)}
+              githubUser={githubUser}
               onSelectFlag={() => {}}
             />
           </div>

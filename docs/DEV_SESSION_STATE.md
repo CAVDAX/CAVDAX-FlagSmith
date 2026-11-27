@@ -9,6 +9,22 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00m. Act 4 ReferenceError Fix, Multi-Workspace Flag Radar, Sliding Pillbar & MCP CLI Overhaul (November 27, 2026)
+- **Runtime Error Resolution (`App.jsx`, `apps/server/index.js`)**:
+  - *`ReferenceError: oauthCode is not defined`*: Fixed Act 4 simulation fallback where `flagsmithToggleCode` was passed instead of undefined legacy `oauthCode`.
+  - *`/api/mcp/call` 400 Bad Request Resolution*: Added native input validation and simulation fallback handling for `safe_toggle_flag`, `get_flag_blast_radius`, `list_flagsmith_features`, `scan_code_for_flags`, `sync_flagsmith_graph`, `list_stale_flags`, and `simulate_flag_state`.
+  - *Anonymous Demo MCP Clearance*: Expanded `isDemoMcp` inside `requireAuthOrDemoGuest` to allow Flagsmith MCP tool executions for public demo evaluation without auth blocks.
+- **Multi-Workspace & Repository Switching on Flag Radar (`FlagBlastRadiusCard.jsx`, `App.jsx`)**:
+  - *Target Repository Switcher*: Added full workspace dropdown to `/flags` header, defaulting to `Demo: Flagsmith Sandbox` and enabling live scoping to any connected GitHub repository.
+  - *Dynamic Repository AST Filtering*: `/api/flagsmith/features` now supports `?repo=<org/repo>` query parameter to filter feature flags and AST references dynamically.
+- **Custom Sliding Pillbar for "SELECT FEATURE FLAG" (`FlagBlastRadiusCard.jsx`)**:
+  - *Anti-Flying Sliding Pill Rail*: Replaced discrete toggle buttons with container-relative sliding pillbar tracked via `useLayoutEffect`, `useRef`, and spring dampening (`stiffness: 450, damping: 35`), eliminating the framer-motion `layoutId` flying bug entirely.
+  - *Tactile Active Contrast*: Inverted text color when selected (`text-white dark:text-slate-950 font-bold`) and unified dependent chip contrast (`[2 DEP]`).
+- **MCP Navigation & Universal CLI Suite Overhaul (`Header.jsx`, `ConnectMcpPage.jsx`)**:
+  - *Navigation Streamlined*: Renamed `Repo & MCP` to `MCP` across header navigation items and tab states.
+  - *Single-Line Subtext Discipline*: Shortened GitHub connection subtext to strictly 1 single concise line (`truncate max-w-xl`), eliminating multi-line paragraph bloat.
+  - *Universal CAVDAX CLI Suite Bento*: Replaced cramped 2x4 header grid with a spacious full-width horizontal sliding tab rail and updated active Flagsmith commands (`init`, `mcp`, `doctor`, `ingest`, `radar`, `toggle`, `blast`, `stale`).
+
 ### 00l. Forensic FalkorDB Graph Node Bug Fix, UI Badge Refinements & Complete Sub-Page ADR Purge (November 27, 2026)
 - **FalkorDB Graph Node ID & Column Stacking Resolution (`core/graph/queries.js`, `apps/client/src/components/GraphCanvas.jsx`)**:
   - *Root Cause Uncovered & Fixed*: `:FlagsmithFeature` nodes created in FalkorDB contain `props.name` but no `props.id` or `props.ref`. `fetchGraphState()` fell back to `String(row.internal_id)` = `"16"`, and `GraphCanvas` lacked an entry in `LAYER_X`, dumping all 16 feature flag nodes at coordinate `(495, 220)`. Node 16 stacked on top, displaying `16 UNKNOWN :FlagsmithFeature` with 5 incoming `GUARDS` edges.

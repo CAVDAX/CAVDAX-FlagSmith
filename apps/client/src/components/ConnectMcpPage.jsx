@@ -597,55 +597,34 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
     },
     doctor: {
       cmd: 'npx cavdax doctor',
-      desc: 'Runs full diagnostic suite testing FalkorDB GraphBLAS connectivity and causal DAG node health.',
+      desc: 'Runs full diagnostic suite testing FalkorDB GraphBLAS connectivity and feature flag DAG health.',
       flags: '--host <host> --port <port>'
     },
     ingest: {
       cmd: 'npx cavdax ingest --type flags --repo .',
-      desc: 'Parses local code ASTs for flagsmith SDK calls, git commit coupling, and syncs topological dependencies into FalkorDB.',
-      flags: '-t [flags|commit|issue|all] -r <path>'
+      desc: 'Parses local code ASTs for Flagsmith SDK calls, git commit coupling, and syncs topological dependencies into FalkorDB.',
+      flags: '-t [flags|ast|git|all] -r <path>'
     },
-
-    check: {
-
-      cmd: 'npx cavdax check --staged',
-
-      desc: 'CI/CD and pre-commit verification gate: validates staged files against active architecture decisions.',
-
-      flags: '-s, --staged | --pr <number>'
-
+    radar: {
+      cmd: 'npx cavdax radar --flag dark_mode',
+      desc: 'Evaluates real-time GraphBLAS multi-hop blast radius, upstream prerequisites, and downstream impact.',
+      flags: '-f, --flag <name> | --depth <hops>'
     },
-
-    gate: {
-
-      cmd: 'npx cavdax gate --repo <org/repo> --sha <sha>',
-
-      desc: 'CI/CD status check: validates PR commit diffs against active architecture decisions and invariants.',
-
-      flags: '-r, --repo <name> | --sha <hex> | --strict'
-
+    toggle: {
+      cmd: 'npx cavdax toggle dark_mode --state off --fallback light_mode_v2',
+      desc: 'Safely toggles a Flagsmith feature flag through the enclosed causal gate with dynamic fallback validation.',
+      flags: '-s, --state <on|off> | --fallback <flag> | --force'
     },
-
-    impact: {
-
-      cmd: 'npx cavdax impact <decision-id>',
-
-      desc: 'Inspect downstream architectural impact and affected source files before refactoring.',
-
-      flags: '-d, --decision <id> (alias: blast)'
-
+    blast: {
+      cmd: 'npx cavdax blast dark_mode',
+      desc: 'Inspects downstream architectural blast radius and affected source files before toggling flags in production.',
+      flags: '-f, --flag <name> | --json'
     },
-
-    decisions: {
-
-      cmd: 'npx cavdax decisions',
-
-      desc: 'Lists active governing architecture decisions, statuses, and file patterns in the repository.',
-
-      flags: '-f, --filter [ALL|APPROVED|INVALIDATED]'
-
+    stale: {
+      cmd: 'npx cavdax stale --days 90',
+      desc: 'Audits codebase for stale, orphaned, or unreferenced Flagsmith feature flags ready for sunset.',
+      flags: '-d, --days <number> | --archive'
     }
-
   };
 
 
@@ -928,12 +907,10 @@ EXECUTION WORKFLOW:
 
               </div>
 
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 font-sans leading-relaxed text-pretty">
-
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 font-sans truncate max-w-xl">
                 {githubUser
-                  ? 'Your GitHub account is linked. CAVDAX can now scan Flagsmith SDK calls, AST dependencies, and flag mesh events from your repositories.'
-                  : 'Authenticate with GitHub to enable live Flagsmith AST scanning, webhook events, and per-repo causal flag graphs.'}
-
+                  ? 'GitHub linked. CAVDAX scans Flagsmith SDK calls, AST dependencies, and flag mesh events.'
+                  : 'Authenticate with GitHub to enable live Flagsmith AST scanning, webhooks, and causal graphs.'}
               </p>
 
             </div>
@@ -1636,7 +1613,7 @@ EXECUTION WORKFLOW:
 
         <div className="neo-glass-card p-6 sm:p-8">
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200 dark:border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-200 dark:border-white/10">
             <div>
               <h2 className="text-lg font-bold text-slate-950 dark:text-white flex items-center gap-2">
                 <Terminal className="w-5 h-5 text-slate-900 dark:text-white" />
@@ -1646,55 +1623,49 @@ EXECUTION WORKFLOW:
                 Execute directly via <code className="font-mono text-slate-900 dark:text-white font-semibold">npx cavdax &lt;command&gt;</code> without manual installation.
               </p>
             </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 p-1 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 self-start sm:self-auto relative">
-              {cliTabPill.position.ready && (
-                <motion.div
-                  className="absolute top-0 left-0 rounded-lg bg-slate-950 dark:bg-white shadow-xs pointer-events-none"
-                  initial={false}
-                  animate={{
-                    x: cliTabPill.position.x,
-                    y: cliTabPill.position.y,
-                    width: cliTabPill.position.width,
-                    height: cliTabPill.position.height,
-                    opacity: cliTabPill.position.isRowChange ? [0, 1] : 1,
-                    scale: cliTabPill.position.isRowChange ? [0.92, 1] : 1,
-                  }}
-                  transition={
-                    cliTabPill.position.isRowChange
-                      ? {
-                          x: { duration: 0 },
-                          y: { duration: 0 },
-                          width: { duration: 0 },
-                          height: { duration: 0 },
-                          opacity: { duration: 0.14, ease: 'easeOut' },
-                          scale: { duration: 0.14, ease: 'easeOut' },
-                        }
-                      : { type: 'spring', stiffness: 420, damping: 34 }
-                  }
-                />
-              )}
-              {Object.keys(cliCommands).map((tab) => {
-                const isSelected = activeCliTab === tab;
-                return (
-                  <button
-                    key={tab}
-                    ref={el => { if (el) cliTabPill.refs.current[tab] = el; }}
-                    onClick={() => {
-                      playClick();
-                      setActiveCliTab(tab);
-                    }}
-                    className={`relative px-3 py-1.5 rounded-lg text-xs font-mono uppercase font-bold transition-colors duration-200 select-none text-center ${
-                      isSelected
-                        ? 'text-white dark:text-slate-950 z-10'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
-                    }`}
-                  >
-                    <span className="relative z-10">{tab}</span>
-                  </button>
-                );
-              })}
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="text-[11px] font-mono px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400">
+                npm: cavdax v1.4.0
+              </span>
             </div>
+          </div>
+
+          {/* Full-width horizontal command tab rail with sliding pill */}
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 overflow-x-auto scrollbar-none relative mb-5">
+            {cliTabPill.position.ready && (
+              <motion.div
+                className="absolute top-1 bottom-1 rounded-lg bg-slate-950 dark:bg-white shadow-xs pointer-events-none"
+                initial={false}
+                animate={{
+                  x: cliTabPill.position.x,
+                  y: cliTabPill.position.y,
+                  width: cliTabPill.position.width,
+                  height: cliTabPill.position.height,
+                  opacity: 1,
+                }}
+                transition={{ type: 'spring', stiffness: 450, damping: 35 }}
+              />
+            )}
+            {Object.keys(cliCommands).map((tab) => {
+              const isSelected = activeCliTab === tab;
+              return (
+                <button
+                  key={tab}
+                  ref={el => { if (el) cliTabPill.refs.current[tab] = el; }}
+                  onClick={() => {
+                    playClick();
+                    setActiveCliTab(tab);
+                  }}
+                  className={`flex-1 min-w-[76px] relative px-3 py-2 rounded-lg text-xs font-mono uppercase font-bold transition-colors duration-150 select-none text-center cursor-pointer ${
+                    isSelected
+                      ? 'text-white dark:text-slate-950 z-10'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
+                  }`}
+                >
+                  <span className="relative z-10">{tab}</span>
+                </button>
+              );
+            })}
           </div>
 
           <div className="p-4 rounded-xl bg-slate-950 dark:bg-[#07090D] border border-slate-800 dark:border-white/10 font-mono text-xs text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
