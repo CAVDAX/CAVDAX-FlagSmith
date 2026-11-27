@@ -366,13 +366,13 @@ export default function DevConsolePage() {
         <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0B0D11] p-4 flex flex-col gap-3 shadow-xs">
           <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-white/5 pb-3">
             <div className="flex items-center gap-2">
-              <Play className="h-4 w-4 text-cyan-500 dark:text-cyan-400" />
+              <Play className="h-4 w-4 text-slate-900 dark:text-white" />
               <span className="text-xs font-semibold text-slate-900 dark:text-white uppercase tracking-widest font-mono">
                 Flagsmith Live Diagnostic Triggers
               </span>
             </div>
             {actionLatency && (
-              <span className="text-[11px] font-mono text-cyan-600 dark:text-cyan-400">
+              <span className="text-[11px] font-mono text-slate-600 dark:text-slate-400">
                 Last execution: {actionLatency} ms
               </span>
             )}
@@ -395,7 +395,7 @@ export default function DevConsolePage() {
               disabled={Boolean(activeAction)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] text-xs font-medium text-slate-700 dark:text-slate-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
-              <Code2 className={`h-3 w-3 ${activeAction === 'AST_SCAN' ? 'animate-spin text-cyan-500 dark:text-cyan-400' : 'text-cyan-500 dark:text-cyan-400'}`} />
+              <Code2 className={`h-3 w-3 ${activeAction === 'AST_SCAN' ? 'animate-spin text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`} />
               <span className="font-mono text-slate-400 mr-0.5">2.</span>
               <span>Scan Sample AST</span>
             </button>

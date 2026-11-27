@@ -490,7 +490,7 @@ export function AnalyticsDashboard() {
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Code2 className="w-3.5 h-3.5 text-cyan-400" />
+              <Code2 className="w-3.5 h-3.5 text-current" />
               <span>AST Inspector</span>
             </button>
           </div>
@@ -758,7 +758,7 @@ export function AnalyticsDashboard() {
           <div className="relative rounded-xl border border-slate-200 dark:border-white/10 bg-[#07080A] text-slate-100 overflow-hidden shadow-inner">
             <div className="flex items-center justify-between px-3.5 py-2 bg-slate-950/80 border-b border-white/5 text-[11px] text-slate-400 font-mono">
               <div className="flex items-center gap-2">
-                <FileCode2 className="w-3.5 h-3.5 text-cyan-400" />
+                <FileCode2 className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300" />
                 <span>snippet.js</span>
               </div>
               <span className="text-[10px] tracking-wide text-slate-400">AST Parser (Babel Core / Acorn)</span>
@@ -768,7 +768,7 @@ export function AnalyticsDashboard() {
               onChange={(e) => setAstCode(e.target.value)}
               rows={8}
               spellCheck={false}
-              className="w-full p-3.5 bg-transparent font-mono text-xs text-emerald-400 placeholder-slate-500 focus:outline-none resize-none leading-relaxed"
+              className="w-full p-3.5 bg-transparent font-mono text-xs text-slate-200 dark:text-slate-100 placeholder-slate-500 focus:outline-none resize-none leading-relaxed"
               placeholder="// Paste source code containing Flagsmith SDK calls here..."
             />
             <div className="p-3 bg-slate-950/60 border-t border-white/5 flex items-center justify-between">
@@ -778,9 +778,9 @@ export function AnalyticsDashboard() {
               <button
                 onClick={handleScanAst}
                 disabled={isScanningAst || !astCode.trim()}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-colors disabled:opacity-50 cursor-pointer shadow-sm"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold bg-slate-950 hover:bg-slate-900 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 border border-slate-800 dark:border-white/20 transition-all disabled:opacity-50 cursor-pointer shadow-xs active:scale-[0.98]"
               >
-                <Play className={`w-3.5 h-3.5 ${isScanningAst ? 'animate-spin' : ''}`} />
+                <Play className={`w-3.5 h-3.5 fill-current ${isScanningAst ? 'animate-spin' : ''}`} />
                 <span>{isScanningAst ? 'Parsing AST...' : 'Analyze Code AST'}</span>
               </button>
             </div>
@@ -884,7 +884,7 @@ export function AnalyticsDashboard() {
                           <span className="font-mono font-bold text-slate-900 dark:text-white">
                             {dep.targetFlag}
                           </span>
-                          <span className="text-[11px] font-mono font-bold text-cyan-500 dark:text-cyan-400 ml-2">
+                          <span className="text-[11px] font-mono font-bold text-slate-700 dark:text-slate-300 ml-2">
                             {dep.relationship} ({Math.round(dep.confidence * 100)}% conf)
                           </span>
                         </div>
@@ -915,7 +915,7 @@ export function AnalyticsDashboard() {
           </div>
           <div className="w-[1px] h-3.5 bg-slate-300 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-xs font-bold text-cyan-500 dark:text-cyan-400">SIG-2</span>
+            <span className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">SIG-2</span>
             <span className="text-slate-600 dark:text-slate-300 font-medium">AST Static</span>
           </div>
           <div className="w-[1px] h-3.5 bg-slate-300 dark:bg-white/10" />

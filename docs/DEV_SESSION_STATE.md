@@ -20,9 +20,16 @@
   - *Unboxed Full-Width Card Shell (`FlagBlastRadiusCard.jsx`)*: Removed constraining `max-w-4xl mx-auto`. Expanded shell to `w-full flex-1 flex flex-col justify-between p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-[#0B0D11]/90 backdrop-blur-2xl shadow-2xl`, eliminating the cramped "toy" card aesthetic entirely.
   - *Radar Icon Plate Unboxing*: Stripped `bg-slate-100 dark:bg-white/5 border border-slate-200/80 dark:border-white/10` from the header icon container, liberating the radar instrument into pure unboxed geometry.
   - *Spacious 3-Column Telemetry Grid*: Expanded columns with generous `p-6` card padding, responsive typography, and increased vertical list height (`max-h-72 sm:max-h-80`) for downstream dependents and upstream prerequisites.
-- **Ruthless AI Slop Tag Border & Bracket Purge (`FlagBlastRadiusCard.jsx`)**:
+- **Ruthless AI Slop Tag Border, Bracket & Cyan Purge (`FlagBlastRadiusCard.jsx`, `DevConsolePage.jsx`)**:
   - *Bracket Elimination*: Purged enclosing brackets from `[SIG-1]`, `[SIG-2]`, `[SIG-3]`, rendering them as clean colored monospace identifiers `SIG-1`, `SIG-2`, `SIG-3`.
-  - *3-Signal Provenance Bar*: Completely removed badge box rectangles and borders around signal tags. Replaced with clean monochromatic typography with colored monospace text (`text-indigo-500`, `text-cyan-500`, `text-amber-500`) and clean dividing rules.
+  - *Full Cyan Slop Purge in AST Inspector*:
+    - Tab Switcher: Replaced `text-cyan-400` on `<Code2>` with `text-current`, achieving pure monochromatic theme contrast.
+    - Snippet Header: Replaced `text-cyan-400` on `<FileCode2>` with monochromatic `text-slate-400 dark:text-slate-300`.
+    - Textarea Code Highlighting: Replaced neon emerald with clean monochromatic syntax coloring `text-slate-200 dark:text-slate-100 placeholder-slate-500`.
+    - "Analyze Code AST" Button: Purged generic AI slop `bg-cyan-500 hover:bg-cyan-400 text-slate-950`. Replaced with official CAVDAX monochromatic high-contrast CTA (`bg-slate-950 hover:bg-slate-900 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 border border-slate-800 dark:border-white/20 font-mono font-bold shadow-xs active:scale-[0.98]`).
+    - Inferred AST Dependencies & SIG-2: Replaced `text-cyan-500 dark:text-cyan-400` with monochromatic high-contrast `text-slate-700 dark:text-slate-300` and `text-slate-800 dark:text-slate-200`.
+  - *Dev Console Diagnostic Workbench Purge (`DevConsolePage.jsx`)*: Purged `text-cyan-500` / `text-cyan-400` from Diagnostic triggers and `Code2` action indicators, unifying the workbench under obsidian/porcelain monochromatic discipline.
+  - *3-Signal Provenance Bar*: Completely removed badge box rectangles and borders around signal tags. Replaced with clean monochromatic typography and dividing rules.
   - *Risk Tier Badges*: Stripped heavy pill borders and background rectangles around `HIGH RISK`, `LOW RISK`, `CRITICAL RISK`. Now rendered with clean typographic color indicators.
   - *Upstream Prerequisites*: Stripped `border-emerald-300` and `border-amber-300` rounded-full badge pills from `SATISFIED` / `MISSING`. Now rendered as crisp, unbordered monospace colored text.
   - *Feature Selector Pillbar*: Stripped badge borders from `{feat.incoming_dependents} DEP`, preserving clean monospace text contrast.
