@@ -9,6 +9,19 @@
 
 ## 🏆 Completed Milestones & Architectural Landings
 
+### 00d. Full AI-Slop Mechanical Purge & Headless Puppeteer Visual Verification (November 27, 2026)
+- **Mechanical AST AI-Slop Eradication (`apps/client/src/components`)**:
+  - *Pure Ticks Law (IC-01)*: Purged 59 occurrences of `CheckCircle2` across 11 components (`CommandPalette`, `ConnectedRepoWorkspace`, `DevTeamPanel`, `FlagBlastRadiusCard`, `LandingPage`, `McpActionPlayground`, `NodeInspector`, `ProfilePage`, `StoryStepper`, `SupportPage`, `TerminalView`), transmuting them to bare `Check` line SVGs (`strokeWidth={2.5}`).
+  - *Generic AI Shield Ban (SHIELD-01)*: Replaced all occurrences of `ShieldAlert` in `FlagBlastRadiusCard.jsx` with semantic `AlertTriangle`.
+  - *Gradient Text Ban (TY-02)*: Eliminated `bg-clip-text text-transparent` from `LandingPage.jsx` and `CausalSolutionScroller.jsx`, establishing solid high-contrast display typography.
+  - *Obsidian Palette Grounding (BAD-NAVY)*: Purged `#0f172a` and `#1e293b` from `CausalEnclaveHub.jsx`, `CausalSolutionScroller.jsx`, `SpotlightDataRain.jsx`, and `TierBenefitsPage.jsx`, enforcing pure monochromatic obsidian `#090A0C` and `#0B0D11`.
+  - *Pulsing Indicator Removal (MO-17)*: Replaced ornamental `animate-pulse` on Track 03 Hero Pill with a steady status indicator.
+- **Headless Chrome Puppeteer Visual Audit (`scripts/audit-puppeteer-slop.mjs`)**:
+  - Executed automated visual and functional audit against live production deployment (`https://cavdax-flagsmith.sahnirmaan.live`) capturing 6 full viewports (Landing, Flags Console, AST Code Inspector, MCP Connect, Architecture Audit, Tier Benefits).
+  - Verified **0 console errors** and **0 network failures**. Verified interactive AST code analysis execution and live FalkorDB feature extraction in 14.2ms.
+- **Documentation Master Ledger (`docs/AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md`)**:
+  - Authored authoritative forensic audit document detailing before/after scorecards, rule catalogs, and verification evidence.
+
 ### 00c. GitHub OAuth Fallback Hardening & CISO Security Threat Model (November 27, 2026)
 - **GitHub OAuth Unconfigured Fallback Trap Eliminated (`apps/server/index.js`)**:
   - *Diagnosis*: Unset `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` returned raw HTTP 503 JSON to browser direct navigations (`window.location.href = '/api/auth/github'`), trapping judges on a raw JSON error screen.
