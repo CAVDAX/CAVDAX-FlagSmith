@@ -1863,23 +1863,23 @@ export default function ConnectedRepoWorkspace({
                       command: "npx",
                       args: ["-y", `@cavdax/mcp-server@${MCP_SERVER_DEFAULT_VERSION}`, "--repo", repo.full_name, "--branch", selectedBranch],
                       env: {
-                        CAVDAX_SERVER_URL: typeof window !== 'undefined' ? window.location.origin : 'https://cavdax.sahnirmaan.live'
+                        CAVDAX_SERVER_URL: typeof window !== 'undefined' ? window.location.origin : 'https://cavdax-flagsmith.sahnirmaan.live'
                       }
                     }
                   }
                 }, null, 2)}
 
                 {agentSetupTab === 'claude' && (
-                  `claude mcp add cavdax npx -y @cavdax/mcp-server@${MCP_SERVER_DEFAULT_VERSION} --repo ${repo.full_name} --branch ${selectedBranch} -e CAVDAX_SERVER_URL=${typeof window !== 'undefined' ? window.location.origin : 'https://cavdax.sahnirmaan.live'}\n\n# Registered Tools Enclosed Behind FalkorDB GraphBLAS Gate:\n# • check_intent_clearance           Pre-flight architectural radar before token burn\n# • check_file_status                Real-time active ADR governance and boundary status\n# • apply_code_change                Enclosed diff execution rejected on superseded ADRs\n# • get_architectural_blast_radius   Transitive downstream impact graph traversal\n# • revalidate_decision              GraphBLAS cache invalidation on superseding ADR\n# • get_active_invariants            Fetch active machine-verifiable rules for repo`
+                  `claude mcp add cavdax npx -y @cavdax/flagsmith-mcp@1.0.3 --repo ${repo.full_name} --branch ${selectedBranch} -e CAVDAX_SERVER_URL=${typeof window !== 'undefined' ? window.location.origin : 'https://cavdax-flagsmith.sahnirmaan.live'}\n\n# Registered Flagsmith MCP Tools Enclosed Behind FalkorDB Gate:\n# • get_flag_blast_radius            Transitive downstream feature impact graph traversal\n# • safe_toggle_flag                 Enclosed flag mutation rejected on critical blast radius\n# • list_flagsmith_features          Real-time active Flagsmith flag inventory & status\n# • scan_code_for_flags              AST static analysis for SDK invocations in repo\n# • sync_flagsmith_graph             Synchronize Flagsmith mesh with FalkorDB GraphBLAS\n# • list_stale_flags                 Audit abandoned and unreferenced feature flags`
                 )}
 
                 {agentSetupTab === 'cline' && JSON.stringify({
                   mcpServers: {
                     cavdax: {
                       command: "npx",
-                      args: ["-y", `@cavdax/mcp-server@${MCP_SERVER_DEFAULT_VERSION}`, "--repo", repo.full_name, "--branch", selectedBranch],
+                      args: ["-y", `@cavdax/flagsmith-mcp@1.0.3`, "--repo", repo.full_name, "--branch", selectedBranch],
                       env: {
-                        CAVDAX_SERVER_URL: typeof window !== 'undefined' ? window.location.origin : 'https://cavdax.sahnirmaan.live'
+                        CAVDAX_SERVER_URL: typeof window !== 'undefined' ? window.location.origin : 'https://cavdax-flagsmith.sahnirmaan.live'
                       }
                     }
                   }

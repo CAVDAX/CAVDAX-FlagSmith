@@ -1011,14 +1011,14 @@ export default function App() {
       component: 'MCP_SERVER',
       time: '15:30:02',
       type: 'INFO',
-      text: 'Enclosed tool `apply_code_change` registered. Grounded verification active.'
+      text: 'Enclosed tool `safe_toggle_flag` registered. Topological verification active.'
     }
   ]);
 
   const [latestAction, setLatestAction] = useState({
-    filePath: 'demo-repo/src/services/payment.js',
-    decisionId: 'DEC-102',
-    codeSnippet: `// Agent attempting to scaffold checkout route with deprecated TokenAuth v1:\napp.post('/api/checkout', (req, res) => {\n  const token = req.headers['x-tokenauth-v1'];\n  if (!TokenAuth.v1.verify(token)) return res.status(401).send();\n  // Process checkout...\n});`
+    filePath: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+    decisionId: 'FLAG:dark_mode',
+    codeSnippet: `// Agent inspecting feature flag state in client application:\nconst { hasFeature } = useFlags(['dark_mode', 'premium_analytics']);\nif (hasFeature('dark_mode')) {\n  applyDarkObsidianTheme();\n  // Downstream analytics initialized...\n}`
   });
 
   // Fetch initial graph, health & check first-visit tour auto-start
@@ -1260,9 +1260,9 @@ export default function App() {
       setAgentState('idle');
       await handleReset();
     } else if (actNumber === 2) {
-      // ACT II: Ingest Commit Mutation — ADR-002 supersedes ADR-001
+      // ACT II: Flagsmith Blast Radius Ingestion — dark_mode toggle impact
       setAgentState('reasoning');
-      addLog('INGESTION', 'Ingesting git commit containing ADR-002 (supersedes ADR-001)...', 'CASCADE');
+      addLog('INGESTION', 'Detecting downstream blast radius: feature flag `dark_mode` toggle requested...', 'CASCADE');
       let lat = null;
       let isSimulated = false;
       try {
@@ -1283,21 +1283,20 @@ export default function App() {
       if (isSimulated) {
         addLog(
           'SIMULATION',
-          'In-memory cascade simulated: ADR-001 -> SUPERSEDED, F-Auth-v1 -> STALE, DEC-102 -> INVALIDATED. [SIMULATION FALLBACK]',
+          'In-memory blast radius computed: dark_mode -> CASCADE_IMPACT, premium_analytics (Hop 1) -> STALE, analytics_dashboard (Hop 2) -> CRITICAL_DOWNSTREAM. [SIMULATION FALLBACK]',
           'CASCADE'
         );
       } else {
         addLog(
           'FALKORDB',
-          `Query 2 Cascade completed in ${lat ?? '<1'}ms. SUPERSEDES edge established. ADR-001 -> SUPERSEDED, F-Auth-v1 -> STALE, DEC-102 -> INVALIDATED_NEEDS_REVALIDATION.`,
+          `Query 2 Blast Radius completed in ${lat ?? '<5'}ms. 2 downstream features impacted: premium_analytics (Hop 1), analytics_dashboard (Hop 2).`,
           'CASCADE'
         );
       }
       setActiveVerdict('BLOCKED');
       setAgentState('idle');
     } else if (actNumber === 3) {
-      // ACT III: Agent Enclosed MCP Gate Execution Call — blocked on stale DEC-102
-      // When switching back to Act 3 from Act 4, clean up DEC-103 so the state cleanly reflects the blocked DEC-102 attempt
+      // ACT III: Agent Enclosed MCP Gate Execution Call — blocked on dependent feature flag breach
       setGraphData(prev => {
         const hasD103 = prev.nodes.some(n => n.id === 'DEC-103');
         if (!hasD103) return prev;
@@ -1309,11 +1308,11 @@ export default function App() {
         };
       });
       setAgentState('executing');
-      addLog('AGENT', 'Autonomous Coding Agent requests tool execution: `apply_code_change` with DEC-102...', 'INFO');
+      addLog('AGENT', 'Autonomous Coding Agent requests MCP tool execution: `safe_toggle_flag("dark_mode", false)`...', 'INFO');
       setLatestAction({
-        filePath: 'demo-repo/src/services/payment.js',
-        decisionId: 'DEC-102',
-        codeSnippet: `// AGENT PROPOSED MUTATION (STALE PROVENANCE):\napp.post('/api/checkout', (req, res) => {\n  const token = req.headers['x-tokenauth-v1'];\n  if (!TokenAuth.v1.verify(token)) return res.status(401).send();\n  res.json({ status: 'paid' });\n});`
+        filePath: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+        decisionId: 'FLAG:dark_mode',
+        codeSnippet: `// AGENT PROPOSED UNCHECKED FEATURE TOGGLE:\nawait flagsmith.setFeatureState('dark_mode', false);\n// CRITICAL WARNING: Downstream dependents 'premium_analytics' and\n// 'analytics_dashboard' depend on dark_mode palette without fallback!`
       });
 
       let data;
@@ -1323,7 +1322,7 @@ export default function App() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ toolName: 'apply_code_change', args: { decision_id: 'DEC-102', file_path: 'demo-repo/src/services/payment.js', code_payload: '// TokenAuth v1 code' } })
+          body: JSON.stringify({ toolName: 'safe_toggle_flag', args: { flag_name: 'dark_mode', enabled: false } })
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         data = await res.json();
@@ -1339,15 +1338,15 @@ export default function App() {
       setAgentState('rejected');
       playRejectBuzz();
       if (isSimulated) {
-        addLog('MCP_GATE', `ENCLOSED MCP GATE BLOCKED [SIMULATION FALLBACK]. Verdict: ${data.gate_verdict}. Write rejected. Zero files modified.`, 'GATE_BLOCK', data.violation_paths);
+        addLog('MCP_GATE', `ENCLOSED MCP GATE BLOCKED [SIMULATION FALLBACK]. Verdict: ${data.gate_verdict}. Unsafe toggle rejected. Zero flags mutated.`, 'GATE_BLOCK', data.violation_paths);
       } else {
-        addLog('MCP_GATE', `ENCLOSED MCP GATE BLOCKED in ${data.latency_ms}ms! Verdict: ${data.gate_verdict}. Write rejected. Zero files modified.`, 'GATE_BLOCK', data.violation_paths);
+        addLog('MCP_GATE', `ENCLOSED MCP GATE BLOCKED in ${data.latency_ms}ms! Verdict: ${data.gate_verdict}. Unsafe toggle rejected. Zero flags mutated.`, 'GATE_BLOCK', data.violation_paths);
       }
 
     } else if (actNumber === 4) {
-      // ACT IV: Revalidation & Safe Execution — DEC-103 synthesized, OAuth2 written
+      // ACT IV: Revalidation & Safe Execution — Dependent features migrated, safe toggle approved
       setAgentState('reasoning');
-      addLog('AGENT', 'Act IV: Agent synthesizes Decision DEC-103 grounded in fresh Source ADR-002...', 'REVALIDATION');
+      addLog('AGENT', 'Act IV: Agent coordinates topological safe cutover: updates downstream analytics with dynamic theme fallback...', 'REVALIDATION');
 
       let isRevalSimulated = false;
       try {
@@ -1369,12 +1368,17 @@ export default function App() {
             { source: 'DEC-103', target: 'DEC-102', type: 'REPLACES' }
           ];
           return {
-            nodes: hasD103 ? nodes : [...nodes, { id: 'DEC-103', label: 'Decision', title: 'Scaffold Payment Gateway with OAuth2 (JWT/RS256)', status: 'VALID' }],
+            nodes: hasD103 ? nodes : [...nodes, { id: 'DEC-103', label: 'Decision', title: 'Topological Safe Cutover with Dynamic Theme Fallback', status: 'VALID' }],
             edges: newEdges
           };
         });
         addLog('SYSTEM', 'Notice: Backend offline — simulating revalidation in-browser.', 'INFO');
       }
+      setLatestAction({
+        filePath: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+        decisionId: 'FLAG:dark_mode (SAFE)',
+        codeSnippet: `// REVALIDATED SAFE TOGGLE WITH TOPOLOGICAL FALLBACK:\nawait flagsmith.setFeatureState('dark_mode', false, {\n  fallback: 'light_mode_v2',\n  downstreamSafe: true\n});\n// FalkorDB verified: zero runtime breaks across 2 downstream dependents.`
+      });
       if (isRevalSimulated) {
         addLog('SIMULATION', 'In-memory revalidation simulated: DEC-103 created; DEC-102 archived. [SIMULATION FALLBACK]', 'REVALIDATION');
       } else {
@@ -1382,11 +1386,11 @@ export default function App() {
       }
 
       setAgentState('executing');
-      addLog('AGENT', 'Agent re-submits `apply_code_change` using verified DEC-103...', 'INFO');
+      addLog('AGENT', 'Agent re-submits `safe_toggle_flag` with dynamic theme fallback verified...', 'INFO');
 
-      const oauthCode = `/**\n * Payment Gateway Service\n * Verified & Grounded in DEC-103 (ADR-002: OAuth2 JWT/RS256)\n */\nimport express from 'express';\nimport { verifyOAuth2Bearer } from './auth.js';\n\nconst app = express();\napp.use(express.json());\n\n// Verified OAuth2 Checkout Endpoint\napp.post('/api/v2/checkout', verifyOAuth2Bearer, (req, res) => {\n  res.json({ status: 'approved', authMethod: 'OAuth2-RS256' });\n});\n\nexport default app;`;
+      const flagsmithToggleCode = `/**\n * Flagsmith Safe Toggle\n * Verified Topologically with Dynamic Fallback\n */\nawait flagsmith.setFeatureState('dark_mode', false, {\n  fallback: 'light_mode_v2',\n  downstreamSafe: true\n});\n// FalkorDB verified: zero runtime breaks across 2 downstream dependents.`;
 
-      setLatestAction({ filePath: 'demo-repo/src/services/payment.js', decisionId: 'DEC-103', codeSnippet: oauthCode });
+      setLatestAction({ filePath: 'apps/client-pwa/src/components/ThemeWrapper.jsx', decisionId: 'FLAG:dark_mode (SAFE)', codeSnippet: flagsmithToggleCode });
 
       let execData;
       let isExecSimulated = false;
@@ -1395,7 +1399,7 @@ export default function App() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ toolName: 'apply_code_change', args: { decision_id: 'DEC-103', file_path: 'demo-repo/src/services/payment.js', code_payload: oauthCode } })
+          body: JSON.stringify({ toolName: 'safe_toggle_flag', args: { flag_name: 'dark_mode', enabled: false, fallback: 'light_mode_v2' } })
         });
         if (!execRes.ok) throw new Error(`HTTP ${execRes.status}`);
         execData = await execRes.json();

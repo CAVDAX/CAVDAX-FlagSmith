@@ -219,24 +219,24 @@ Most agent governance tools are purely advisory (*"please respect this system pr
 
 ```
 +---------------------------------------------------------------------------------------------------------+
-| CAVDAX DUAL-PLANE ENCLOSED EXECUTION ARCHITECTURE                                                      |
+| CAVDAX DUAL-PLANE ENCLOSED EXECUTION ARCHITECTURE (FLAGSMITH CAUSAL GATEWAY)                           |
 +----------------------------------------------------+----------------------------------------------------+
-| PLANE 1: LOCAL IN-IDE PRE-WRITE FIREWALL           | PLANE 2: CLOUD CI/CD PULL REQUEST GATE            |
+| PLANE 1: LOCAL IN-IDE PRE-MUTATION FIREWALL        | PLANE 2: CLOUD CI/CD PULL REQUEST GATE            |
 | (Cursor, Claude Code, Cline, Windsurf)             | (GitHub Actions, Headless CI, Merge Checks)        |
 +----------------------------------------------------+----------------------------------------------------+
-| • Intercepts apply_code_change over local stdio    | • Executes npx @cavdax/mcp-server gate --sha ...   |
-| • Traverses FalkorDB DAG in < 2.5ms before write   | • Scans git diff against repository decisions      |
-| • ZERO invalid bytes reach the developer's disk    | • HARD-BLOCKS pull requests before merge           |
-| • Proactive intent clearance (check_intent_...)    | • Emits rich Markdown proof to $GITHUB_STEP_SUMMARY|
+| • Intercepts safe_toggle_flag over local stdio     | • Executes npx @cavdax/flagsmith-mcp gate --sha... |
+| • Traverses FalkorDB DAG in < 4.5ms before toggle  | • Scans PR diffs against feature flag dependencies |
+| • ZERO breaking flag mutations reach production    | • HARD-BLOCKS PRs causing unmigrated flag breaks   |
+| • Pre-flight blast radius (get_flag_blast_radius)  | • Emits rich Markdown blast report to STEP_SUMMARY |
 +----------------------------------------------------+----------------------------------------------------+
 ```
 
-When a superseding commit or ADR arrives:
-1. **Deterministic Ingestion:** Frontmatter (`supersedes: ADR-001`) and commit messages are parsed deterministically without probabilistic LLM hops.
-2. **Cascading Invalidation Wave:** FalkorDB establishes a `[:SUPERSEDES]` relationship and cascades invalidation status flags across the DAG in **< 2.5ms** via GraphBLAS sparse matrix operations.
-3. **Plane 1 (In-IDE stdio Enclosure):** The agent's file modification tool (`apply_code_change`) is enclosed inside an internal parameterized Cypher gate. If any ancestor source or fact has been superseded, the gate **hard-blocks** execution (`BLOCKED_SUPERSEDED_SOURCE`). Zero invalid bytes are written to disk.
-4. **Plane 2 (Cloud CI Pull Request Gate):** In automated workflows where autonomous agents open PRs, `cavdax-gate.yml` verifies grounding against the remote graph before code can ever merge into the protected branch.
-5. **Dynamic Invalidation Recovery:** The agent is prompted to invoke `revalidate_decision` to ground actions in active sources, enabling safe, verified execution.
+When an agent or developer attempts a feature flag toggle:
+1. **Multi-Signal Ingestion:** Flagsmith REST metadata (Signal 1), AST code references (Signal 2), and git temporal co-change matrices (Signal 3) are synthesized into FalkorDB.
+2. **Topological GraphBLAS Traversal:** FalkorDB executes Boolean semiring matrix multiplication in **< 4.5ms** to determine multi-hop upstream prerequisites and downstream dependents.
+3. **Plane 1 (In-IDE stdio Enclosure):** The agent's feature flag mutation tool (`safe_toggle_flag`) is enclosed inside a Cypher verification gate. If downstream dependents remain unmigrated without fallbacks, the gate **hard-blocks** execution (`BLOCKED_CRITICAL_BLAST_RADIUS`). Zero breaking mutations reach Flagsmith.
+4. **Plane 2 (Cloud CI Pull Request Gate):** In automated workflows where autonomous agents open PRs, `cavdax-flagsmith-gate.yml` verifies flag grounding against the remote graph before code can ever merge.
+5. **Dynamic Topological Recovery:** The agent is guided to synthesize fallback branches or migrate dependents, achieving verified zero-regression cutover.
 
 ---
 
@@ -1075,44 +1075,36 @@ claude mcp add cavdax -- npx -y @cavdax/mcp-server
 claude mcp add cavdax https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer YOUR_CAVDAX_API_KEY"
 ```
 
-### Registered Model Context Protocol (MCP) Tools
-1. `check_intent_clearance`: **Proactive Architectural Pre-Flight Radar.** Allows AI coding agents (Claude Code, Devin, Cursor) to verify proposed actions against FalkorDB *prior to generating tokens or editing files*. Eliminates reactive token burn in < 2ms.
-2. `apply_code_change`: **Enclosed Execution Gate.** Intercepts in-flight file write actions and validates decision provenance against the causal graph. Hard-blocks execution if grounding facts are stale (`BLOCKED_SUPERSEDED_SOURCE`).
-3. `revalidate_decision`: **Dynamic Invalidation Recovery.** Synthesizes a new Decision replacing an invalidated or superseded one, automatically linking the new Decision to active Facts extracted from fresh ADRs.
-4. `acquire_decision_lock`: **Distributed Concurrency Lock.** Prevents race conditions during multi-agent workflows (e.g. concurrent Devin or Claude Code sessions) by leasing atomic locks on specific decision branches.
-5. `release_decision_lock`: **Lease Release.** Voluntarily releases leased locks upon completed task milestone execution.
-6. `export_graph_image`: **Visual PR Artifact Generator.** Produces standalone SVG/PNG vector maps with Vision OCR tags for automated PR descriptions and multimodal model grounding.
-7. `query_causal_graph` *(Local CLI/stdio)*: Sub-millisecond GraphBLAS BFS Cypher query for active ADRs, dependencies, and invalidation trails.
+### Registered Model Context Protocol (MCP) Tools (`@cavdax/flagsmith-mcp` v1.0.3)
+1. `get_flag_blast_radius`: **Topological Blast Radius Calculator.** Computes multi-hop upstream prerequisites and downstream dependents across all 3 signals (Flagsmith tags, AST code references, Git temporal coupling) via GraphBLAS in `< 5ms`.
+2. `safe_toggle_flag`: **Enclosed Feature Flag Execution Gate.** Intercepts in-flight flag toggles and validates topological dependency safety against FalkorDB. Hard-blocks execution if downstream dependents are unmigrated (`CRITICAL_DOWNSTREAM_BREACH`).
+3. `list_flagsmith_features`: **Real-Time Flag Inventory.** Returns current feature flags, production enablement states, incoming dependent counts, and risk tiers directly from the self-hosted Flagsmith instance.
+4. `scan_code_for_flags`: **AST Syntactic Code Scanner.** Parses repository source files (`.js`, `.jsx`, `.ts`, `.tsx`, `.py`) to extract Flagsmith SDK invocations (`hasFeature`, `isFeatureEnabled`, `useFlags`, `getValue`) and infer structural code dependencies.
+5. `sync_flagsmith_graph`: **Multi-Signal Mesh Synchronizer.** Reconciles self-hosted Flagsmith REST API entities with the live repository AST and FalkorDB GraphBLAS matrix engine.
+6. `list_stale_flags`: **Technical Debt & Stale Flag Auditor.** Discovers abandoned, 100% rolled-out, or unreferenced feature flags for safe cleanup without breaking dormant code branches.
 
-### Universal CLI Daemon (`@cavdax/mcp-server` v1.3.3)
+### Universal CLI Daemon (`@cavdax/flagsmith-mcp` v1.0.3)
 
-> **Zero-Dependency Supply Chain Hardening**: `@cavdax/mcp-server` uses Node.js native `node:util.parseArgs` with zero external CLI runtime dependencies (no `commander`, no `child_process` shell hooks). Scored **100/100 Vulnerability**, **100/100 Quality**, **100/100 License**, and verified with **Sigstore SLSA-3 Build Provenance**.
+> **Zero-Dependency Supply Chain Hardening**: `@cavdax/flagsmith-mcp` uses Node.js native `node:util.parseArgs` with zero external CLI runtime dependencies (no `commander`, no `child_process` shell hooks). Scored **100/100 Vulnerability**, **100/100 Quality**, **100/100 License**, and verified with **Sigstore SLSA-3 Build Provenance**.
 
 ```bash
-# Start local Model Context Protocol stdio daemon
-npx -y @cavdax/mcp-server
+# Start local Model Context Protocol stdio daemon for Flagsmith
+npx -y @cavdax/flagsmith-mcp
 
-# Scaffold docs/adr, baseline ADR-001, and .cursor/mcp.json in seconds
-npx cavdax init
+# Connect Claude Code CLI to live CAVDAX Flagsmith SSE Gate
+claude mcp add cavdax https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer YOUR_API_KEY"
 
-# Diagnose FalkorDB GraphBLAS connection and causal DAG health
-npx cavdax doctor
+# Compute topological blast radius for a feature flag
+npx @cavdax/flagsmith-mcp blast-radius --flag dark_mode
 
-# List active architectural decisions and governed file targets
-npx cavdax decisions
+# Execute safe toggle with pre-flight downstream dependency verification
+npx @cavdax/flagsmith-mcp safe-toggle --flag dark_mode --state false
 
-# Calculate downstream architectural impact and invalidated AST dependents
-npx cavdax impact <node_id>
+# Scan repository source code for Flagsmith SDK invocations
+npx @cavdax/flagsmith-mcp scan --repo .
 
-# Ingest ADRs (supports standard YAML frontmatter and plain Markdown files)
-npx cavdax ingest --repo .
-
-# Validate staged files or PR diffs against active architecture decisions
-npx cavdax check --staged
-npx cavdax check --pr <number>
-
-# CI/CD Pull Request Invariant Gate (verify commits in GitHub Actions with remote fallback)
-npx -y @cavdax/mcp-server@1.3.3 gate --repo <owner/repo> --sha $GITHUB_SHA --strict
+# Synchronize Flagsmith REST API features with FalkorDB GraphBLAS
+npx @cavdax/flagsmith-mcp sync --api https://cavdax-flagsmith.sahnirmaan.live/flagsmith/api/v1/
 ```
 
 ---

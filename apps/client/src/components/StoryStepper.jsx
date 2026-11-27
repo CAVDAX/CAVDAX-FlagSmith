@@ -5,30 +5,30 @@ export default function StoryStepper({ currentAct, onSelectAct, loadingAct }) {
   const acts = [
     {
       act: 1,
-      title: 'Act I: Baseline',
-      subtitle: 'ADR-001 Active',
-      desc: 'TokenAuth v1 is accepted; DEC-102 is valid.',
+      title: 'Act I: Flag Baseline',
+      subtitle: 'dark_mode Active',
+      desc: 'Topological mesh healthy; 2 downstream dependents satisfied.',
       icon: Play,
     },
     {
       act: 2,
-      title: 'Act II: Ingest Commit',
-      subtitle: 'ADR-002 Supersedes',
-      desc: 'YAML parser detects superseding; FalkorDB invalidates DAG in 2.1ms.',
+      title: 'Act II: Blast Radius',
+      subtitle: 'Cascading Impact',
+      desc: 'FalkorDB computes 2-hop blast radius across AST & Git coupling in 4.5ms.',
       icon: GitCommit,
     },
     {
       act: 3,
       title: 'Act III: Enclosed MCP Gate',
-      subtitle: 'Agent Call Blocked',
-      desc: 'Agent invokes apply_code_change; Gate intercepts & hard blocks write.',
+      subtitle: 'Unsafe Toggle Blocked',
+      desc: 'Agent calls safe_toggle_flag; Gate intercepts & hard blocks critical blast.',
       icon: AlertTriangle,
     },
     {
       act: 4,
-      title: 'Act IV: Revalidation',
-      subtitle: 'DEC-103 Verified & Written',
-      desc: 'Agent synthesizes DEC-103; Gate approves & writes OAuth2 code to disk.',
+      title: 'Act IV: Safe Cutover',
+      subtitle: 'Topological Approval',
+      desc: 'Downstream migrated; Gate approves & safely executes toggle in Flagsmith.',
       icon: Check,
     }
   ];

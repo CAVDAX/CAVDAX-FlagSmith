@@ -73,58 +73,49 @@ function usePillTracker(activeKey, extraDep = null) {
 // ─── Realistic Fallback Audit Trail for Demo & Offline Resilience ─────────────
 const DEMO_FALLBACK_AUDIT_ENTRIES = [
   {
-    action_id: 'ACT-004-VERIFIED-WRITE',
-    target_file: 'services/payment/v2/checkout.js',
-    status: 'EXECUTED',
+    action_id: 'ACT-004-SAFE-TOGGLE',
+    target_file: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
+    status: 'APPROVED',
     executed_at: Date.now() - 35000,
-    decision_id: 'DEC-103',
+    decision_id: 'FLAG:dark_mode',
     decision_status: 'VALID',
-    decision_title: 'ADR-002: OAuth2 JWT/RS256 Migration'
+    decision_title: 'Topological Safe Cutover (dynamic theme fallback verified)'
   },
   {
-    action_id: 'ACT-003-BLOCKED-DEC',
-    target_file: 'services/auth/token_verifier.js',
-    status: 'BLOCKED_SUPERSEDED_SOURCE',
-    executed_at: Date.now() - 90000,
-    decision_id: 'DEC-102',
-    decision_status: 'REPLACED_ARCHIVED',
-    decision_title: 'ADR-001: Legacy TokenAuth v1'
-  },
-  {
-    action_id: 'ACT-002-BLOCKED-STALE',
-    target_file: 'services/payment/checkout.js',
+    action_id: 'ACT-003-BLOCKED-BLAST',
+    target_file: 'apps/client-pwa/src/components/ThemeWrapper.jsx',
     status: 'BLOCKED_STALE_FACT',
-    executed_at: Date.now() - 150000,
-    decision_id: 'DEC-101',
+    executed_at: Date.now() - 90000,
+    decision_id: 'FLAG:dark_mode',
     decision_status: 'INVALIDATED_NEEDS_REVALIDATION',
-    decision_title: 'DEC-101: Baseline Checkout Token'
+    decision_title: 'safe_toggle_flag blocked: 2 downstream dependents unmigrated'
   },
   {
-    action_id: 'ACT-001-INIT',
-    target_file: 'services/payment/checkout.js',
+    action_id: 'ACT-002-TOPOLOGY-MINED',
+    target_file: 'apps/client-pwa/src/features/analytics/Dashboard.jsx',
+    status: 'APPROVED',
+    executed_at: Date.now() - 150000,
+    decision_id: 'AST:analytics_dashboard',
+    decision_status: 'VALID',
+    decision_title: 'Signal 2 AST: flagsmith.hasFeature("analytics_dashboard") detected'
+  },
+  {
+    action_id: 'ACT-001-FLAG-INGEST',
+    target_file: 'flagsmith.json',
     status: 'EXECUTED',
     executed_at: Date.now() - 240000,
-    decision_id: 'DEC-101',
+    decision_id: 'SYNC:flagsmith_features',
     decision_status: 'VALID',
-    decision_title: 'DEC-101: Baseline Checkout Token'
-  },
-  {
-    action_id: 'ACT-000-ADR-AUDIT',
-    target_file: 'docs/adr/002-oauth2-migration.md',
-    status: 'APPROVED',
-    executed_at: Date.now() - 360000,
-    decision_id: 'DEC-103',
-    decision_status: 'VALID',
-    decision_title: 'ADR-002: Ingestion Verification'
+    decision_title: 'Flagsmith Mesh Sync: 12 features mapped to FalkorDB GraphBLAS'
   },
   {
     action_id: 'ACT-000-GRAPH-BOOT',
-    target_file: 'core/falkordb/schema.cypher',
+    target_file: 'core/falkordb/flagsmith_schema.cypher',
     status: 'EXECUTED',
-    executed_at: Date.now() - 480000,
-    decision_id: 'DEC-100',
+    executed_at: Date.now() - 360000,
+    decision_id: 'SCHEMA:falkordb_mesh',
     decision_status: 'VALID',
-    decision_title: 'DEC-100: Schema Initialization'
+    decision_title: 'GraphBLAS Matrix Kernel Topology Initialized'
   }
 ];
 
@@ -681,7 +672,7 @@ export default function AuditPage() {
           <div className="rounded-2xl bg-white/60 dark:bg-slate-950/50 backdrop-blur-3xl shadow-[0_24px_60px_-15px_rgba(0,0,0,0.06)] dark:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden">
             {/* Table header */}
             <div className="grid grid-cols-[1fr_1.4fr_0.9fr_0.9fr_1.5fr] gap-x-3 px-3.5 py-2.5 border-b border-slate-200/50 dark:border-white/5 bg-slate-100/50 dark:bg-slate-950/40">
-              {['Action ID', 'Target File', 'Verdict', 'Decision', 'Executed At'].map(h => (
+              {['Action ID', 'Target Flag / File', 'Verdict', 'Decision / Topology', 'Executed At'].map(h => (
                 <span key={h} className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">
                   {h}
                 </span>
