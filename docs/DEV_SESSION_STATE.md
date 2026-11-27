@@ -12525,3 +12525,34 @@ A complete visual and architectural transformation has been executed across the 
     3. **MCP Architecture**: Fix stale domain URLs and document the 6 first-class Flagsmith MCP tools.
     4. **Audit Ledger**: Connect to live FalkorDB GraphBLAS feature flag governance events.
 
+
+### Milestone 2026-11-27: Docker Container Conflict Resolution, CI/CD Deploy Hardening, FalkorDB Mesh Seed, Orb Purge & Full Documentation Suite Synchronization
+
+- **Docker Rolling Recreation Conflict Root Cause & Permanent Fix (`.github/workflows/deploy.yml`)**:
+  - *Root Cause Diagnosed*: During rolling recreation (`docker compose up -d client`), Docker daemon unmounted containers with slight latency, causing name lock conflicts: `Error response from daemon: Conflict. The container name "/cavdax-client" is already in use by container...`.
+  - *Hardening Implemented*: Updated `.github/workflows/deploy.yml` with `--force-recreate` on all `docker compose up` invocations and an automatic `docker rm -f "cavdax-$svc"` clearing routine before retrying.
+  - *Permanent Runbook Update*: Added Section 10 to `docs/DEPLOYMENT_AND_INFRA_RUNBOOK.md` detailing the container name collision invariant, automated CI/CD safeguards, and emergency clean-slate commands.
+
+- **Interactive Console & 4-Act Flagsmith Transformation**:
+  - Refactored `App.jsx`, `StoryStepper.jsx`, and `McpActionPlayground.jsx` to completely replace the legacy ADR TokenAuth simulation with the Flagsmith Feature Flag Mesh:
+    - Act I: Flagsmith Baseline Mesh (`theme_system`, `auth_v2`, `dark_mode`, `premium_analytics`, `analytics_dashboard`, `ref_theme_provider`, `ref_analytics_panel`).
+    - Act II: Multi-Signal Ingestion (AST scan + Git temporal Jaccard miner discovering `premium_analytics -> dark_mode`).
+    - Act III: Enclosed MCP Gate Intercept halting unsafe toggle of `dark_mode` with `BLOCKED_HIGH_BLAST_RADIUS` (HTTP 409).
+    - Act IV: Revalidation with dynamic theme fallback and verified prerequisite guards (`APPROVED`, HTTP 200).
+  - Fixed esbuild ternary syntax error in `McpActionPlayground.jsx`.
+
+- **FalkorDB GraphBLAS Demo Seed Overhaul (`core/graph/queries.js`)**:
+  - Overhauled `seedDemoGraph(graph)` to instantiate 12 authentic Flagsmith feature nodes and 10 topological dependency edges (`[:DEPENDS_ON]`, `[:GUARDS]`, `[:CO_CHANGED_WITH]`).
+  - Seeded 3 real historical audit records into `:AgentAction` ledger.
+  - Verified live via `/api/graph` (12 nodes, 10 edges) and `/api/audit` (3 records, 12.96ms latency).
+
+- **Visual AI Slop & Ambient Orb Purge**:
+  - Purged ambient background halo blur orbs and glowing specular spheres across `TeamPage.jsx`, `CausalSolutionScroller.jsx`, and `SubsystemErrorBoundary.jsx`.
+  - Verified with comprehensive Puppeteer text scanner across all 9 web HUD routes on `https://cavdax-flagsmith.sahnirmaan.live` (0 residual ADR keywords).
+
+- **Full Documentation Suite Synchronization (`Suneet-MASTER-Documentation-Product-Manager-Skill`)**:
+  - Fully rewritten `docs/PRD.md`: Sections 1, 2, and 3 now 100% focused on Flagsmith feature flag blast radius, the 3-signal inference engine, FalkorDB GraphBLAS, the 4 Acts, and the 6 MCP tools.
+  - Fully rewritten `docs/ARCHITECTURE.md`: Sections 1 through 5 updated with Flagsmith topology diagram, 4-Act Mermaid sequence diagram, Cypher schemas (`:FlagsmithFeature`, `:CodeReference`, `:AgentAction`), and the 6 first-class Flagsmith MCP tool schemas.
+  - Synchronized `docs/DOCS_PROGRESS_TRACKER.md` (v1.3.5) with verified invariant scorecard and deployment health.
+
+

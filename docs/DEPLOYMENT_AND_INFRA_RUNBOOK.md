@@ -275,3 +275,34 @@ docker compose -f infra/docker-compose.prod.yml logs --tail=100 -f server
 git checkout HEAD~1
 docker compose -f infra/docker-compose.prod.yml up --build -d
 ```
+
+---
+
+## 10. Container Name Collision & Rolling Recreation Invariant
+
+### 10.1 Problem Analysis
+During rapid rolling deployments or failed recreation cycles, Docker daemon may unmount a container (`cavdax-client` or `cavdax-server`) asynchronously while retaining the container name in its internal namespace table. Subsequent `docker compose up -d` calls may throw:
+```
+err: Container cavdax-client Error response from daemon: Conflict. 
+The container name "/cavdax-client" is already in use by container "5d19abb4d...". 
+You have to remove (or rename) that container to be able to reuse that name.
+```
+
+### 10.2 Permanent Architectural Safeguard
+The automated GitHub Actions workflow (`.github/workflows/deploy.yml`) implements an automated retry and force-recreate mechanism:
+1. Always passes `--force-recreate` to `docker compose up -d --no-deps`.
+2. Intercepts any unmount delay by automatically executing `docker rm -f cavdax-$svc` before retrying up to 4 attempts.
+3. Automatically frees container name locks without developer intervention.
+
+### 10.3 Manual Emergency Reset (Clean Slate)
+If containers ever become deadlocked manually on the host VM:
+```bash
+# Force-remove all active and stopped cavdax containers
+docker rm -f cavdax-server cavdax-client cavdax-falkordb cavdax-flagsmith-db cavdax-flagsmith-api cavdax-caddy 2>/dev/null || true
+
+# Recreate the stack cleanly with no-orphans
+docker compose -f infra/docker-compose.prod.yml up -d --remove-orphans
+
+# Verify container health
+docker compose -f infra/docker-compose.prod.yml ps
+```

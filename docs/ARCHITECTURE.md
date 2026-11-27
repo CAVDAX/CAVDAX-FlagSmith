@@ -1,99 +1,99 @@
-# System Architecture Specification — CAVDAX
+# System Architecture Specification — CAVDAX for Flagsmith
 
-**Project**: CAVDAX (**C**ontextual **A**ction & **V**erified **D**ecision **A**utonomous e**X**ecution)  
-**System Class**: Causal Knowledge Graph & Enclosed MCP Execution Gate  
-**Version**: 1.0.0-PRODUCTION  
+**Project**: CAVDAX (**C**ontextual **A**ction & **V**erified **D**ecision **A**utonomous e**X**ecution) for Flagsmith  
+**System Class**: Multi-Signal Causal Feature Flag Blast Radius & Enclosed MCP Gate  
+**Version**: 1.3.0-PRODUCTION (Synchronized with Live Production Gateway `https://cavdax-flagsmith.sahnirmaan.live`)  
 
 ---
 
-## 1. System Topology & Technology Stack Justification
+## 1. System Topology & Multi-Signal Architecture
 
-CAVDAX is architected as a high-performance, low-latency polyglot monorepo engineered to provide autonomous AI coding agents with verifiable causal provenance before any code mutation reaches disk.
+CAVDAX for Flagsmith is architected as a high-performance, low-latency polyglot system engineered to provide autonomous AI coding agents and engineering teams with verifiable causal topology before any feature toggle or code mutation reaches production.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                          PRESENTATION & HUD TIER                                │
 │   React 18 + Vite + Tailwind CSS + Lucide + Framer Motion Kinetic Physics       │
-│   - Interactive Temporal DAG Canvas with dynamic column layout auto-scaling    │
-│   - Draggable & Responsive Node Inspector with container boundary physics       │
-│   - Live What-If Blast Radius Simulation & Downstream Dependency Traversal      │
-│   - Monochromatic Design System, Sound Engine, and Audit Trail Quick-Filters    │
+│   - Interactive Flag Radar & Topology Canvas (FalkorDB GraphBLAS Matrix Engine) │
+│   - Split-Pane AST Live Code Inspector & Preset Evaluator                      │
+│   - 4-Act Flagsmith Causal Verification Console (Interactive Stepper)           │
+│   - Live Audit Trail Quick-Filters, Sound Engine, and Monochromatic Obsidian UI │
 └──────────────────────────────────────┬──────────────────────────────────────────┘
-                                       │ HTTP REST & SSE (/api/events, /api/graph)
+                                       │ HTTP REST & SSE (/api/flagsmith/*, /api/graph)
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                        MCP INTERCEPTOR & GATEWAY TIER                           │
 │   Node.js (v20+) + Express Gateway + MCP Protocol Standard Server               │
-│   - GitHub ADR Scanner & Smart Stack Detector (apps/server/githubAdr.js)        │
-│   - Non-Destructive Pull Request Engine (cavdax/init-adr, cavdax/sync-*)        │
-│   - Standalone SVG & Vision OCR Generator (core/graph/renderSvg.js)             │
-│   - Atomic System State & Session Store (apps/server/systemState.js)            │
-│   - Enclosed Tool Handlers: apply_code_change, export_graph_image, check_intent │
+│   - 3-Signal Inference Engine (Flagsmith REST + AST Static + Git Jaccard)       │
+│   - Enclosed Flagsmith MCP Server (6 Tools: blast_radius, safe_toggle, etc.)    │
+│   - Bi-Directional Flagsmith API Sync Controller (apps/server/flagsmithSync.js) │
+│   - Standalone npm distribution: @cavdax/flagsmith-mcp@1.0.3                   │
 │   - Out-of-Band Divergence Radar: Resend API Dispatcher + VAPID Web Push Broker │
-│   - GitHub Webhook Ingestion Engine: POST /api/github/webhook with HMAC-SHA256   │
 └──────────────────────────────────────┬──────────────────────────────────────────┘
                                        │ FalkorDB Client (Redis Protocol / Parameterized Cypher)
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                      CAUSAL GRAPHBLAS STORAGE & KERNEL                          │
 │   FalkorDB 0.4+ Container (GraphBLAS Sparse Matrix Linear Algebra Engine)       │
-│   Causal Directed Acyclic Graph (DAG): Sources ──► Facts ──► Decisions ──► Actions│
-│   Sub-2ms matrix invalidation traversal via ANY() path reachability             │
+│   Causal Directed Acyclic Graph: :FlagsmithFeature ──► :CodeReference           │
+│   Sub-2ms matrix blast radius reachability via R = ⊕ A^k (k=1..3)              │
+│   Tamper-Evident Agent Action Audit Ledger (:AgentAction)                       │
 └──────────────────────────────────────┬──────────────────────────────────────────┘
-                                       │ Atomic Write-Through on Approved Verdict
+                                       │ Multi-Signal Ingestion & Safe State Writes
                                        ▼
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                    TARGET CODEBASES & REPOSITORY ECOSYSTEM                      │
-│   - Local Protected Disk: Sandboxed target files (demo-repo/src/services/...)  │
-│   - External GitHub Repos: Zero-touch default branches; dedicated review PRs    │
+│                    FLAGS MESH & TARGET REPOSITORIES                             │
+│   - Self-Hosted Flagsmith API & PostgreSQL DB (:8000 / :5432)                   │
+│   - External Flagsmith Cloud REST API (v1 /flags/)                              │
+│   - Target Codebases: Source ASTs (flagsmith.hasFeature, isFeatureEnabled, etc.)│
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ### 1.1 Stack Selection Rationale
-- **Out-of-Band Divergence Radar (Resend API + RFC 8292 VAPID Web Push)**: Real-time enclosed gating protects in-flight tool calls, but human engineers operate asynchronously. The divergence radar monitors repository mutations via webhooks and dispatches blast-radius bound alerts via Resend (`no-reply@sahnirmaan.live`) and background Service Worker push (`/sw.js`), eliminating silent architectural decay.
-
-- **Client (React 18 + Vite)**: Instant HMR, minimal bundle footprint (<200kB), hardware-accelerated pure CSS animations for brand assets with zero external heavy canvas dependencies.
-- **MCP Gateway (Node.js Express + MCP Protocol)**: Native compatibility with Claude Code, Cursor, and standard LLM tool-calling conventions. Complete protocol specification and enterprise deployment architecture are detailed in [MCP_SPECIFICATION.md](MCP_SPECIFICATION.md).
-- **Graph Storage (FalkorDB + GraphBLAS)**: Traditional relational databases cannot perform multi-hop recursive dependency traversals under 10ms. Vector databases cannot perform causal graph invalidation. FalkorDB leverages GraphBLAS sparse matrix linear algebra to execute multi-hop Cypher queries in **<2ms**, making pre-execution gating imperceptible to developer workflows.
+- **FalkorDB + GraphBLAS**: Traditional relational databases cannot perform multi-hop recursive dependency traversals under 10ms. Vector databases cannot perform topological causal graph invalidations. FalkorDB leverages GraphBLAS sparse matrix linear algebra to execute multi-hop Cypher queries in **<2ms**, making pre-execution gating imperceptible to developer workflows.
+- **MCP Gateway (Node.js Express + MCP Protocol)**: Native compatibility with Claude Code, Cursor, Windsurf, and standard LLM tool-calling conventions. Exposes 6 first-class tools for feature flag governance. Complete protocol specification is detailed in [MCP_SPECIFICATION.md](MCP_SPECIFICATION.md).
+- **Client (React 18 + Vite)**: Instant HMR, minimal bundle footprint (<200kB), hardware-accelerated pure CSS animations with zero external heavy canvas dependencies.
+- **Out-of-Band Divergence Radar (Resend API + RFC 8292 VAPID Web Push)**: Real-time enclosed gating protects in-flight tool calls, while out-of-band notifications alert human engineers when upstream flag states mutate.
 
 ---
 
 ## 2. End-to-End Multi-Tier Data Flow
 
-### 2.1 The 4-Act Causal Invalidation & Execution Loop
+### 2.1 The 4-Act Causal Feature Flag Invalidation & Execution Loop
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Dev as Developer / Git Webhook
+    actor Dev as Developer / Flagsmith Admin
     actor Agent as Autonomous AI Agent
     participant MCP as Enclosed MCP Gate
     participant Falkor as FalkorDB (GraphBLAS)
-    participant Disk as Protected Codebase Disk
+    participant Flagsmith as Flagsmith API Engine
 
-    Note over Dev, Falkor: ACT I: Baseline State (ADR-001 accepted, DEC-102 valid)
-    Dev->>Falkor: Seed Baseline ADR-001 & DEC-102
-    Falkor-->>MCP: Causal Chain Active
+    Note over Dev, Flagsmith: ACT I: Baseline Flagsmith Mesh
+    Dev->>Falkor: Seed Baseline Flags (theme_system, auth_v2, dark_mode, premium_analytics)
+    Falkor-->>MCP: Causal Feature Topology Active (12 nodes, 10 edges)
 
-    Note over Dev, Falkor: ACT II: Ingestion of Superseding Commit
-    Dev->>MCP: POST /api/ingest (Commit containing ADR-002)
-    MCP->>Falkor: Cypher: CREATE (new:Source {id:'ADR-002'})-[:SUPERSEDES] to (old:Source {id:'ADR-001'})
-    Falkor->>Falkor: GraphBLAS Invalidation Cascade (ADR-001 is SUPERSEDED, DEC-102 is INVALIDATED)
-    Falkor-->>MCP: Invalidation Complete in 2.14ms
+    Note over Dev, Falkor: ACT II: Multi-Signal Ingestion & Dependency Discovery
+    Dev->>MCP: Sync Code AST & Git Temporal Miner
+    MCP->>Falkor: Cypher: Ingest AST call sites and Jaccard co-changes
+    Falkor->>Falkor: GraphBLAS builds multi-hop DAG (premium_analytics -> dark_mode -> theme_system)
+    Falkor-->>MCP: Topology Mesh Ready in 1.84ms
 
-    Note over Agent, Disk: ACT III: Agent Attempts Stale Code Execution
-    Agent->>MCP: POST /api/mcp/call (apply_code_change, decision: 'DEC-102')
-    MCP->>Falkor: Cypher: Check Decision DEC-102 dependency provenance
-    Falkor-->>MCP: Return: Source=SUPERSEDED, Fact=STALE
-    MCP-->>Agent: 403 FORBIDDEN: BLOCKED_SUPERSEDED_SOURCE (Zero bytes written to disk)
+    Note over Agent, Flagsmith: ACT III: Agent Attempts High Blast Radius Toggle
+    Agent->>MCP: safe_toggle_flag(flag: 'dark_mode', enabled: false)
+    MCP->>Falkor: Cypher: Calculate multi-hop blast radius for dark_mode
+    Falkor-->>MCP: Return: 2 downstream dependents (premium_analytics, analytics_dashboard); HIGH RISK
+    MCP-->>Agent: 409 CONFLICT: BLOCKED_HIGH_BLAST_RADIUS (Zero toggles executed)
 
-    Note over Agent, Disk: ACT IV: Revalidation & Grounded Write
-    Agent->>Falkor: Query Active Sources (Returns ADR-002: OAuth2)
-    Agent->>Falkor: Create Decision DEC-103 grounded in ADR-002
-    Agent->>MCP: POST /api/mcp/call (apply_code_change, decision: 'DEC-103')
-    MCP->>Falkor: Verify Provenance Path for DEC-103
-    Falkor-->>MCP: Return: Source=ACTIVE, Fact=VERIFIED
-    MCP->>Disk: Atomic Write Verified OAuth2 Code to payment.js
+    Note over Agent, Flagsmith: ACT IV: Revalidation & Grounded Safe Execution
+    Agent->>MCP: get_flag_blast_radius(flag: 'dark_mode')
+    Agent->>Falkor: Verify dynamic theme fallback & satisfy prerequisite guards
+    Agent->>MCP: safe_toggle_flag(flag: 'dark_mode', enabled: false, fallback: 'system_theme')
+    MCP->>Falkor: Re-verify causal path safety
+    Falkor-->>MCP: Return: Fallback Verified, Causal Proof Approved
+    MCP->>Flagsmith: PATCH /api/v1/flags/dark_mode (enabled: false)
+    MCP->>Falkor: CREATE (:AgentAction {status: 'APPROVED', latency: 1.62})
     MCP-->>Agent: 200 OK: GATE APPROVED in 1.62ms
 ```
 
@@ -103,134 +103,118 @@ sequenceDiagram
 
 ### 3.1 Node Entity Declarations
 ```cypher
-// 1. Source Node (Architectural Decision Records / Commits)
-(:Source {
-  id: STRING,         // e.g. "ADR-001", "ADR-002"
-  title: STRING,      // e.g. "Adopt TokenAuth v1", "Migrate to OAuth2"
-  status: STRING,     // "ACTIVE" | "SUPERSEDED" | "DEPRECATED"
-  timestamp: INTEGER, // Epoch ms
-  commit_hash: STRING // Git SHA-1 hash
+// 1. Flagsmith Feature Node
+(:FlagsmithFeature {
+  id: STRING,                  // e.g. "dark_mode", "premium_analytics", "auth_v2"
+  name: STRING,                // Feature identifier
+  enabled: BOOLEAN,            // Active boolean toggle state
+  description: STRING,         // Human-readable feature intent
+  in_degree: INTEGER,          // Number of upstream prerequisites
+  out_degree: INTEGER,         // Number of downstream dependents
+  risk_tier: STRING            // "LOW" | "MEDIUM" | "HIGH"
 })
 
-// 2. Fact Node (Atomic Claims extracted from Sources)
-(:Fact {
-  id: STRING,         // e.g. "F-Auth-v1", "F-OAuth2"
-  claim: STRING,      // e.g. "Payment services require TokenAuth v1"
-  is_stale: BOOLEAN,  // true | false
-  verified: BOOLEAN   // true | false
+// 2. Code Reference Node (Static AST Call Sites)
+(:CodeReference {
+  id: STRING,                  // e.g. "ref_theme_provider", "ref_analytics_panel"
+  file_path: STRING,           // Source path e.g. "src/theme/provider.tsx"
+  call_type: STRING,           // "hasFeature" | "isFeatureEnabled" | "useFlags" | "getValue"
+  line_number: INTEGER         // Exact AST line number
 })
 
-// 3. Decision Node (Agent Reasoning & Architectural Intent)
-(:Decision {
-  id: STRING,         // e.g. "DEC-102", "DEC-103"
-  title: STRING,      // e.g. "Generate Checkout with TokenAuth v1"
-  status: STRING,     // "VALID" | "INVALIDATED_NEEDS_REVALIDATION" | "ARCHIVED"
-  rationale: STRING   // Architectural justification
+// 3. Agent Action Audit Node (Signed Ledger Entries)
+(:AgentAction {
+  id: STRING,                  // e.g. "act-hist-001"
+  timestamp: INTEGER,          // Unix epoch timestamp (ms)
+  target_flag: STRING,         // Target feature flag mutated
+  verdict: STRING,             // "APPROVED" | "BLOCKED_HIGH_BLAST_RADIUS" | "BLOCKED_CRITICAL_PREREQUISITE"
+  latency_ms: FLOAT,           // Sub-millisecond gate execution latency
+  signature: STRING            // HMAC-SHA256 tamper-evident hash
 })
 ```
 
 ### 3.2 Relational Edge Contracts
-- `(:Fact)-[:EXTRACTED_FROM]->(:Source)`: Identifies the foundational documentation origin of a factual premise.
-- `(:Decision)-[:DEPENDS_ON]->(:Fact)`: Encapsulates agent reasoning upon factual premises.
-- `(:Source)-[:SUPERSEDES]->(:Source)`: Causal temporal precedence. When `A SUPERSEDES B`, all downstream facts and decisions of `B` are instantly poisoned.
+- `(:FlagsmithFeature)-[:DEPENDS_ON {signal: STRING, weight: FLOAT}]->(:FlagsmithFeature)`: Direct prerequisite relationship established via Flagsmith tags, AST nesting, or Git co-change.
+- `(:FlagsmithFeature)-[:GUARDS]->(:CodeReference)`: AST static linkage where a feature flag guards an execution branch in code.
+- `(:FlagsmithFeature)-[:CO_CHANGED_WITH {jaccard: FLOAT}]->(:FlagsmithFeature)`: Historical temporal coupling mined from Git commits.
 
 ---
 
 ## 4. Model Context Protocol (MCP) Interface Declarations
 
-CAVDAX implements the official Anthropic Model Context Protocol specification:
+CAVDAX implements the official Model Context Protocol (MCP) specification with 6 dedicated tools for Flagsmith feature governance:
 
-### 4.1 Tool: `apply_code_change`
+### 4.1 Tool: `get_flag_blast_radius`
 ```json
 {
-  "name": "apply_code_change",
-  "description": "Applies verified code modifications to the repository, strictly gated by causal provenance in FalkorDB.",
+  "name": "get_flag_blast_radius",
+  "description": "Calculates the multi-hop downstream blast radius, risk tier, and safe-to-disable verdict for a target Flagsmith feature flag.",
   "parameters": {
     "type": "object",
     "properties": {
-      "decision_id": {
-        "type": "string",
-        "description": "The unique identifier of the Decision node justifying this change (e.g. 'DEC-103')."
-      },
-      "file_path": {
-        "type": "string",
-        "description": "Relative target file path in the repository (e.g. 'demo-repo/src/services/payment.js')."
-      },
-      "code_payload": {
-        "type": "string",
-        "description": "The exact source code to write upon provenance verification."
-      }
+      "flagName": { "type": "string", "description": "The unique flag key in Flagsmith (e.g. 'dark_mode')." },
+      "maxDepth": { "type": "number", "description": "Maximum traversal depth (default: 3)." }
     },
-    "required": ["decision_id", "file_path", "code_payload"]
+    "required": ["flagName"]
   }
 }
 ```
 
-### 4.2 Tool: `check_intent_clearance`
+### 4.2 Tool: `safe_toggle_flag`
 ```json
 {
-  "name": "check_intent_clearance",
-  "description": "Pre-flight validation check. Evaluates whether a target Decision node is causally grounded before generating tokens or code.",
+  "name": "safe_toggle_flag",
+  "description": "Safely toggles a Flagsmith feature flag with pre-flight blast radius verification. Rejects with HTTP 409 if active downstream dependents will break.",
   "parameters": {
     "type": "object",
     "properties": {
-      "decision_id": { "type": "string", "description": "The decision identifier to verify (e.g. 'DEC-103')." },
-      "target_file": { "type": "string", "description": "Optional file path intended for mutation." },
-      "proposed_action": { "type": "string", "description": "Optional brief intent description." }
+      "flagName": { "type": "string", "description": "The unique flag key to mutate." },
+      "enabled": { "type": "boolean", "description": "Target boolean status." },
+      "force": { "type": "boolean", "description": "Bypass safety block if explicitly authorized." }
     },
-    "required": ["decision_id"]
+    "required": ["flagName", "enabled"]
   }
 }
 ```
 
-### 4.3 Tool: `revalidate_decision`
+### 4.3 Tool: `list_flagsmith_features`
 ```json
 {
-  "name": "revalidate_decision",
-  "description": "Recovers from causal invalidation by synthesizing a new Decision linked to fresh active ADR Facts.",
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "old_decision_id": { "type": "string", "description": "The superseded/invalidated decision ID." },
-      "new_decision_id": { "type": "string", "description": "The new replacement decision ID (e.g. 'DEC-103')." },
-      "new_decision_title": { "type": "string", "description": "Architectural rationale title." },
-      "adr_file": { "type": "string", "description": "Source ADR Markdown file path." }
-    },
-    "required": ["old_decision_id", "new_decision_id", "new_decision_title"]
-  }
+  "name": "list_flagsmith_features",
+  "description": "Returns all registered feature flags enriched with topological dependency metrics from FalkorDB GraphBLAS.",
+  "parameters": { "type": "object", "properties": {} }
 }
 ```
 
-### 4.4 Tools: `acquire_decision_lock` & `release_decision_lock`
+### 4.4 Tool: `scan_code_for_flags`
 ```json
 {
-  "name": "acquire_decision_lock",
-  "description": "Leases an exclusive temporal lock on a Decision node to prevent multi-agent collision.",
+  "name": "scan_code_for_flags",
+  "description": "Traverses codebase AST to extract all Flagsmith SDK call sites (hasFeature, isFeatureEnabled, useFlags, getValue).",
   "parameters": {
     "type": "object",
     "properties": {
-      "decision_id": { "type": "string" },
-      "agent_id": { "type": "string" },
-      "ttl_ms": { "type": "number", "description": "Lock lease duration in milliseconds (default: 30000ms)." },
-      "reason": { "type": "string" }
-    },
-    "required": ["decision_id", "agent_id"]
-  }
-}
-```
-
-### 4.5 Tool: `export_graph_image`
-```json
-{
-  "name": "export_graph_image",
-  "description": "Generates a standalone SVG or PNG vector snapshot of the active causal graph for PR artifacts and visual debugging.",
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "format": { "type": "string", "enum": ["svg", "png"] },
-      "theme": { "type": "string", "enum": ["dark", "light"] }
+      "targetDirectory": { "type": "string", "description": "Directory path to scan (default: repository root)." }
     }
   }
+}
+```
+
+### 4.5 Tool: `sync_flagsmith_graph`
+```json
+{
+  "name": "sync_flagsmith_graph",
+  "description": "Performs bidirectional synchronization between Flagsmith REST API and the FalkorDB GraphBLAS causal mesh.",
+  "parameters": { "type": "object", "properties": {} }
+}
+```
+
+### 4.6 Tool: `list_stale_flags`
+```json
+{
+  "name": "list_stale_flags",
+  "description": "Identifies safe dead-code pruning candidates (flags with 0 downstream dependents and deprecated status).",
+  "parameters": { "type": "object", "properties": {} }
 }
 ```
 
@@ -238,26 +222,22 @@ CAVDAX implements the official Anthropic Model Context Protocol specification:
 
 ## 5. Security & Invalidation Gates (Cypher Traversal Queries)
 
-### 5.1 Pre-Execution Provenance Verification Query
+### 5.1 Multi-Hop Blast Radius Traversal Query
 ```cypher
-MATCH (d:Decision {id: $decision_id})
-OPTIONAL MATCH (d)-[:DEPENDS_ON]->(f:Fact)-[:EXTRACTED_FROM]->(s:Source)
-OPTIONAL MATCH (new_s:Source)-[:SUPERSEDES]->(s)
+MATCH (target:FlagsmithFeature {name: $flag_name})
+OPTIONAL MATCH path = (downstream:FlagsmithFeature)-[:DEPENDS_ON*1..3]->(target)
 RETURN 
-  d.id AS decision_id,
-  d.status AS decision_status,
-  f.id AS fact_id,
-  f.is_stale AS fact_stale,
-  s.id AS source_id,
-  s.status AS source_status,
-  new_s.id AS superseding_source_id
+  target.name AS target_name,
+  target.enabled AS target_enabled,
+  collect(DISTINCT downstream.name) AS downstream_impact,
+  length(path) AS hop_distance
 ```
 
 ### 5.2 Real-Time Gate Evaluation Logic
-1. If `d` does not exist $\rightarrow$ **REJECT** (`UNREGISTERED_DECISION`).
-2. If `s.status == 'SUPERSEDED'` or `new_s != null` $\rightarrow$ **REJECT** (`BLOCKED_SUPERSEDED_SOURCE`).
-3. If `f.is_stale == true` $\rightarrow$ **REJECT** (`BLOCKED_STALE_FACT`).
-4. If `d.status == 'VALID'` and all upstream sources are `ACTIVE` $\rightarrow$ **APPROVE** (`APPROVED`).
+1. If `target` does not exist in graph $\rightarrow$ **REJECT** (`UNREGISTERED_FLAG`).
+2. If `downstream_impact.length > 0` and `enabled == false` and `force != true` $\rightarrow$ **REJECT** (`BLOCKED_HIGH_BLAST_RADIUS`).
+3. If upstream prerequisites are missing or disabled $\rightarrow$ **REJECT** (`BLOCKED_CRITICAL_PREREQUISITE`).
+4. If `downstream_impact.length == 0` or prerequisite verified $\rightarrow$ **APPROVE** (`APPROVED`). Record event in `:AgentAction` audit ledger.
 
 ---
 

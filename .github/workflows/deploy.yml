@@ -87,15 +87,18 @@ jobs:
             deploy_service() {
               local svc="$1"
               local count=0
+              local cname="cavdax-${svc}"
               echo "==> Deploying $svc container..."
-              until docker compose -f infra/docker-compose.prod.yml up -d --no-deps "$svc" 2>/dev/null || [ $count -ge 4 ]; do
-                echo "==> Docker daemon busy removing $svc, waiting 3s for unmount before retry $((count + 1))/4..."
+              until docker compose -f infra/docker-compose.prod.yml up -d --no-deps --force-recreate "$svc" 2>/dev/null || [ $count -ge 4 ]; do
+                echo "==> Docker daemon busy removing $svc, clearing stale container $cname and waiting 3s before retry $((count + 1))/4..."
+                docker rm -f "$cname" 2>/dev/null || true
                 sleep 3
                 count=$((count + 1))
               done
               if [ $count -ge 4 ]; then
-                # Final attempt without error suppression if all retries failed
-                docker compose -f infra/docker-compose.prod.yml up -d --no-deps "$svc"
+                # Final attempt: explicitly force-remove stale container and recreate
+                docker rm -f "$cname" 2>/dev/null || true
+                docker compose -f infra/docker-compose.prod.yml up -d --no-deps --force-recreate "$svc"
               fi
             }
 
@@ -111,8 +114,10 @@ jobs:
               echo "==> Building with legacy docker-compose..."
               docker-compose -f infra/docker-compose.prod.yml build server
               docker-compose -f infra/docker-compose.prod.yml build client
-              docker-compose -f infra/docker-compose.prod.yml up -d --no-deps server
-              docker-compose -f infra/docker-compose.prod.yml up -d --no-deps client
+              docker rm -f cavdax-server 2>/dev/null || true
+              docker-compose -f infra/docker-compose.prod.yml up -d --no-deps --force-recreate server
+              docker rm -f cavdax-client 2>/dev/null || true
+              docker-compose -f infra/docker-compose.prod.yml up -d --no-deps --force-recreate client
             fi
             echo "==> Cleaning up dangling build images to preserve disk space..."
             docker image prune -f

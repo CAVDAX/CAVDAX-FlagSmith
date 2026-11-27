@@ -4,8 +4,8 @@
 > **Track**: Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
 > **Lead Architect & Maintainer**: Suneet Chugh & Team AWDAX  
 > **Current Status**: 100% Verified Production Delivery & Published Package  
-> **Version**: 1.3.4 (Synchronized with `@cavdax/flagsmith-mcp@1.0.3` & Caddy Gateway)  
-> **Timestamp**: `2026-11-27T19:30:00+05:30`  
+> **Version**: 1.3.5 (Synchronized with `@cavdax/flagsmith-mcp@1.0.3` & Caddy Gateway)  
+> **Timestamp**: `2026-11-27T20:45:00+05:30`  
 > **Production Gateway**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)
 
 ---
@@ -20,7 +20,7 @@
 - **AI Dummy Remnant Status**: **0 Remnants** across Categories A–J (`doc_dummy_scan.py` clean)
 - **Vale Style & Anti-Slop Audit**: **0 S1 Blockers, 0 S2 Warnings, 0.00 Slop Density (GATE PASSED)**
 - **Dual-Theme Mockup Parity**: **100%** (HTML5 `<picture>` tags with Dark & Light variants)
-- **Last Parity Verification**: `2026-11-27 19:30:00` (UTC+05:30)
+- **Last Parity Verification**: `2026-11-27 20:45:00` (UTC+05:30)
 
 ---
 
@@ -28,14 +28,14 @@
 
 | Canonical Document | Path | Diátaxis Mode | Status | Last Audit | Invariants Verified |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Product Requirements (PRD)** | [`docs/PRD.md`](./PRD.md) | Explanation / Reference | ✅ Up to date | 2026-11-27 | Flagsmith Track 03 scope, 3-signal mesh, TTFHW < 5m |
-| **System Architecture** | [`docs/ARCHITECTURE.md`](./ARCHITECTURE.md) | Explanation | ✅ Up to date | 2026-11-27 | FalkorDB GraphBLAS, Cypher traversal, multi-signal Bayesian fusion |
+| **Product Requirements (PRD)** | [`docs/PRD.md`](./PRD.md) | Explanation / Reference | ✅ Up to date | 2026-11-27 | Flagsmith Track 03 scope, 3-signal mesh, 4 Acts, 6 MCP tools, TTFHW < 5m |
+| **System Architecture** | [`docs/ARCHITECTURE.md`](./ARCHITECTURE.md) | Explanation | ✅ Up to date | 2026-11-27 | Flagsmith multi-signal topology, FalkorDB GraphBLAS, 4-Act sequence diagram, 6 MCP tools |
 | **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | ISM elimination, secret-guard pre-commit, zero-emoji UI |
 | **Sprint Phases & Milestones** | [`docs/PHASES.md`](./PHASES.md) | Tutorial / Guide | ✅ Up to date | 2026-11-27 | Phase 1–4 completed, Track 03 Flagsmith deployed |
 | **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 2-line max subtexts, Team AWDAX |
-| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Reverse-proxy static routing fix & Master README architecture overhaul |
+| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Container conflict fix, deploy hardening, full PRD & ARCHITECTURE sync |
 | **Track 03 Hackathon Blueprint** | [`docs/TRACK03_BLUEPRINT.md`](./TRACK03_BLUEPRINT.md) | Strategic Spec | ✅ Up to date | 2026-11-27 | Judging rubric alignment, 3-signal discovery, gap analysis |
-| **AI Slop Forensic Master** | [`docs/AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md`](./AI_SLOP_COMPREHENSIVE_FORENSIC_MASTER_DOCUMENT.md) | Audit Ledger | ✅ Up to date | 2026-11-27 | Full /flags & /dev audit, dual-theme parity, 2x Retina SHA-256 diffs |
+| **Deployment Runbook** | [`docs/DEPLOYMENT_AND_INFRA_RUNBOOK.md`](./DEPLOYMENT_AND_INFRA_RUNBOOK.md) | Operational Guide | ✅ Up to date | 2026-11-27 | Rolling container conflict prevention, EC2 specs, zero-downtime reload |
 
 ---
 
