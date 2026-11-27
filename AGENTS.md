@@ -1618,3 +1618,13 @@ To ensure that floating navigation docks, sidebars, modal dialogs, and viewport 
   2. **Guaranteed `finally` Reset**: Every `setIs*(true)` guarding an async operation MUST reset inside a `finally` block so transient network failures never strand the UI in a locked state.
   3. **Atomic Server Session Transitions**: Centralize interdependent `req.session` mutations (e.g. `tier`, `user`, `authorizedReposCache`) rather than mutating fields independently across concurrent handlers.
   4. **Pre-Completion Audit**: When auditing a codebase or concluding a feature, scan for components with `>= 3` correlated `is*` boolean flags and verify mutexes and `finally` resets empirically.
+
+## 23. Continuous Mermaid Diagram Synchronization Law (Law of Architectural Parity)
+- **Mandatory Synchronization Directive**:
+  Whenever `README.md` or any architectural document in `docs/` (`docs/ARCHITECTURE.md`, `docs/PHASES.md`, `docs/PRD.md`) is created, modified, or refined, ALL embedded Mermaid diagrams (`flowchart`, `graph`, `sequenceDiagram`) MUST be audited and updated in the exact same pass and commit.
+- **Zero Architectural Drift & Reality Parity**:
+  Diagrams must reflect 100% active entity schemas, current protocol tools (`safe_toggle_flag`, `get_flag_blast_radius`, `simulate_flag_state`), active database node labels (`:FlagsmithFeature`, `:CodeSymbol`), real network ports, and exact sequence choreography. Leaving diagrams in a legacy state while updating prose or code is strictly classified as documentation regression.
+- **Forbidden Placeholder & Stale Token Ban**:
+  Diagram node labels, subgraphs, or sequence steps must NEVER contain placeholder stubs (`TODO`, `TBD`, `Flag_Placeholder`, `dummy_toggle`, `placeholder_feature`) or renamed legacy brands.
+- **Automated Verification Harness**:
+  Enforced by `python scripts/audit_readme.py ./README.md --strict` under invariant rule `MMD-06` (Mermaid Entity Synchronization & Architectural Drift Gate). Any diagram drift triggers an immediate S1 blocker and aborts the release pipeline.

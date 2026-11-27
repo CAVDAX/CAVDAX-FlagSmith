@@ -8,7 +8,7 @@ Validates:
   1. Zero-Emoji Invariant (EM-01)
   2. Mojibake & C1 Control Characters (ENC-01, ENC-02)
   3. Marketing Fog Words & Slop Language (COPY-01, COPY-02)
-  4. Mermaid Diagram Syntax & Node Label Wrapping (MMD-01 - MMD-05)
+  4. Mermaid Diagram Syntax, Node Wrapping & Architectural Parity (MMD-01 - MMD-06)
   5. Badge Uniformity (shields.io style=for-the-badge) (BDG-01)
   6. Dual-Theme Logo Invariant (<picture> dark/light) (LOGO-01)
   7. Broken File Links & Local Anchor Slugs (LNK-01, LNK-02)
@@ -486,6 +486,21 @@ class ReadmeAuditor:
                         )
                     )
 
+                # Check for stale or placeholder tokens (MMD-06)
+                for stale_token in ["TODO", "TBD", "FIXME", "Samasutra", "Flag_Placeholder", "dummy_toggle", "placeholder_feature"]:
+                    if stale_token.lower() in s_line.lower():
+                        self.violations.append(
+                            Violation(
+                                rule_id="MMD-06",
+                                severity="S1",
+                                category="Mermaid Diagram Linter",
+                                message=f"Stale or placeholder identifier '{stale_token}' detected in Mermaid diagram.",
+                                line_number=cur_ln,
+                                snippet=s_line,
+                                remediation="Synchronize diagram with active system entities, removing placeholders and stale legacy names.",
+                            )
+                        )
+
             if subgraph_stack:
                 for unclosed_ln in subgraph_stack:
                     self.violations.append(
@@ -499,6 +514,23 @@ class ReadmeAuditor:
                             remediation="Close the subgraph with an 'end' keyword.",
                         )
                     )
+
+        # Document-level Mermaid Architecture Parity Invariant (MMD-06)
+        has_arch_section = any(re.search(r"^##\s+.*(?:Architecture|Topology|System Flow)", ln, re.IGNORECASE) for ln in self.lines)
+        mermaid_blocks_count = sum(1 for _, _, lang, _ in self.fenced_blocks if lang == "mermaid")
+
+        if has_arch_section and mermaid_blocks_count == 0:
+            self.violations.append(
+                Violation(
+                    rule_id="MMD-06",
+                    severity="S1",
+                    category="Mermaid Diagram Linter",
+                    message="Document contains Architecture/System Flow sections but zero Mermaid diagrams.",
+                    line_number=1,
+                    snippet="## Architecture",
+                    remediation="Add synchronized Mermaid diagrams illustrating system topology, execution sequence, and data flow.",
+                )
+            )
 
     def audit_badges(self):
         badge_regex = re.compile(r"https?://img\.shields\.io/[^\s)\"'>]+", re.IGNORECASE)
