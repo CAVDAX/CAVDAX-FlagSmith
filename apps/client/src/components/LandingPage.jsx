@@ -682,18 +682,6 @@ export default function LandingPage({
 
           {/* Soft Monochromatic Ambient Radial Halo */}
 
-          <div 
-
-            aria-hidden="true" 
-
-            style={{ opacity: wordmarkOpacity * 0.9 }}
-
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] sm:w-[820px] h-[240px] sm:h-[420px] bg-white/[0.04] dark:bg-white/[0.04] blur-[100px] sm:blur-[160px] pointer-events-none rounded-full transition-opacity" 
-
-          />
-
-
-
           {/* Monumentally Enlarged CAVDAX Wordmark with Nail-Hinge & Gravity Physics */}
 
           <div 
@@ -900,18 +888,6 @@ export default function LandingPage({
 
       <section id="hero-section" className="min-h-[100dvh] w-full flex flex-col justify-center items-center text-center relative px-6 py-20 overflow-hidden">
 
-        {/* Soft Monochromatic Ambient Radial Halo */}
-
-        <div 
-
-          aria-hidden="true" 
-
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] sm:w-[700px] h-[220px] sm:h-[360px] bg-white/[0.03] dark:bg-white/[0.03] blur-[100px] sm:blur-[140px] pointer-events-none rounded-full" 
-
-        />
-
-
-
         {/* Toggle Wars Track 03 Submission Callout Banner */}
         <div className="mb-6 sm:mb-8 flex items-center justify-center">
           <button
@@ -919,14 +895,11 @@ export default function LandingPage({
               playClick();
               if (onSelectTab) onSelectTab('flags');
             }}
-            className="group inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 transition-all text-xs font-sans font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-2xs hover:shadow-xs"
+            className="group inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-md border border-slate-200/90 dark:border-white/10 bg-slate-100/70 dark:bg-white/[0.04] hover:bg-slate-200/80 dark:hover:bg-white/[0.08] hover:border-slate-300 dark:hover:border-white/20 transition-all text-xs font-sans font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white shadow-2xs hover:shadow-xs"
           >
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            <span className="font-semibold text-slate-900 dark:text-slate-100 tracking-tight">Toggle Wars Track 03:</span>
-            <span className="text-slate-600 dark:text-slate-300">Flagsmith Blast Radius Radar &amp; MCP Gate</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-200/90 dark:bg-white/10 text-slate-800 dark:text-slate-200">TRACK 03</span>
+            <span className="font-semibold text-slate-900 dark:text-slate-100 tracking-tight">Flagsmith Blast Radius Radar</span>
+            <span className="text-slate-400 dark:text-slate-500 font-mono text-[11px]">&amp; MCP Gate</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 text-slate-400 dark:text-slate-500 group-hover:text-slate-900 dark:group-hover:text-white" />
           </button>
         </div>

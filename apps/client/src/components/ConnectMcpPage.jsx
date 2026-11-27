@@ -435,7 +435,7 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
         snippet: JSON.stringify({
           mcpServers: {
             cavdax: {
-              url: "https://cavdax.sahnirmaan.live/api/mcp/sse",
+              url: "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
               headers: {
                 Authorization: `Bearer ${effectiveKey}`
               }
@@ -445,7 +445,7 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
         displaySnippet: JSON.stringify({
           mcpServers: {
             cavdax: {
-              url: "https://cavdax.sahnirmaan.live/api/mcp/sse",
+              url: "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
               headers: {
                 Authorization: `Bearer ${displayKey}`
               }
@@ -458,8 +458,8 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
         name: 'Claude Code CLI',
         desc: 'Anthropic official agentic coding tool for terminal environments',
         file: 'Terminal Command',
-        snippet: `claude mcp add cavdax https://cavdax.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer ${effectiveKey}"`,
-        displaySnippet: `claude mcp add cavdax https://cavdax.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer ${displayKey}"`,
+        snippet: `claude mcp add cavdax https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer ${effectiveKey}"`,
+        displaySnippet: `claude mcp add cavdax https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse --header "Authorization: Bearer ${displayKey}"`,
         notes: 'Run directly inside your git repository root before launching claude. Passes your Bearer API key via HTTP headers.'
       },
       claude: {
@@ -473,7 +473,7 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
               args: [
                 "-y",
                 "mcp-proxy",
-                "https://cavdax.sahnirmaan.live/api/mcp/sse",
+                "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
                 "--header",
                 `Authorization: Bearer ${effectiveKey}`
               ]
@@ -487,7 +487,7 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
               args: [
                 "-y",
                 "mcp-proxy",
-                "https://cavdax.sahnirmaan.live/api/mcp/sse",
+                "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
                 "--header",
                 `Authorization: Bearer ${displayKey}`
               ]
@@ -503,7 +503,7 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
         snippet: JSON.stringify({
           mcpServers: {
             cavdax: {
-              serverUrl: "https://cavdax.sahnirmaan.live/api/mcp/sse",
+              serverUrl: "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
               headers: {
                 Authorization: `Bearer ${effectiveKey}`
               }
@@ -513,7 +513,7 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
         displaySnippet: JSON.stringify({
           mcpServers: {
             cavdax: {
-              serverUrl: "https://cavdax.sahnirmaan.live/api/mcp/sse",
+              serverUrl: "https://cavdax-flagsmith.sahnirmaan.live/api/mcp/sse",
               headers: {
                 Authorization: `Bearer ${displayKey}`
               }
@@ -585,45 +585,25 @@ export default function ConnectMcpPage({ onLaunchConsole, user: propUser, onAuth
   };
 
   const cliCommands = {
-
     init: {
-
       cmd: 'npx cavdax init',
-
-      desc: 'Scaffolds docs/adr directory, baseline ADR-001, and Cursor/Claude MCP configuration in current repo.',
-
+      desc: 'Scaffolds Flagsmith feature flag configuration, scans repo code for flag usages, and configures Cursor/Claude MCP gate.',
       flags: '--yes, -y'
-
     },
-
     mcp: {
-
       cmd: 'npx cavdax mcp',
-
       desc: 'Starts the Model Context Protocol stdio server for Claude Code and Cursor agents.',
-
       flags: '--host <host> --port <port>'
-
     },
-
     doctor: {
-
       cmd: 'npx cavdax doctor',
-
       desc: 'Runs full diagnostic suite testing FalkorDB GraphBLAS connectivity and causal DAG node health.',
-
       flags: '--host <host> --port <port>'
-
     },
-
     ingest: {
-
-      cmd: 'npx cavdax ingest --type adr --repo .',
-
-      desc: 'Parses local ADRs (docs/adr/), git commit history, and GitHub issues into the active causal graph.',
-
-      flags: '-t [adr|commit|issue|all] -r <path>'
-
+      cmd: 'npx cavdax ingest --type flags --repo .',
+      desc: 'Parses local code ASTs for flagsmith SDK calls, git commit coupling, and syncs topological dependencies into FalkorDB.',
+      flags: '-t [flags|commit|issue|all] -r <path>'
     },
 
     check: {

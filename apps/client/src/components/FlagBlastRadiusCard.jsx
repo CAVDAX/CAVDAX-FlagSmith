@@ -297,9 +297,7 @@ export function AnalyticsDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-white/10">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white">
-              <RadarIcon size={18} className="w-4.5 h-4.5 text-current" />
-            </div>
+            <RadarIcon size={20} className="w-5 h-5 text-slate-900 dark:text-white shrink-0" />
             <div>
               <h2 className="text-base sm:text-lg font-bold tracking-tight">Flagsmith Blast Radius Radar</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl">
@@ -370,14 +368,13 @@ export function AnalyticsDashboard() {
                     }}
                     className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold shadow-sm'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold shadow-xs'
                         : 'bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 border border-transparent dark:border-white/5'
                     }`}
                   >
-                    <span className={`w-2 h-2 rounded-full shrink-0 ${feat.enabled ? 'bg-emerald-500' : 'bg-slate-400'}`} />
                     <span className="truncate">{feat.name}</span>
                     {feat.incoming_dependents > 0 && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-white/10 font-sans shrink-0 font-medium">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 font-sans shrink-0 font-medium">
                         {feat.incoming_dependents} dep
                       </span>
                     )}
@@ -435,7 +432,7 @@ export function AnalyticsDashboard() {
                     <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
                       Active State
                     </span>
-                    <span className={`text-[11px] px-2 py-0.5 rounded-full font-bold border ${riskColor}`}>
+                    <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider border ${riskColor}`}>
                       {blastRadius.risk_tier} RISK
                     </span>
                   </div>
@@ -456,9 +453,8 @@ export function AnalyticsDashboard() {
                     <button
                       onClick={() => handleSafeToggle(false)}
                       disabled={togglePending}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/15 text-slate-800 dark:text-slate-100 transition-all cursor-pointer shadow-2xs hover:shadow-xs disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-semibold border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/15 text-slate-800 dark:text-slate-100 transition-all cursor-pointer shadow-2xs hover:shadow-xs disabled:opacity-50"
                     >
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${blastRadius.enabled ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.5)]' : 'bg-slate-400'}`} />
                       <span>{blastRadius.enabled ? 'Turn Off' : 'Turn On'}</span>
                     </button>
                   </div>
@@ -480,18 +476,17 @@ export function AnalyticsDashboard() {
                 </div>
 
                 {uniqueDownstream.length > 0 ? (
-                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  <div className="divide-y divide-slate-100 dark:divide-white/5 max-h-48 overflow-y-auto pr-1">
                     {uniqueDownstream.map((dep, idx) => (
                       <div
                         key={`${dep.name}-${idx}`}
-                        className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 text-xs shadow-xs hover:border-slate-300 dark:hover:border-white/20 transition-all"
+                        className="flex items-center justify-between py-2 text-xs"
                       >
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dep.enabled ? 'bg-rose-500' : 'bg-slate-400'}`} />
-                          <span className="font-mono truncate font-medium">{dep.name}</span>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="font-mono text-slate-900 dark:text-white font-medium truncate">{dep.name}</span>
                         </div>
                         <span className="text-[10px] text-slate-400 shrink-0 ml-2 font-mono">
-                          Hop {dep.depth || 1}
+                          HOP {dep.depth || 1}
                         </span>
                       </div>
                     ))}
@@ -516,18 +511,17 @@ export function AnalyticsDashboard() {
                 </div>
 
                 {uniqueUpstream.length > 0 ? (
-                  <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                  <div className="divide-y divide-slate-100 dark:divide-white/5 max-h-48 overflow-y-auto pr-1">
                     {uniqueUpstream.map((pre, idx) => (
                       <div
                         key={`${pre.name}-${idx}`}
-                        className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-white/[0.04] border border-slate-200/80 dark:border-white/10 text-xs shadow-xs hover:border-slate-300 dark:hover:border-white/20 transition-all"
+                        className="flex items-center justify-between py-2 text-xs"
                       >
-                        <div className="flex items-center gap-2 min-w-0">
-                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${pre.enabled ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                          <span className="font-mono truncate font-medium">{pre.name}</span>
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="font-mono text-slate-900 dark:text-white font-medium truncate">{pre.name}</span>
                         </div>
-                        <span className={`text-[10px] font-mono font-bold ${pre.enabled ? 'text-emerald-500' : 'text-amber-500'}`}>
-                          {pre.enabled ? 'SATISFIED' : 'MISSING'}
+                        <span className={`text-[10px] font-mono font-bold ${pre.enabled ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                          [{pre.enabled ? 'SATISFIED' : 'MISSING'}]
                         </span>
                       </div>
                     ))}
@@ -727,18 +721,20 @@ export function AnalyticsDashboard() {
 
       {/* 3-Signal Technical Provenance Bar */}
       <div className="mt-5 pt-4 border-t border-slate-100 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500 dark:text-slate-400">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-indigo-500" />
-            <span>Signal 1: Tags (c=1.0)</span>
+            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold">[SIG-1]</span>
+            <span>Tags (c=1.0)</span>
           </div>
+          <div className="w-[1px] h-3 bg-slate-200 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-cyan-500" />
-            <span>Signal 2: AST Static</span>
+            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold">[SIG-2]</span>
+            <span>AST Static</span>
           </div>
+          <div className="w-[1px] h-3 bg-slate-200 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-500" />
-            <span>Signal 3: Git Temporal (Jaccard)</span>
+            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">[SIG-3]</span>
+            <span>Git Temporal (Jaccard)</span>
           </div>
         </div>
         <div className="font-mono text-[10px]">

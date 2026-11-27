@@ -40,12 +40,9 @@ function RadarIcon({ size = 13, className = "" }) {
 
 const NAV_TABS = [
   { id: "landing", label: "Overview", icon: Layers },
-  { id: "console", label: "Console", icon: SlidersHorizontal },
   { id: "flags", label: "Flag Radar", icon: RadarIcon },
-  { id: "mcp", label: "MCP", icon: Cable },
-  { id: "audit", label: "Audit", icon: ClipboardList },
-  { id: "project", label: "Walkthrough", icon: Play },
-  { id: "team", label: "Team", icon: Users },
+  { id: "mcp", label: "Repo & MCP", icon: Cable },
+  { id: "audit", label: "Audit Ledger", icon: ClipboardList },
 ];
 
 const ALL_NAV_ITEMS = [
@@ -335,13 +332,6 @@ export default function Header({
                   </div>
                 }
               />
-
-              {tier === 'pro' && (
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-400 ring-2 ring-white dark:ring-slate-950 z-20 pointer-events-none" />
-              )}
-              {tier === 'enterprise' && (
-                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-950 z-20 pointer-events-none shadow-xs" />
-              )}
             </button>
           </Tooltip>
 

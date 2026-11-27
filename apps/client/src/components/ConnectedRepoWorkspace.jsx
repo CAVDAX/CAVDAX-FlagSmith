@@ -419,7 +419,7 @@ export default function ConnectedRepoWorkspace({
     const targetBranch = branchOverride || selectedBranchRef.current || repoRef.current?.default_branch || '';
     setPhase('scanning');
     setError(null);
-    addLog('SCAN', `Reading ADRs from ${repoRef.current.full_name}${targetBranch ? ` on branch ${targetBranch}` : ''}.`);
+    addLog('SCAN', `Scanning Flagsmith feature flags and AST in ${repoRef.current.full_name}${targetBranch ? ` on branch ${targetBranch}` : ''}.`);
     try {
       const branchQuery = targetBranch ? `?branch=${encodeURIComponent(targetBranch)}&` : '?';
       let activeReposHeader = '';
@@ -452,12 +452,12 @@ export default function ConnectedRepoWorkspace({
         }
       }
       setPhase('ready');
-      addLog('PARSER', `Found ${data.count} ADR file${data.count === 1 ? '' : 's'} on branch ${data.branch}.`, data.count ? 'CASCADE' : 'INFO');
+      addLog('PARSER', `Found ${data.count} flag definition${data.count === 1 ? '' : 's'} on branch ${data.branch}.`, data.count ? 'CASCADE' : 'INFO');
       if (data.count > 0) {
-        addLog('GRAPH', `Built ${data.graph.nodes.length} nodes and ${data.graph.edges.length} edges from the ADRs.`);
+        addLog('GRAPH', `Built ${data.graph.nodes.length} nodes and ${data.graph.edges.length} edges in topological flag mesh.`);
         playApprovalChime();
       } else {
-        addLog('GITHUB', `0 ADR files detected on branch ${data.branch}. If you recently merged a pull request, GitHub edge caches take ~10-15s to update. Please wait a moment and click Rescan.`, 'INFO');
+        addLog('GITHUB', `0 feature flags detected on branch ${data.branch}. If you recently merged a pull request, GitHub edge caches take ~10-15s to update. Please wait a moment and click Rescan.`, 'INFO');
       }
       const current = repoRef.current;
       const hasAdrs = data.count > 0;
@@ -1156,19 +1156,19 @@ export default function ConnectedRepoWorkspace({
 
       {noAdrs && !pr && (
         <StateCard icon={<FolderGit2 className="w-6 h-6 text-slate-700 dark:text-slate-300" />}
-          title="No Architecture Decision Records found"
-          body={<>No ADRs found in <strong className="font-mono text-slate-950 dark:text-white">{repo.full_name}</strong>. Initialize will inspect your stack and open a starter ADR-001 pull request without committing directly to <strong className="font-mono">{scan.branch}</strong>.</>}
+          title="No Flagsmith Feature Flags found"
+          body={<>No Flagsmith SDK invocations or feature flag definitions detected in <strong className="font-mono text-slate-950 dark:text-white">{repo.full_name}</strong>. Initialize will inspect your codebase for feature toggles and configure Flagsmith Blast Radius monitoring without committing directly to <strong className="font-mono">{scan.branch}</strong>.</>}
           actions={
             <button onClick={() => { playClick(); setShowInitConfirmModal(true); }} disabled={repoOp !== null} className={`${btnPrimary} w-full cursor-pointer`}>
               {isOpeningPr ? <Loader2 className="w-4 h-4 animate-spin shrink-0" strokeWidth={2} /> : <GitPullRequest className="w-4 h-4 shrink-0" strokeWidth={2} />}
-              <span>{isOpeningPr ? 'Opening pull request' : 'Open pull request with ADR-001'}</span>
+              <span>{isOpeningPr ? 'Opening pull request' : 'Open pull request with Flagsmith Flags'}</span>
             </button>
           }
           footnote={
             <div>
-              <span className="font-medium text-slate-800 dark:text-slate-200 block mb-1">Already have ADRs?</span>
+              <span className="font-medium text-slate-800 dark:text-slate-200 block mb-1">Already using Flagsmith?</span>
               <span className="block text-slate-500 dark:text-slate-400">
-                Put them in <code className="font-mono bg-slate-200 dark:bg-white/10 px-1 py-0.5 rounded text-slate-900 dark:text-slate-200">docs/adrs</code>, <code className="font-mono bg-slate-200 dark:bg-white/10 px-1 py-0.5 rounded text-slate-900 dark:text-slate-200">docs/adr</code>, root <code className="font-mono bg-slate-200 dark:bg-white/10 px-1 py-0.5 rounded text-slate-900 dark:text-slate-200">ADR-*.md</code> or <code className="font-mono bg-slate-200 dark:bg-white/10 px-1 py-0.5 rounded text-slate-900 dark:text-slate-200">docs/decisions</code> and rescan.
+                Call <code className="font-mono bg-slate-200 dark:bg-white/10 px-1 py-0.5 rounded text-slate-900 dark:text-slate-200">flagsmith.hasFeature()</code> or declare flags in <code className="font-mono bg-slate-200 dark:bg-white/10 px-1 py-0.5 rounded text-slate-900 dark:text-slate-200">flagsmith.json</code>, then click Rescan.
               </span>
             </div>
           } />
@@ -1229,11 +1229,11 @@ export default function ConnectedRepoWorkspace({
                   </button>
                 </Tooltip>
                 <FileText className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
-                <span className="font-bold text-slate-950 dark:text-white truncate">ADRs in this repository</span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono shrink-0">({scan.count} files)</span>
+                <span className="font-bold text-slate-950 dark:text-white truncate">Flagsmith Flags in repository</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono shrink-0">({scan.count} flags)</span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
-                <Tooltip content="Draft a new Architecture Decision Record (ADR)" position="bottom">
+                <Tooltip content="Register a new Flagsmith Feature Flag" position="bottom">
                   <button
                     type="button"
                     onClick={() => {
@@ -1242,13 +1242,13 @@ export default function ConnectedRepoWorkspace({
                       setShowProposeAdrModal(true);
                     }}
                     className="px-2 py-1 rounded-lg text-[10.5px] font-mono font-bold bg-slate-900 text-white dark:bg-white dark:text-slate-950 hover:opacity-90 flex items-center gap-1 transition-all cursor-pointer shadow-xs"
-                    aria-label="Draft a new Architecture Decision Record (ADR) and open a pull request"
+                    aria-label="Register a new Flagsmith Feature Flag and open a pull request"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Propose ADR</span>
+                    <span>Propose Flag</span>
                   </button>
                 </Tooltip>
-                <Tooltip content="Collapse ADR Panel" position="bottom">
+                <Tooltip content="Collapse Flags Panel" position="bottom">
                   <button
                     type="button"
                     onClick={() => setIsLeftCollapsed(true)}
