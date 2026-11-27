@@ -4,8 +4,8 @@
 > **Track**: Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
 > **Lead Architect & Maintainer**: Suneet Chugh & Team AWDAX  
 > **Current Status**: 100% Verified Production Delivery & Published Package  
-> **Version**: 1.3.5 (Synchronized with `@cavdax/flagsmith-mcp@1.0.3` & Caddy Gateway)  
-> **Timestamp**: `2026-11-27T20:45:00+05:30`  
+> **Version**: 1.3.6 (Synchronized with Milestone 00m, Universal CLI Suite & Continuous Mermaid Parity)  
+> **Timestamp**: `2026-11-27T21:55:00+05:30`  
 > **Production Gateway**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)
 
 ---
@@ -20,7 +20,8 @@
 - **AI Dummy Remnant Status**: **0 Remnants** across Categories A–J (`doc_dummy_scan.py` clean)
 - **Vale Style & Anti-Slop Audit**: **0 S1 Blockers, 0 S2 Warnings, 0.00 Slop Density (GATE PASSED)**
 - **Dual-Theme Mockup Parity**: **100%** (HTML5 `<picture>` tags with Dark & Light variants)
-- **Last Parity Verification**: `2026-11-27 20:45:00` (UTC+05:30)
+- **Mermaid Architectural Parity**: **100%** (6/6 README diagrams synchronized with active Flagsmith & FalkorDB entities; rule `MMD-06` enforced in `scripts/audit_readme.py`)
+- **Last Parity Verification**: `2026-11-27 21:55:00` (UTC+05:30)
 
 ---
 
@@ -30,10 +31,10 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Product Requirements (PRD)** | [`docs/PRD.md`](./PRD.md) | Explanation / Reference | ✅ Up to date | 2026-11-27 | Flagsmith Track 03 scope, 3-signal mesh, 4 Acts, 6 MCP tools, TTFHW < 5m |
 | **System Architecture** | [`docs/ARCHITECTURE.md`](./ARCHITECTURE.md) | Explanation | ✅ Up to date | 2026-11-27 | Flagsmith multi-signal topology, FalkorDB GraphBLAS, 4-Act sequence diagram, 6 MCP tools |
-| **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | ISM elimination, secret-guard pre-commit, zero-emoji UI |
+| **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | Section 23 Mermaid Diagram Synchronization Law, ISM elimination, secret-guard pre-commit, zero-emoji UI |
 | **Sprint Phases & Milestones** | [`docs/PHASES.md`](./PHASES.md) | Tutorial / Guide | ✅ Up to date | 2026-11-27 | Phases 1–7 completed, Flagsmith blast radius & MCP gate roadmap verified |
-| **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 2-line max subtexts, Team AWDAX |
-| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Container conflict fix, deploy hardening, full PRD & ARCHITECTURE sync |
+| **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 1-line subtext discipline, anti-flying sliding pillbars, Team AWDAX |
+| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00m: Act 4 ReferenceError fix, multi-workspace Flag Radar, sliding pillbar, MCP overhaul |
 | **Track 03 Hackathon Blueprint** | [`docs/TRACK03_BLUEPRINT.md`](./TRACK03_BLUEPRINT.md) | Strategic Spec | ✅ Up to date | 2026-11-27 | Judging rubric alignment, 3-signal discovery, gap analysis |
 | **Deployment Runbook** | [`docs/DEPLOYMENT_AND_INFRA_RUNBOOK.md`](./DEPLOYMENT_AND_INFRA_RUNBOOK.md) | Operational Guide | ✅ Up to date | 2026-11-27 | Rolling container conflict prevention, EC2 specs, zero-downtime reload |
 
@@ -70,6 +71,8 @@
 - [x] **Invariant 9 (AI Dummy Remnant Zero-Placeholder Law)**: Scanned all 43 documentation files across Cat A–J; 0 unverified remnants.
 - [x] **Invariant 10 (Dual-Theme Interface Mockup Law)**: Dual-theme UI mockups verified in `README.md` across Dark and Light modes for both `/flags` and `/dev` using HTML5 `<picture>` tags.
 - [x] **Invariant 11 (Reverse-Proxy Route Gating)**: Caddyfile routes for Flagsmith Django root assets (`/static/*`, `/config/*`, `/version*`) verified via Puppeteer CDP audit with 0 console errors.
+- [x] **Invariant 12 (Continuous Mermaid Synchronization Law)**: 6/6 embedded Mermaid diagrams in `README.md` verified in 1:1 parity with active Flagsmith schemas, tools (`safe_toggle_flag`), and FalkorDB node labels; rule `MMD-06` enforced in `scripts/audit_readme.py`.
+- [x] **Invariant 13 (Anti-Flying Sliding Pillbar & Single-Line Discipline)**: Feature flag selector and universal CLI command switcher use container-relative layout springs, eliminating framer-motion `layoutId` flying bugs; subtext adheres to strict 1-line truncation.
 
 ---
 
