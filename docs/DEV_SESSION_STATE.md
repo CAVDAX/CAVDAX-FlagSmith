@@ -29,6 +29,7 @@
     2. `Scan Sample AST` (`POST /api/flagsmith/scan-code`)
     3. `Audit Stale Flags` (`GET /api/flagsmith/stale?days=90`)
     4. `Test Blast Radius Gate` (`GET /api/flagsmith/blast-radius/dark_mode`)
+  - *Empirical Verification*: Puppeteer captured live viewports (`cavdax_flagsmith_dev_console_live.png` - 396 KB, `cavdax_flagsmith_dev_console_trigger_stale.png`) with **0 console errors** and verified real-time execution.
 - **Automated Test Gate Verification**:
   - `node scripts/test-ci.mjs`: **187/187 test suites passed (100% green)**; 9/9 MCP tests passed; README invariant gate passed with 0.00 pts slop density.
 
