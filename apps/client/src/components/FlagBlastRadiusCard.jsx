@@ -334,25 +334,27 @@ export function AnalyticsDashboard() {
     return Array.from(map.values()).filter(d => !JUNK_FLAG_NAMES.has(d.name)).sort((a, b) => (a.depth || 1) - (b.depth || 1) || a.name.localeCompare(b.name));
   }, [blastRadius?.upstream_prerequisites]);
 
-  // Compute Risk Tier styling with strict high-contrast dark & light mode parity
-  const riskColor = blastRadius?.risk_tier === 'CRITICAL'
-    ? 'text-rose-800 dark:text-rose-400 bg-rose-100/90 dark:bg-rose-950/40 border-rose-300 dark:border-rose-500/40'
+  // Compute Risk Tier styling with borderless typographic clarity
+  const riskTextColor = blastRadius?.risk_tier === 'CRITICAL'
+    ? 'text-rose-600 dark:text-rose-400'
     : blastRadius?.risk_tier === 'HIGH'
-    ? 'text-amber-800 dark:text-amber-400 bg-amber-100/90 dark:bg-amber-950/40 border-amber-300 dark:border-amber-500/40'
+    ? 'text-amber-600 dark:text-amber-400'
     : blastRadius?.risk_tier === 'MODERATE'
-    ? 'text-yellow-800 dark:text-yellow-400 bg-yellow-100/90 dark:bg-yellow-950/40 border-yellow-300 dark:border-yellow-500/40'
-    : 'text-emerald-800 dark:text-emerald-400 bg-emerald-100/90 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/40';
+    ? 'text-yellow-600 dark:text-yellow-400'
+    : 'text-emerald-600 dark:text-emerald-400';
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 md:p-6 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0B0D11] text-slate-900 dark:text-white shadow-xl transition-all">
+    <div className="w-full flex-1 flex flex-col justify-between p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-slate-300/80 dark:border-white/10 bg-white/80 dark:bg-[#0B0D11]/90 backdrop-blur-2xl text-slate-900 dark:text-white shadow-2xl transition-all">
       {/* Header bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-white/10">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200/80 dark:border-white/10">
         <div>
-          <div className="flex items-center gap-2.5">
-            <RadarIcon size={20} className="w-5 h-5 text-slate-900 dark:text-white shrink-0" />
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200/80 dark:border-white/10 text-slate-900 dark:text-white shrink-0">
+              <RadarIcon size={22} className="w-5 h-5 text-current" />
+            </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold tracking-tight">Flagsmith Blast Radius Radar</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xl">
+              <h2 className="text-lg sm:text-xl font-bold tracking-tight font-mono text-slate-950 dark:text-white">Flagsmith Blast Radius Radar</h2>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-2xl mt-0.5">
                 Real-time GraphBLAS topological dependency traversal across 3 signals.
               </p>
             </div>
@@ -512,14 +514,14 @@ export function AnalyticsDashboard() {
       {activeTab === 'radar' && (
         <>
           {/* Feature Selector Sliding Pillbar */}
-          <div className="py-4">
-            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">
+          <div className="py-6">
+            <label className="block text-xs font-mono font-semibold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-wider">
               Select Feature Flag
             </label>
-            <div className="relative inline-flex items-center p-1 rounded-xl bg-slate-200/60 dark:bg-white/[0.06] border border-slate-300/80 dark:border-white/10 backdrop-blur-md overflow-x-auto max-w-full scrollbar-none gap-1">
+            <div className="relative inline-flex items-center p-1.5 rounded-xl bg-slate-200/50 dark:bg-white/[0.04] border border-slate-300/60 dark:border-white/10 backdrop-blur-md overflow-x-auto max-w-full scrollbar-none gap-1.5">
               {pillPosition.ready && pillPosition.visible && (
                 <motion.div
-                  className="absolute top-1 bottom-1 rounded-lg bg-slate-950 dark:bg-white shadow-xs pointer-events-none"
+                  className="absolute top-1.5 bottom-1.5 rounded-lg bg-slate-950 dark:bg-white shadow-xs pointer-events-none"
                   initial={false}
                   animate={{
                     x: pillPosition.x,
@@ -545,7 +547,7 @@ export function AnalyticsDashboard() {
                       playClick();
                       setSelectedFlagName(feat.name);
                     }}
-                    className={`relative z-10 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer select-none ${
+                    className={`relative z-10 flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-mono whitespace-nowrap shrink-0 transition-colors duration-150 cursor-pointer select-none ${
                       isSelected
                         ? 'text-white dark:text-slate-950 font-bold'
                         : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white'
@@ -553,10 +555,10 @@ export function AnalyticsDashboard() {
                   >
                     <span>{feat.name}</span>
                     {feat.incoming_dependents > 0 && (
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded font-mono font-semibold shrink-0 tracking-tight transition-colors ${
+                      <span className={`text-[10px] font-mono shrink-0 tracking-tight transition-colors ${
                         isSelected
-                          ? 'bg-white/20 text-white dark:bg-slate-900/15 dark:text-slate-900'
-                          : 'bg-slate-300/80 text-slate-700 dark:bg-white/10 dark:text-slate-300'
+                          ? 'text-white/80 dark:text-slate-900/80 font-bold'
+                          : 'text-slate-500 dark:text-slate-400 font-medium'
                       }`}>
                         {feat.incoming_dependents} DEP
                       </span>
@@ -607,75 +609,75 @@ export function AnalyticsDashboard() {
 
           {/* Main Flag Telemetry Grid */}
           {blastRadius && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6 pt-2">
               {/* Column 1: Flag State & Safe Toggle */}
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A] flex flex-col justify-between">
+              <div className="p-6 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] flex flex-col justify-between shadow-xs">
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold font-mono">
                       Active State
                     </span>
-                    <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold uppercase tracking-wider border ${riskColor}`}>
+                    <span className={`text-xs font-mono font-bold uppercase tracking-wider ${riskTextColor}`}>
                       {blastRadius.risk_tier} RISK
                     </span>
                   </div>
 
-                  <div className="text-xl font-bold font-mono tracking-tight text-slate-900 dark:text-white mb-1">
+                  <div className="text-2xl font-bold font-mono tracking-tight text-slate-950 dark:text-white mb-2">
                     {blastRadius.flag_name}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 text-balance mb-4">
+                  <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 text-balance mb-6">
                     {blastRadius.description || 'No description provided in Flagsmith.'}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-slate-200 dark:border-white/10">
+                <div className="pt-4 border-t border-slate-200/80 dark:border-white/10">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    <span className="text-xs font-mono font-medium text-slate-700 dark:text-slate-300">
                       {blastRadius.enabled ? 'Feature Enabled' : 'Feature Disabled'}
                     </span>
                     <button
                       onClick={() => handleSafeToggle(false)}
                       disabled={togglePending}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-semibold border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/15 text-slate-800 dark:text-slate-100 transition-all cursor-pointer shadow-2xs hover:shadow-xs disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-slate-300 dark:border-white/15 bg-white dark:bg-white/[0.08] hover:bg-slate-100 dark:hover:bg-white/15 text-slate-900 dark:text-white transition-all cursor-pointer shadow-xs disabled:opacity-50"
                     >
                       <span>{blastRadius.enabled ? 'Turn Off' : 'Turn On'}</span>
                     </button>
                   </div>
-                  <div className="mt-2 text-[10px] text-slate-400">
+                  <div className="mt-3 text-[11px] font-mono text-slate-400 dark:text-slate-500">
                     FalkorDB Traversal: {blastRadius.latency_ms || 0.1} ms
                   </div>
                 </div>
               </div>
 
               {/* Column 2: Downstream Dependents (Blast Radius) */}
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A]">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
+              <div className="p-6 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] flex flex-col shadow-xs">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold font-mono">
                     Downstream Impact ({uniqueDownstream.length})
                   </span>
                   <Tooltip content="Features that break or stop working if this flag is disabled">
-                    <AlertCircle className="w-3.5 h-3.5 text-slate-400" />
+                    <AlertCircle className="w-4 h-4 text-slate-400" />
                   </Tooltip>
                 </div>
 
                 {uniqueDownstream.length > 0 ? (
-                  <div className="divide-y divide-slate-100 dark:divide-white/5 max-h-48 overflow-y-auto pr-1">
+                  <div className="divide-y divide-slate-100 dark:divide-white/5 max-h-72 sm:max-h-80 overflow-y-auto pr-1">
                     {uniqueDownstream.map((dep, idx) => (
                       <div
                         key={`${dep.name}-${idx}`}
-                        className="flex items-center justify-between py-2 text-xs"
+                        className="flex items-center justify-between py-2.5 text-xs"
                       >
-                        <div className="flex items-center gap-1.5 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0">
                           <span className="font-mono text-slate-900 dark:text-white font-medium truncate">{dep.name}</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 shrink-0 ml-2 font-mono">
+                        <span className="text-[11px] text-slate-400 shrink-0 ml-2 font-mono">
                           HOP {dep.depth || 1}
                         </span>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="py-8 text-center text-xs text-slate-400">
+                  <div className="py-12 text-center text-xs text-slate-400">
                     <Check className="w-6 h-6 mx-auto mb-2 text-emerald-500 opacity-80" strokeWidth={2.5} />
                     <span>Zero downstream dependents. Safe to toggle without cascading breaking changes.</span>
                   </div>
@@ -683,30 +685,30 @@ export function AnalyticsDashboard() {
               </div>
 
               {/* Column 3: Upstream Prerequisites */}
-              <div className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-[#11141A]">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-medium">
+              <div className="p-6 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] flex flex-col shadow-xs">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold font-mono">
                     Upstream Prerequisites ({uniqueUpstream.length})
                   </span>
                   <Tooltip content="Features required to be active before this flag can safely execute">
-                    <Layers className="w-3.5 h-3.5 text-slate-400" />
+                    <Layers className="w-4 h-4 text-slate-400" />
                   </Tooltip>
                 </div>
 
                 {uniqueUpstream.length > 0 ? (
-                  <div className="divide-y divide-slate-100 dark:divide-white/5 max-h-48 overflow-y-auto pr-1">
+                  <div className="divide-y divide-slate-100 dark:divide-white/5 max-h-72 sm:max-h-80 overflow-y-auto pr-1">
                     {uniqueUpstream.map((pre, idx) => (
                       <div
                         key={`${pre.name}-${idx}`}
-                        className="flex items-center justify-between py-2 text-xs"
+                        className="flex items-center justify-between py-2.5 text-xs"
                       >
-                        <div className="flex items-center gap-1.5 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0">
                           <span className="font-mono text-slate-900 dark:text-white font-medium truncate">{pre.name}</span>
                         </div>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold tracking-wider border shrink-0 ${
+                        <span className={`text-[11px] font-mono font-bold tracking-wider shrink-0 ${
                           pre.enabled
-                            ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100/80 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-500/30'
-                            : 'text-amber-700 dark:text-amber-400 bg-amber-100/80 dark:bg-amber-950/40 border-amber-300 dark:border-amber-500/30'
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : 'text-amber-600 dark:text-amber-400'
                         }`}>
                           {pre.enabled ? 'SATISFIED' : 'MISSING'}
                         </span>
@@ -714,7 +716,7 @@ export function AnalyticsDashboard() {
                     ))}
                   </div>
                 ) : (
-                  <div className="py-8 text-center text-xs text-slate-400">
+                  <div className="py-12 text-center text-xs text-slate-400">
                     <Layers className="w-6 h-6 mx-auto mb-2 text-slate-400 opacity-60" />
                     <span>Zero upstream prerequisites. Standalone root feature.</span>
                   </div>
@@ -842,12 +844,12 @@ export function AnalyticsDashboard() {
 
                         <div className="text-right">
                           <span
-                            className={`inline-block text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                            className={`inline-block text-[11px] font-mono font-bold tracking-tight ${
                               f.enabled === true
-                                ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+                                ? 'text-emerald-600 dark:text-emerald-400'
                                 : f.enabled === false
-                                ? 'bg-rose-500/10 text-rose-500 border border-rose-500/20'
-                                : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'
+                                ? 'text-rose-600 dark:text-rose-400'
+                                : 'text-slate-500 dark:text-slate-400'
                             }`}
                           >
                             {f.enabled === true ? 'ACTIVE IN PROD' : f.enabled === false ? 'DISABLED IN PROD' : 'UNREGISTERED'}
@@ -884,7 +886,7 @@ export function AnalyticsDashboard() {
                           <span className="font-mono font-bold text-slate-900 dark:text-white">
                             {dep.targetFlag}
                           </span>
-                          <span className="text-[10px] px-2 py-0.5 rounded font-mono font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 ml-2">
+                          <span className="text-[11px] font-mono font-bold text-cyan-500 dark:text-cyan-400 ml-2">
                             {dep.relationship} ({Math.round(dep.confidence * 100)}% conf)
                           </span>
                         </div>
@@ -907,24 +909,24 @@ export function AnalyticsDashboard() {
       )}
 
       {/* 3-Signal Technical Provenance Bar */}
-      <div className="mt-5 pt-4 border-t border-slate-100 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500 dark:text-slate-400">
-        <div className="flex items-center gap-3">
+      <div className="mt-8 pt-5 border-t border-slate-200/80 dark:border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-4 flex-wrap">
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 font-bold">[SIG-1]</span>
-            <span>Tags (c=1.0)</span>
+            <span className="font-mono text-xs font-bold text-indigo-500 dark:text-indigo-400">[SIG-1]</span>
+            <span className="text-slate-600 dark:text-slate-300 font-medium">Tags (c=1.0)</span>
           </div>
-          <div className="w-[1px] h-3 bg-slate-200 dark:bg-white/10" />
+          <div className="w-[1px] h-3.5 bg-slate-300 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold">[SIG-2]</span>
-            <span>AST Static</span>
+            <span className="font-mono text-xs font-bold text-cyan-500 dark:text-cyan-400">[SIG-2]</span>
+            <span className="text-slate-600 dark:text-slate-300 font-medium">AST Static</span>
           </div>
-          <div className="w-[1px] h-3 bg-slate-200 dark:bg-white/10" />
+          <div className="w-[1px] h-3.5 bg-slate-300 dark:bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">[SIG-3]</span>
-            <span>Git Temporal (Jaccard)</span>
+            <span className="font-mono text-xs font-bold text-amber-500 dark:text-amber-400">[SIG-3]</span>
+            <span className="text-slate-600 dark:text-slate-300 font-medium">Git Temporal (Jaccard)</span>
           </div>
         </div>
-        <div className="font-mono text-[10px]">
+        <div className="font-mono text-xs text-slate-400 dark:text-slate-500">
           FalkorDB GraphBLAS Matrix Engine
         </div>
       </div>

@@ -1605,9 +1605,9 @@ export default function App() {
           />
         </SubsystemErrorBoundary>
       ) : activeTab === 'flags' ? (
-        /* Dedicated Flagsmith Multi-Signal Blast Radius Radar */
+        /* Dedicated Flagsmith Multi-Signal Blast Radius Radar — Spacious Full-Width Bench Console */
         <SubsystemErrorBoundary name="Flagsmith Blast Radius Radar">
-          <div className="pt-24 pb-16 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
+          <div className="flex-1 min-h-0 flex flex-col pt-20 sm:pt-22 px-3 sm:px-6 max-w-[1600px] mx-auto w-full pb-8">
             <FlagBlastRadiusCard
               isDarkTheme={isDarkTheme}
               connectedRepos={connectedRepos}

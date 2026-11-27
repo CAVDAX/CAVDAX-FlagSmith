@@ -4,8 +4,8 @@
 > **Track**: Track 03 — Build on Open Source Flagsmith (Prize: PS5 + GTA 6 Bundle)  
 > **Lead Architect & Maintainer**: Suneet Chugh & Team AWDAX  
 > **Current Status**: 100% Verified Production Delivery & Published Package  
-> **Version**: 1.3.7 (Synchronized with Milestone 00n, Wordmark Subtext Alignment, Hero Headlines & Tier Benefits Overhaul)  
-> **Timestamp**: `2026-11-27T22:30:00+05:30`  
+> **Version**: 1.3.8 (Synchronized with Milestone 00o, Single-Line Hero Heading, Console-Dimensioned Flag Radar & Tag Border Purge)  
+> **Timestamp**: `2026-11-27T23:15:00+05:30`  
 > **Production Gateway**: [`https://cavdax-flagsmith.sahnirmaan.live`](https://cavdax-flagsmith.sahnirmaan.live)
 
 ---
@@ -34,7 +34,7 @@
 | **Agent Constitution & Rules** | [`AGENTS.md`](../AGENTS.md) | Reference / Rules | ✅ Up to date | 2026-11-27 | Section 23 Mermaid Diagram Synchronization Law, ISM elimination, secret-guard pre-commit, zero-emoji UI |
 | **Sprint Phases & Milestones** | [`docs/PHASES.md`](./PHASES.md) | Tutorial / Guide | ✅ Up to date | 2026-11-27 | Phases 1–7 completed, Flagsmith blast radius & MCP gate roadmap verified |
 | **UI Design System** | [`docs/UI_DESIGN_SYSTEM.md`](./UI_DESIGN_SYSTEM.md) | Reference | ✅ Up to date | 2026-11-27 | Monochromatic Obsidian theme, 1-line subtext discipline, anti-flying sliding pillbars, Team AWDAX |
-| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00n: Wordmark subtext alignment, hero rotating headlines, tier benefits overhaul |
+| **Active Session State** | [`docs/DEV_SESSION_STATE.md`](./DEV_SESSION_STATE.md) | Reference / Log | ✅ Up to date | 2026-11-27 | Milestone 00o: Single-line hero heading, console-dimensioned Flag Radar, tag border purge |
 | **Track 03 Hackathon Blueprint** | [`docs/TRACK03_BLUEPRINT.md`](./TRACK03_BLUEPRINT.md) | Strategic Spec | ✅ Up to date | 2026-11-27 | Judging rubric alignment, 3-signal discovery, gap analysis |
 | **Deployment Runbook** | [`docs/DEPLOYMENT_AND_INFRA_RUNBOOK.md`](./DEPLOYMENT_AND_INFRA_RUNBOOK.md) | Operational Guide | ✅ Up to date | 2026-11-27 | Rolling container conflict prevention, EC2 specs, zero-downtime reload |
 
